@@ -1,0 +1,5 @@
+conclusion,fraction_specs_supporting,n_specifications
+C1: below-p10 RR > 2 (both endpoints),1.0,200
+C2: fetal below-p10 RR > infant below-p10 RR,1.0,200
+C3: fetal above-p90 RR > infant above-p90 RR,1.0,200
+C4: fetal above-p90 RR > 1,0.975,200

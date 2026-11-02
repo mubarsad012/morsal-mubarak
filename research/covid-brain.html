@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brain Metabolism in Long COVID (COVID-BRAIN) — Morsal Mubarak</title>
+  <meta name="description" content="COVID-BRAIN poster, Clinical Research Day 2026 at Mass General Brigham: people with neurological Long COVID had lower thalamic glutathione and creatine than controls. Morsal Mubarak is third author.">
+  <meta property="og:title" content="Brain Metabolism in Long COVID (COVID-BRAIN) — Morsal Mubarak">
+  <meta property="og:description" content="COVID-BRAIN poster, Clinical Research Day 2026 at Mass General Brigham: people with neurological Long COVID had lower thalamic glutathione and creatine than controls. Morsal Mubarak is third author.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* Page-specific styles (COVID-BRAIN). Tokens only, so light and dark themes both work. */
+    .page-hero .badge { white-space: normal; }
+    .poster-title { font: 500 clamp(1rem, 1.7vw, 1.14rem)/1.5 var(--font-serif); color: var(--ink-2); max-width: 72ch; margin: 4px 0 10px; }
+    .poster-title cite { font-style: italic; color: var(--ink); }
+    .byline sup, .affil sup { font-size: .7em; line-height: 0; }
+    .affil { font-size: .86rem; color: var(--ink-3); margin: -6px 0 4px; max-width: 80ch; }
+    .affil summary { cursor: pointer; color: var(--ink-2); font-weight: 600; width: fit-content; }
+    .affil ol { margin: 8px 0 0; padding-left: 1.4em; }
+    .affil li { margin: 2px 0; }
+
+    .defs { margin-top: 1.4rem; }
+    .defs .card h3 { font-size: 1.08rem; }
+    .defs .card p { font-size: .95rem; margin-bottom: .6em; }
+    .defs .card p:last-child { margin-bottom: 0; }
+
+    .glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 12px 0 0; }
+    .glossary div { padding: 12px 0; border-top: 1px solid var(--line); }
+    .glossary dt { font-weight: 700; color: var(--ink); font-size: .95rem; }
+    .glossary dd { margin: 4px 0 0; color: var(--ink-2); font-size: .92rem; line-height: 1.5; }
+    @media (max-width: 640px) { .glossary { grid-template-columns: minmax(0, 1fr); } }
+
+    .read-note { font-size: .95rem; }
+    .metrics.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 640px) { .metrics.two { grid-template-columns: minmax(0, 1fr); } }
+    .metric .kicker { display: block; font: 600 .74rem/1.35 var(--font-sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
+    .metric .value sub { font-size: .5em; letter-spacing: 0; }
+    .metric .label sub, .finding sub, .prose sub, .panel-intro sub { font-size: .72em; }
+
+    /* Surface-colored halo so gridlines and the dashed reference line never cut through chart labels */
+    .viz text.cat, .viz text.val { paint-order: stroke; stroke: var(--chart-surface); stroke-width: 4px; stroke-linejoin: round; }
+    .chart-stack > .chart-card + .chart-card { margin-top: clamp(18px, 2.4vw, 26px); }
+    .color-key { margin: 6px 0 18px; }
+    .filters.seg, .filters.chips { margin: 0 0 12px; }
+    .filters button { min-height: 36px; line-height: 1.2; }
+    .chip-tag { font-weight: 500; opacity: .78; margin-left: 4px; }
+    .ctrl-row { display: flex; flex-wrap: wrap; gap: 0 22px; align-items: flex-start; margin-top: 14px; }
+    .ctrl-label { display: block; font: 600 .72rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+
+    .explorer .tabs { margin: 14px 0 4px; }
+    @media (max-width: 640px) { .explorer .tabs { border-radius: 18px; } .explorer .tabs button { padding: 10px 12px; } }
+    .panel-intro { color: var(--ink-2); font-size: .95rem; margin: 16px 0 12px; max-width: 72ch; }
+    .subchart { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .subchart .chart-sub { margin-bottom: 8px; }
+
+    .pstat { display: inline-block; max-width: 100%; font: 600 .84rem/1.5 var(--font-mono); color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; margin: 2px 0 10px; }
+    .finding { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; background: var(--surface); margin-top: 16px; }
+    .finding h4 { margin: 10px 0 6px; font-size: 1rem; }
+    .finding p { margin: 0 0 8px; color: var(--ink-2); font-size: .94rem; }
+    .finding .src, .met-detail .src { color: var(--ink-3); font-size: .78rem; margin: 6px 0 0; }
+
+    .met-detail { padding: 18px 20px; }
+    .met-detail h4 { margin: 10px 0 4px; font-size: 1.02rem; }
+    .met-detail p { margin: 0 0 8px; color: var(--ink-2); font-size: .94rem; }
+    .met-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .met-abbr { font: 700 1.25rem/1 var(--font-mono); color: var(--ink); }
+    .met-role { color: var(--ink-3) !important; font-size: .88rem !important; }
+
+    .method-cards { margin-top: 18px; }
+    .method-cards .card h3 { font-size: 1.02rem; margin-bottom: .5em; }
+    .method-cards .card ul { margin: 0; padding-left: 1.1em; color: var(--ink-2); font-size: .92rem; }
+    .method-cards .card li { margin: .3em 0; }
+
+    .poster-fig img { width: 100%; }
+    .desc { font-size: .9rem; color: var(--ink-2); max-width: 80ch; }
+    .desc summary { cursor: pointer; font-weight: 600; color: var(--ink-2); width: fit-content; }
+    .desc p { margin: 8px 0 0; }
+
+    .conclusions { counter-reset: c; list-style: none; padding: 0; margin: 0 0 1.4rem; }
+    .conclusions li { counter-increment: c; position: relative; padding: 0 0 0 40px; margin: 0 0 14px; color: var(--ink-2); }
+    .conclusions li::before { content: counter(c); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font: 700 .8rem/1 var(--font-sans); }
+    .callout ul { margin: 6px 0 0; padding-left: 1.1em; color: var(--ink-2); }
+    .callout li { margin: .35em 0; }
+    .callout .callout-body { min-width: 0; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">Brain Metabolism in Long COVID (COVID-BRAIN)</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge live">Poster · MGB Clinical Research Day 2026</span><span class="badge plain">Co-author (3rd author) on the poster</span></div>
+        <h1>Brain Metabolism in Long COVID (COVID-BRAIN)</h1>
+        <p class="poster-title">Poster: <cite>Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort</cite></p>
+        <p class="byline"><strong>Morsal Mubarak</strong>, 3rd author · with the multicenter COVID-BRAIN study team</p>
+        <details class="affil">
+          <summary>Author affiliations (as printed on the poster)</summary>
+          <ol>
+            <li>Center for Magnetic Resonance Research, Department of Radiology, University of Minnesota, MN, USA</li>
+            <li>The Houston Methodist Research Institute, TX, USA</li>
+            <li>Johns Hopkins University, MD, USA</li>
+            <li>Athinoula A. Martinos Center for Biomedical Imaging, Department of Radiology, Massachusetts General Hospital, MA, USA</li>
+            <li>Department of Radiology, Mayo Clinic Rochester, MN, USA</li>
+          </ol>
+        </details>
+        <p class="lede">Some people keep having neurological and cognitive symptoms long after a COVID-19 infection, a form of Long COVID called neuroPASC. The multicenter COVID-BRAIN study used proton MR spectroscopy, a noninvasive MRI method that measures brain chemistry, to look at the thalamus about two years after infection. People with neuroPASC had lower glutathione and lower total creatine there than controls, and within neuroPASC, higher creatine went with better performance on a cognitive test.</p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>Co-author (3rd author) on the poster</dd></div>
+          <div><dt>Affiliation</dt><dd>Athinoula A. Martinos Center for Biomedical Imaging, Massachusetts General Hospital (Mass General Brigham)</dd></div>
+          <div><dt>Presented</dt><dd>Clinical Research Day 2026, Mass General Brigham · Friday, October 30, 2026</dd></div>
+          <div><dt>Study</dt><dd>Multicenter COVID-BRAIN cohort · 176 participants analyzed (102 neuroPASC, 74 controls)</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#explore">Explore the findings</a>
+          <a class="btn btn-ghost" href="https://dcr.massgeneral.org/clinical-research-day-3/" target="_blank" rel="noopener">Event page
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#results">Key results</a><a href="#explore">Explore the findings</a><a href="#methods">Methods</a><a href="#meaning">What it means</a><a href="#cite">Reference</a>
+        </nav></aside>
+        <div>
+          <!-- ============ OVERVIEW ============ -->
+          <section id="overview" class="block">
+            <div class="prose">
+              <h2>Overview</h2>
+              <p>Some people continue to have neurological and cognitive symptoms long after a COVID-19 infection, a form of Long COVID that researchers call <strong>neuroPASC</strong> (neurological post-acute sequelae of COVID-19). The multicenter COVID-BRAIN study used <strong>proton magnetic resonance spectroscopy (1H-MRS)</strong>, a noninvasive MRI-based method that measures chemicals involved in brain metabolism, to examine the thalamus, the brain's central relay hub.</p>
+              <p>The study analyzed 176 participants (102 with neuroPASC and 74 controls); those with neuroPASC were studied on average about two years after infection. People with neuroPASC had lower thalamic glutathione, an antioxidant, and lower total creatine, an energy buffer, than controls, whether or not they had been hospitalized during the initial infection. In people with neuroPASC, higher creatine went along with better performance on a cognitive test (Stroop Color-Word). Lower myo-inositol tracked worse fatigue and depression scores in both groups. These are associations, not proof of cause and effect, and they need confirmation in further research.</p>
+              <h3>Why this study</h3>
+              <ul>
+                <li>Long COVID affects roughly 1 in 16 U.S. adults (a CDC figure cited on the poster). Early-pandemic estimates were higher, and many people need ongoing clinical management.</li>
+                <li>Most Long COVID studies follow people to about 1 year after infection. This study looked at an average of 2 years after the initial infection.</li>
+                <li>The multi-site COVID-BRAIN Advanced Imaging Network studies the long-term effects of SARS-CoV-2 infection on the brain, neurological health, cognition, and quality of life. Participating sites: UMN, Mayo Clinic, MGH, JHU, and Houston Methodist.</li>
+              </ul>
+            </div>
+
+            <div class="grid grid-3 defs">
+              <div class="card">
+                <h3>What is neuroPASC?</h3>
+                <p>Neurological post-acute sequelae of COVID-19: persistent neurological and cognitive symptoms after a confirmed SARS-CoV-2 infection.</p>
+                <p>On the poster, that means a PCR-, antigen- or antibody-confirmed infection, with neurological symptoms that began within 6 months and were still present at the study visit (COVID-Neuro checklist).</p>
+              </div>
+              <div class="card">
+                <h3>What is 1H-MRS?</h3>
+                <p>Proton magnetic resonance spectroscopy, an MRI-based technique that measures brain metabolite concentrations.</p>
+                <p>Instead of a picture, each scan gives a spectrum of peaks from different chemicals. Software (LCModel) fits the spectrum to estimate how much of each chemical is present.</p>
+              </div>
+              <div class="card">
+                <h3>Why the thalamus?</h3>
+                <p>The thalamus is the brain's central relay and integrative hub, sitting deep in the middle of the brain.</p>
+                <p>The team measured spectra from both sides of the thalamus together (a bilateral thalamic voxel).</p>
+              </div>
+            </div>
+
+            <div class="callout mt-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> Co-author (3rd author) on the poster, affiliated with the Athinoula A. Martinos Center for Biomedical Imaging, Massachusetts General Hospital (Mass General Brigham). This page summarizes the poster; the study itself is the work of the multicenter COVID-BRAIN team.</p></div>
+
+            <h3 class="mt-4">Terms used on this page</h3>
+            <dl class="glossary">
+              <div><dt>neuroPASC</dt><dd>Neurological post-acute sequelae of COVID-19: persistent neurological and cognitive symptoms after confirmed SARS-CoV-2 infection (onset within 6 months, still present at the study visit).</dd></div>
+              <div><dt>1H-MRS</dt><dd>Proton magnetic resonance spectroscopy, an MRI-based technique that measures brain metabolite concentrations.</dd></div>
+              <div><dt>GSH (glutathione)</dt><dd>An antioxidant; the poster describes its role as antioxidant defense.</dd></div>
+              <div><dt>Cr+PCr, or tCr (total creatine)</dt><dd>Creatine plus phosphocreatine, an energy buffer.</dd></div>
+              <div><dt>Myo-inositol (Ins, mI)</dt><dd>Found in high amounts in glial cells (the brain's support cells) and involved in osmotic regulation.</dd></div>
+              <div><dt>ICVF</dt><dd>Intracellular volume fraction, a diffusion-MRI (NODDI-MIX) measure.</dd></div>
+              <div><dt>FDR</dt><dd>False discovery rate: a Benjamini–Hochberg correction for multiple comparisons, used because many metabolites and tests were compared.</dd></div>
+              <div><dt>r<sub>s</sub></dt><dd>Spearman rank correlation, from −1 to +1. On the poster it is partial and adjusted for age and sex.</dd></div>
+              <div><dt>MoCA Blind, Stroop, SDMT</dt><dd>The cognitive tests listed on the poster. Results are reported for MoCA Blind and Stroop Color-Word.</dd></div>
+              <div><dt>MFIS, MFIS-cognitive, PHQ-8</dt><dd>Questionnaires for fatigue, cognitive fatigue, and depression. Higher scores mean worse symptoms.</dd></div>
+              <div><dt>hsCRP, IL-6, TNF-α</dt><dd>Blood markers of inflammation, measured in plasma.</dd></div>
+              <div><dt>ANCOVA</dt><dd>A comparison of group averages that adjusts for other factors; here age, sex, and study site.</dd></div>
+            </dl>
+          </section>
+
+          <!-- ============ KEY RESULTS ============ -->
+          <section id="results" class="block">
+            <h2 class="prose">Key results</h2>
+            <p class="prose ink-2 read-note">Statistics are exactly as printed on the poster. A smaller <strong>p</strong>-value means a result would be more surprising if there were no real difference or link. <strong>FDR</strong> values adjust for the many comparisons made; below 0.05 means the result held up after that correction. <strong>r<sub>s</sub></strong> is a correlation from −1 to +1.</p>
+            <div class="metrics two">
+              <div class="metric small">
+                <span class="kicker">Glutathione (GSH) · neuroPASC vs controls</span>
+                <span class="value">p = 0.006</span>
+                <span class="label">Lower in neuroPASC than in controls. FDR = 0.025.</span>
+                <span class="src">Poster · Results, Figure 2B</span>
+              </div>
+              <div class="metric small">
+                <span class="kicker">Total creatine (Cr+PCr) · neuroPASC vs controls</span>
+                <span class="value">p = 0.007</span>
+                <span class="label">Lower in neuroPASC than in controls (unadjusted p). FDR = 0.025.</span>
+                <span class="src">Poster · Results, Figure 2C</span>
+              </div>
+              <div class="metric small">
+                <span class="kicker">GSH and creatine · each subgroup vs controls</span>
+                <span class="value">p = 0.019–0.039</span>
+                <span class="label">Both were also lower in hospitalized and in non-hospitalized neuroPASC participants (pairwise comparisons).</span>
+                <span class="src">Poster · Results, Figure 2E–F</span>
+              </div>
+              <div class="metric small">
+                <span class="kicker">Creatine × Stroop Color-Word · neuroPASC</span>
+                <span class="value">r<sub>s</sub> = +0.31</span>
+                <span class="label">Higher creatine, better score (unadj. p = 0.004, FDR = 0.018). Controls: r<sub>s</sub> = +0.02.</span>
+                <span class="src">Poster · cognition correlations, panel A</span>
+              </div>
+              <div class="metric small">
+                <span class="kicker">Myo-inositol × depression (PHQ-8) · neuroPASC</span>
+                <span class="value">p &lt; 0.001</span>
+                <span class="label">Lower myo-inositol, worse depression score (r<sub>s</sub> = −0.37). Also seen in controls (r<sub>s</sub> = −0.29).</span>
+                <span class="src">Poster · Results, Figure 4C</span>
+              </div>
+              <div class="metric small">
+                <span class="kicker">Glutathione × hsCRP · hospitalized subgroup</span>
+                <span class="value">r<sub>s</sub> = −0.49</span>
+                <span class="label">Lower glutathione, higher blood hsCRP. Exploratory: unadj. p = 0.037, FDR = 0.425.</span>
+                <span class="src">Poster · Results, Figure 5</span>
+              </div>
+            </div>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">FDR value for each result the poster reports with one</h3><p class="chart-sub">Three results stay below 0.05 (dashed line) after correcting for multiple comparisons; the two hospitalized-subgroup links do not.</p></div></div>
+              <div id="chart-fdr"></div>
+            </div>
+          </section>
+
+          <!-- ============ EXPLORE ============ -->
+          <section id="explore" class="block">
+            <h2 class="prose">Explore the findings</h2>
+            <p class="prose ink-2">All values come from the poster; the funnel also shows simple totals and step-to-step percentages worked out from them. Use the buttons to switch views, hover over or tab through a chart for details, or open any chart's data table.</p>
+            <ul class="viz-legend color-key" aria-label="Group colors used in these charts">
+              <li><span class="key" style="background:var(--series-1)"></span>Controls</li>
+              <li><span class="key" style="background:var(--series-2)"></span>neuroPASC (all)</li>
+              <li><span class="key" style="background:var(--series-3)"></span>Hospitalized neuroPASC</li>
+              <li><span class="key" style="background:var(--series-4)"></span>Non-hospitalized neuroPASC</li>
+            </ul>
+
+            <div class="chart-stack">
+              <!-- Funnel -->
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Participants at each stage of the study</h3><p class="chart-sub">Of 2,057 people who expressed interest, 176 were analyzed; 92 neuroPASC and 69 control participants had evaluable thalamic spectra.</p></div></div>
+                <div class="filters seg" role="group" aria-label="Funnel view">
+                  <button type="button" aria-pressed="true" data-funnel="total">Recruitment funnel</button>
+                  <button type="button" aria-pressed="false" data-funnel="groups">Split by group</button>
+                </div>
+                <div id="chart-funnel"></div>
+                <div id="chart-funnel-groups" hidden></div>
+              </div>
+
+              <!-- Findings explorer -->
+              <div class="chart-card explorer" id="findings-explorer">
+                <div class="chart-head"><div><h3 class="chart-title">Findings explorer</h3><p class="chart-sub">Each result from the poster, grouped by theme, with its statistics exactly as printed.</p></div></div>
+                <div class="tabs" role="tablist" aria-label="Finding themes" data-tabs>
+                  <button type="button" role="tab" id="tab-groups" aria-controls="panel-groups" aria-selected="true">Group differences</button>
+                  <button type="button" role="tab" id="tab-cog" aria-controls="panel-cog" aria-selected="false" tabindex="-1">Cognition</button>
+                  <button type="button" role="tab" id="tab-infl" aria-controls="panel-infl" aria-selected="false" tabindex="-1">Inflammation</button>
+                  <button type="button" role="tab" id="tab-sym" aria-controls="panel-sym" aria-selected="false" tabindex="-1">Symptoms &amp; quality of life</button>
+                </div>
+
+                <!-- Panel: group differences -->
+                <div class="tab-panel" role="tabpanel" id="panel-groups" aria-labelledby="tab-groups">
+                  <p class="panel-intro">The team compared seven thalamic metabolites between neuroPASC and controls, using ANCOVA models adjusted for age, sex, and site. Pick a metabolite to see what the poster reports for it.</p>
+                  <div class="filters chips" role="group" aria-label="Choose a metabolite">
+                    <button type="button" aria-pressed="true" data-met="GSH">GSH <span class="chip-tag">· lower</span></button>
+                    <button type="button" aria-pressed="false" data-met="CR">Cr+PCr <span class="chip-tag">· lower</span></button>
+                    <button type="button" aria-pressed="false" data-met="INS">Ins <span class="chip-tag">· not significant</span></button>
+                    <button type="button" aria-pressed="false" data-met="GLU">Glu</button>
+                    <button type="button" aria-pressed="false" data-met="GLX">Glu+Gln</button>
+                    <button type="button" aria-pressed="false" data-met="NAA">NAA+NAAG</button>
+                    <button type="button" aria-pressed="false" data-met="CHO">PCho+GPC</button>
+                  </div>
+                  <div class="card met-detail" id="met-detail" aria-live="polite">
+                    <div class="met-head"><span class="met-abbr">GSH</span><span class="badge review">Lower in neuroPASC</span></div>
+                    <h4>Glutathione</h4>
+                    <p class="met-role">Role on the poster: antioxidant defense.</p>
+                    <p class="pstat">p = 0.006 · FDR = 0.025</p>
+                    <p>Lower in neuroPASC than in controls. The difference also appeared in both the hospitalized and the non-hospitalized neuroPASC subgroups compared with controls (pairwise p = 0.019–0.039).</p>
+                    <p class="src">Poster · Results; Figure 2B (Control 69, neuroPASC 92) and Figure 2E</p>
+                  </div>
+                  <div class="subchart">
+                    <h4 class="chart-title">Participants with thalamic spectra in each comparison group</h4>
+                    <p class="chart-sub">Lower glutathione and creatine appeared in both neuroPASC subgroups compared with controls (pairwise p = 0.019–0.039), including the smaller hospitalized group.</p>
+                    <div id="chart-subgroups"></div>
+                  </div>
+                </div>
+
+                <!-- Panel: cognition -->
+                <div class="tab-panel" role="tabpanel" id="panel-cog" aria-labelledby="tab-cog" hidden>
+                  <p class="panel-intro">Correlations between thalamic metabolites and cognitive test scores (Spearman rank, r<sub>s</sub>, adjusted for age and sex). Values above 0 mean higher metabolite levels went with higher test scores.</p>
+                  <div class="ctrl-row">
+                    <div>
+                      <span class="ctrl-label" id="cog-m-label">Metabolite × test</span>
+                      <div class="filters seg" role="group" aria-labelledby="cog-m-label">
+                        <button type="button" aria-pressed="true" data-cog-m="cr">Creatine × Stroop Color-Word</button>
+                        <button type="button" aria-pressed="false" data-cog-m="gsh">Glutathione × MoCA Blind</button>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="ctrl-label" id="cog-g-label">Groups</span>
+                      <div class="filters seg" role="group" aria-labelledby="cog-g-label">
+                        <button type="button" aria-pressed="true" data-cog-g="all">neuroPASC vs controls</button>
+                        <button type="button" aria-pressed="false" data-cog-g="sub">By hospitalization</button>
+                      </div>
+                    </div>
+                  </div>
+                  <h4 class="chart-title mt-2" id="cog-title">Creatine vs Stroop Color-Word score: correlation by group</h4>
+                  <p class="chart-sub" id="cog-sub" aria-live="polite">In neuroPASC, higher creatine went with better Stroop Color-Word scores; controls showed no such link (r<sub>s</sub> = +0.02).</p>
+                  <div id="cog-A"></div>
+                  <div id="cog-B" hidden></div>
+                  <div id="cog-C" hidden></div>
+                  <div id="cog-D" hidden></div>
+                  <div class="finding" id="cog-find-cr">
+                    <span class="badge review">Held up after FDR correction</span>
+                    <h4>Higher creatine, better Stroop Color-Word performance in neuroPASC</h4>
+                    <p class="pstat">Cr+PCr × Stroop Color-Word, neuroPASC: unadj. p = 0.004, FDR = 0.018</p>
+                    <p>Controls showed no such association (r<sub>s</sub> = +0.02). Split by hospitalization, the correlation was similar in non-hospitalized (r<sub>s</sub> = +0.28) and hospitalized (r<sub>s</sub> = +0.27) participants.</p>
+                    <p class="src">Poster · Results, “Thalamic metabolic alterations track with cognitive performance”; cognition correlations, panels A–B</p>
+                  </div>
+                  <div class="finding" id="cog-find-gsh" hidden>
+                    <span class="badge draft">Nominal: did not survive FDR correction</span>
+                    <h4>Lower glutathione, lower MoCA Blind score in the hospitalized subgroup</h4>
+                    <p class="pstat">GSH × MoCA Blind, hospitalized: unadj. p = 0.041, FDR = 0.163</p>
+                    <p>Because it did not hold up after correcting for multiple comparisons, this is a nominal result. Across all neuroPASC participants, the poster prints r<sub>s</sub> = +0.20 for this pair (controls: −0.16), with no p-value.</p>
+                    <p class="src">Poster · Results, “Thalamic metabolic alterations track with cognitive performance”; cognition correlations, panels C–D</p>
+                  </div>
+                </div>
+
+                <!-- Panel: inflammation -->
+                <div class="tab-panel" role="tabpanel" id="panel-infl" aria-labelledby="tab-infl" hidden>
+                  <p class="panel-intro">Correlations (r<sub>s</sub>, adjusted for age and sex) between thalamic glutathione and inflammation markers measured in blood plasma. Values below 0 mean lower glutathione went with higher marker levels.</p>
+                  <span class="ctrl-label" id="inf-label">View</span>
+                  <div class="filters seg" role="group" aria-labelledby="inf-label">
+                    <button type="button" aria-pressed="true" data-inf="group">Glutathione × hsCRP, by group</button>
+                    <button type="button" aria-pressed="false" data-inf="markers">Hospitalized: glutathione × each marker</button>
+                  </div>
+                  <h4 class="chart-title mt-2" id="inf-title">Glutathione vs blood hsCRP: correlation by group</h4>
+                  <p class="chart-sub" id="inf-sub" aria-live="polite">The direction reverses in the hospitalized subgroup (r<sub>s</sub> = −0.49), where lower glutathione went with higher hsCRP.</p>
+                  <div id="inf-group"></div>
+                  <div id="inf-markers" hidden></div>
+                  <div class="finding">
+                    <span class="badge draft">Exploratory: did not survive FDR correction</span>
+                    <h4>Lower glutathione, higher blood hsCRP in the hospitalized subgroup</h4>
+                    <p class="pstat">GSH × hsCRP, hospitalized: unadj. p = 0.037, FDR = 0.425</p>
+                    <p>The poster suggests this may reflect an interaction between persistent systemic immune perturbation and altered cerebral redox homeostasis: lasting immune changes in the body alongside a shifted antioxidant balance in the brain.</p>
+                    <p>For context, earlier work in the same cohort found higher plasma hsCRP and IL-6 in participants who were hospitalized during acute COVID-19, including after adjustment for BMI (<a href="https://doi.org/10.3389/fnhum.2026.1754342" target="_blank" rel="noopener">Silva et al., 2026, <em>Frontiers in Human Neuroscience</em></a>).</p>
+                    <p class="src">Poster · Results, “Thalamic GSH correlates with peripheral inflammation in hospitalized neuroPASC participants”; Figure 5 (selected values)</p>
+                  </div>
+                </div>
+
+                <!-- Panel: symptoms -->
+                <div class="tab-panel" role="tabpanel" id="panel-sym" aria-labelledby="tab-sym" hidden>
+                  <p class="panel-intro">Correlations (r<sub>s</sub>, adjusted for age and sex) between thalamic myo-inositol and questionnaire scores. Higher scores mean worse fatigue or depression, so values below 0 mean lower myo-inositol went with worse symptoms.</p>
+                  <h4 class="chart-title">Myo-inositol vs symptom scores: correlation by group</h4>
+                  <p class="chart-sub">All six correlations are below zero: lower myo-inositol went with worse fatigue, cognitive fatigue and depression scores in both groups.</p>
+                  <div id="chart-symptoms"></div>
+                  <div class="finding">
+                    <span class="badge review">Seen in neuroPASC and in controls</span>
+                    <h4>Lower myo-inositol, worse fatigue and depression scores</h4>
+                    <p class="pstat">Within neuroPASC: PHQ-8 p &lt; 0.001 · MFIS p = 0.01 · MFIS-cognitive p = 0.022</p>
+                    <p>Myo-inositol levels themselves did not differ significantly between neuroPASC and controls.</p>
+                    <p>Myo-inositol is found in high amounts in glial cells and is involved in osmotic regulation, so the authors read lower levels as possible glial dysfunction. They note this is the opposite direction from classic gliosis (a reactive glial response), and similar to reports in chronic fatigue syndrome and Long COVID.</p>
+                    <p class="src">Poster · Results, “Thalamic myo-inositol tracks fatigue and depression in controls as well as in neuroPASC”; Figure 4A–C; Conclusions</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Demographics -->
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Participant characteristics in the thalamic and pons spectroscopy samples (poster Table 1)</h3><p class="chart-sub" id="demo-sub" aria-live="polite">neuroPASC participants had a higher median age than controls (50.2 vs 41.1 years in the thalamic sample). Analyses were adjusted for age and sex.</p></div></div>
+                <span class="ctrl-label" id="demo-label">Measure</span>
+                <div class="filters seg" role="group" aria-labelledby="demo-label">
+                  <button type="button" aria-pressed="true" data-demo="age">Median age</button>
+                  <button type="button" aria-pressed="false" data-demo="female">Women</button>
+                  <button type="button" aria-pressed="false" data-demo="hosp">Hospitalized</button>
+                  <button type="button" aria-pressed="false" data-demo="n">Sample size</button>
+                </div>
+                <div id="demo-age"></div>
+                <div id="demo-female" hidden></div>
+                <div id="demo-hosp" hidden></div>
+                <div id="demo-n" hidden></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ METHODS ============ -->
+          <section id="methods" class="block">
+            <h2 class="prose">Methods</h2>
+            <p class="prose ink-2">How the team went from volunteers to findings.</p>
+            <div class="flow">
+              <div class="step"><h4>Recruit</h4><p>2,057 people expressed interest, 434 were screened by phone, and 176 were analyzed: 102 with neuroPASC and 74 controls.</p></div>
+              <div class="step"><h4>Assess</h4><p>Questionnaires on fatigue, anxiety, sleep and depression; cognitive tests; blood markers of inflammation.</p></div>
+              <div class="step"><h4>Scan</h4><p>3T Siemens Prisma MRI, 32-channel head coil. 1H-MRS spectra from the bilateral thalamus and the pons.</p></div>
+              <div class="step"><h4>Quantify</h4><p>LCModel fitting. A metabolite was kept if its cohort-average CRLB was below 20%, which left seven in the thalamus.</p></div>
+              <div class="step"><h4>Analyze</h4><p>ANCOVA for group and subgroup differences; partial Spearman correlations; FDR values for multiple comparisons.</p></div>
+            </div>
+            <div class="grid grid-3 method-cards">
+              <div class="card">
+                <h3>Who took part</h3>
+                <ul>
+                  <li><strong>neuroPASC:</strong> PCR-, antigen- or antibody-confirmed infection; neurological symptoms began within 6 months and persisted at the study visit (COVID-Neuro checklist).</li>
+                  <li><strong>Controls:</strong> people without a symptomatic SARS-CoV-2 infection.</li>
+                  <li><strong>Key exclusions:</strong> pre-existing neurological or cognitive disorders, severe psychiatric disorder, prior ME/CFS; WHO ordinal 6–7 or invasive ventilation during the acute illness.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>What was measured</h3>
+                <ul>
+                  <li><strong>Questionnaires:</strong> fatigue (MFIS), anxiety (GAD-7), sleep (PSQI), depression (PHQ-8).</li>
+                  <li><strong>Cognitive tests:</strong> MoCA Blind, Stroop, SDMT.</li>
+                  <li><strong>Blood markers:</strong> peripheral hsCRP, IL-6, TNF-α.</li>
+                  <li><strong>Brain chemistry:</strong> seven thalamic metabolites: Cr+PCr, GSH, Glu, Glu+Gln, Ins, NAA+NAAG, PCho+GPC.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>How it was analyzed</h3>
+                <ul>
+                  <li><strong>Quality rule:</strong> a metabolite was included if its cohort-average CRLB (Cramér–Rao lower bound, a fitting-uncertainty estimate) across both groups was below 20%, with no per-participant filtering (Kreis, MRM 2016).</li>
+                  <li><strong>Group differences:</strong> ANCOVA adjusted for age, sex, and site; subgroup analyses compared non-hospitalized and hospitalized neuroPASC with controls.</li>
+                  <li><strong>Correlations:</strong> partial, age/sex-adjusted Spearman rank (r<sub>s</sub>) for cognitive, symptom and blood-marker associations.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ WHAT IT MEANS ============ -->
+          <section id="meaning" class="block">
+            <div class="prose">
+              <h2>What this means, and its limits</h2>
+              <p>The poster's conclusions, in plain language:</p>
+            </div>
+            <ol class="conclusions prose">
+              <li>About two years after infection, people with neuroPASC had lower thalamic glutathione (antioxidant defense) and lower total creatine (an energy buffer) than controls, whether or not they had been hospitalized during the acute infection.</li>
+              <li>Thalamic chemistry tracked cognition. In neuroPASC, higher creatine went with better Stroop Color-Word performance; controls showed no such relationship.</li>
+              <li>In the hospitalized subgroup, lower glutathione went with higher blood hs-CRP and a higher intracellular volume fraction (ICVF). The authors see this as consistent with a hypothesized inflammation-linked metabolic and microstructural process, such as cellular swelling or glial change. The hs-CRP association was nominal (FDR = 0.425).</li>
+              <li>Lower myo-inositol tracked greater symptom burden, the opposite direction from classic gliosis. The authors read this as possible glial dysfunction, similar to reports in chronic fatigue syndrome and Long COVID.</li>
+              <li>The authors suggest that cerebral energy metabolism and antioxidant defense are measurable and potentially targetable processes in chronic neuroPASC. This needs further study.</li>
+            </ol>
+            <div class="callout warn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+              <div class="callout-body">
+                <p><strong>Read these results with care.</strong></p>
+                <ul>
+                  <li>These are associations, not proof of cause and effect, and they need confirmation in further research.</li>
+                  <li>Two results did not hold up after correcting for multiple comparisons: glutathione × MoCA Blind (FDR = 0.163) and glutathione × hsCRP (FDR = 0.425), both in the hospitalized subgroup.</li>
+                  <li>Subgroup results rest on fewer people: 23 hospitalized neuroPASC participants had thalamic spectra (poster Table 1).</li>
+                  <li>Myo-inositol levels themselves did not differ significantly between groups, and their link with fatigue and depression appeared in controls as well as in neuroPASC.</li>
+                  <li>Nothing here is a diagnostic test or treatment advice.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ CITE ============ -->
+          <section id="cite" class="block">
+            <h2 class="prose">Reference</h2>
+            <div class="citation"><span id="cite-text">Poster presented at Clinical Research Day 2026, Mass General Brigham, October 30, 2026: <i>Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort.</i> Morsal Mubarak, 3rd author, with the COVID-BRAIN study team.</span><button class="btn btn-sm copy-btn" data-copy-target="#cite-text" type="button"><span class="label">Copy</span></button></div>
+            <p class="mt-4 mb-0"><a class="btn btn-ghost" href="../index.html#research">← All research projects</a></p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var V = window.Viz;
+    if (!V) return;
+
+    /* ---------- shared helpers ---------- */
+    var MINUS = '−';
+    var rs = function (v) { return (v > 0 ? '+' : v < 0 ? MINUS : '') + Math.abs(v).toFixed(2); };
+    var tickRs = function (v) { return Math.abs(v) < 1e-9 ? '0' : (v > 0 ? '+' : MINUS) + Math.abs(v).toFixed(1); };
+    /* Group colors follow the entity everywhere on the page (validated: never orange and yellow together). */
+    var GROUP = {
+      ctrl:    { name: 'Controls', s: 0 },
+      npasc:   { name: 'neuroPASC', s: 1 },
+      hosp:    { name: 'Hospitalized neuroPASC', s: 2 },
+      nonhosp: { name: 'Non-hospitalized neuroPASC', s: 3 }
+    };
+    var key = function (g) { return { name: GROUP[g].name, color: 'var(--series-' + (GROUP[g].s + 1) + ')' }; };
+    var SRC = 'Source: COVID-BRAIN poster, Clinical Research Day, Mass General Brigham (October 2026)';
+    var RS_AXIS = 'Spearman correlation, rs (age/sex-adjusted)';
+    var RS_DOMAIN = [-0.62, 0.62]; /* same scale on every correlation chart; slight padding so the ±0.6 ticks draw */
+
+    function pressGroup(selector, onPick) {
+      document.querySelectorAll(selector).forEach(function (group) {
+        var btns = Array.prototype.slice.call(group.querySelectorAll('button[aria-pressed]'));
+        btns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+            onPick(b);
+          });
+        });
+      });
+    }
+    function showOnly(ids, id) {
+      ids.forEach(function (x) { var el = document.getElementById(x); if (el) el.hidden = (x !== id); });
+    }
+    function setHTML(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+
+    /* Dot chart of printed Spearman correlations, one row per group (max 3 groups). */
+    function rsChart(sel, rows, extra) {
+      var opts = {
+        data: rows.map(function (r) {
+          var g = GROUP[r[0]];
+          return { label: r.label || g.name, value: r[1], series: g.s, note: 'As printed on the poster: rs = ' + r[2] };
+        }),
+        mark: 'dot', domain: RS_DOMAIN, ref: { value: 0 },
+        format: rs, tickFormat: tickRs, xLabel: RS_AXIS, valueName: 'rs',
+        table: {
+          columns: ['Group', 'rs', 'As printed on the poster'],
+          rows: rows.map(function (r) { return [r.label || GROUP[r[0]].name, rs(r[1]), r[2]]; })
+        }
+      };
+      for (var k in extra) opts[k] = extra[k];
+      return V.hbar(sel, opts);
+    }
+
+    /* ---------- 1. FDR for each result ---------- */
+    var INK = 'var(--chart-ink)', MUTED = 'var(--chart-muted)';
+    V.hbar('#chart-fdr', {
+      data: [
+        { label: 'Creatine × Stroop (neuroPASC)', value: 0.018, color: INK, note: 'Printed: unadj. p = 0.004, FDR = 0.018' },
+        { label: 'Glutathione: neuroPASC vs controls', value: 0.025, color: INK, note: 'Printed: p = 0.006, FDR = 0.025' },
+        { label: 'Creatine: neuroPASC vs controls', value: 0.025, color: INK, note: 'Printed: unadj. p = 0.007, FDR = 0.025' },
+        { label: 'Glutathione × MoCA (hospitalized)', value: 0.163, color: MUTED, note: 'Printed: unadj. p = 0.041, FDR = 0.163. Nominal: did not survive FDR correction.' },
+        { label: 'Glutathione × hsCRP (hospitalized)', value: 0.425, color: MUTED, note: 'Printed: unadj. p = 0.037, FDR = 0.425. Exploratory: did not survive FDR correction.' }
+      ],
+      mark: 'dot', log: true, domain: [0.01, 0.5], ref: { value: 0.05 },
+      format: function (v) { return v.toFixed(3); },
+      tickFormat: function (v) { return String(v); },
+      xLabel: 'FDR value, log scale (lower = stronger evidence)', valueName: 'FDR',
+      legend: [{ name: 'Below 0.05 after correction', color: INK }, { name: 'Nominal or exploratory (above 0.05)', color: MUTED }],
+      ariaLabel: 'Dot chart of FDR values: creatine by Stroop 0.018, glutathione group difference 0.025, creatine group difference 0.025, glutathione by MoCA in hospitalized 0.163, glutathione by hsCRP in hospitalized 0.425. Dashed line at 0.05.',
+      table: {
+        columns: ['Result', 'p (as printed)', 'FDR (as printed)', 'After correction'],
+        rows: [
+          ['Creatine (Cr+PCr) × Stroop Color-Word, neuroPASC', 'unadj. p = 0.004', '0.018', 'Below 0.05'],
+          ['Glutathione (GSH), neuroPASC vs controls', 'p = 0.006', '0.025', 'Below 0.05'],
+          ['Total creatine (Cr+PCr), neuroPASC vs controls', 'unadj. p = 0.007', '0.025', 'Below 0.05'],
+          ['Glutathione × MoCA Blind, hospitalized', 'unadj. p = 0.041', '0.163', 'Nominal (above 0.05)'],
+          ['Glutathione × hsCRP, hospitalized', 'unadj. p = 0.037', '0.425', 'Exploratory (above 0.05)']
+        ]
+      },
+      source: SRC + ', Results. Dashed line marks 0.05. The poster prints no FDR for the subgroup and myo-inositol comparisons, so they are not shown.'
+    });
+
+    /* ---------- 2. Recruitment funnel ---------- */
+    V.funnel('#chart-funnel', {
+      steps: [
+        { label: 'Interested', value: 2057 },
+        { label: 'Telephone-screened', value: 434 },
+        { label: 'Analyzed', value: 176, note: '102 neuroPASC + 74 controls' },
+        { label: 'Evaluable thalamic MRS', value: 161, note: '92 neuroPASC + 69 controls. The total is their sum.' }
+      ],
+      format: function (v) {
+        if (v === 176) return '176 (102 + 74)';
+        if (v === 161) return '161 (92 + 69)';
+        return V.fmt.int(v);
+      },
+      ariaLabel: 'Funnel: 2,057 interested, 434 telephone-screened, 176 analyzed (102 neuroPASC and 74 controls), 161 with evaluable thalamic spectra (92 neuroPASC and 69 controls).',
+      table: {
+        columns: ['Stage', 'Total', 'neuroPASC', 'Controls'],
+        rows: [
+          ['Interested', '2,057', '—', '—'],
+          ['Telephone-screened', '434', '—', '—'],
+          ['Analyzed', '176', '102', '74'],
+          ['Evaluable thalamic MRS', '161 (sum of 92 + 69)', '92', '69']
+        ]
+      },
+      source: SRC + ', Methods (Study Design). Evaluable thalamic counts from poster Table 1 and Figure 2 labels; 161 is their sum.'
+    });
+    V.groupedHbar('#chart-funnel-groups', {
+      categories: ['Analyzed', 'Evaluable thalamic MRS'],
+      series: [
+        { name: 'Controls', values: [74, 69] },
+        { name: 'neuroPASC', values: [102, 92] }
+      ],
+      format: V.fmt.int, xLabel: 'Participants',
+      ariaLabel: 'Grouped bars: analyzed 74 controls and 102 neuroPASC; evaluable thalamic spectra 69 controls and 92 neuroPASC.',
+      table: {
+        columns: ['Stage', 'Controls', 'neuroPASC'],
+        rows: [['Analyzed', '74', '102'], ['Evaluable thalamic MRS', '69', '92']]
+      },
+      source: SRC + ', Methods (Study Design), Table 1 and Figure 2 labels.'
+    });
+    pressGroup('[aria-label="Funnel view"]', function (b) {
+      showOnly(['chart-funnel', 'chart-funnel-groups'], b.dataset.funnel === 'groups' ? 'chart-funnel-groups' : 'chart-funnel');
+    });
+
+    /* ---------- 3. Group differences: metabolite explorer ---------- */
+    var NONE = {
+      badge: ['plain', 'No statistics printed'], role: null, stat: null,
+      body: 'Measured and analyzed: it is one of the seven thalamic metabolites that passed the quality threshold. The poster does not highlight a group difference for it and prints no statistics for it.',
+      src: 'Poster · Figure 2A (shown in grey, not highlighted)'
+    };
+    var MET = {
+      GSH: { abbr: 'GSH', name: 'Glutathione', badge: ['review', 'Lower in neuroPASC'], role: 'Role on the poster: antioxidant defense.', stat: 'p = 0.006 · FDR = 0.025',
+             body: 'Lower in neuroPASC than in controls. The difference also appeared in both the hospitalized and the non-hospitalized neuroPASC subgroups compared with controls (pairwise p = 0.019–0.039).',
+             src: 'Poster · Results; Figure 2B (Control 69, neuroPASC 92) and Figure 2E' },
+      CR:  { abbr: 'Cr+PCr', name: 'Total creatine (creatine + phosphocreatine, “tCr”)', badge: ['review', 'Lower in neuroPASC'], role: 'Role on the poster: energy buffer.', stat: 'unadj. p = 0.007 · FDR = 0.025',
+             body: 'Lower in neuroPASC than in controls, and in both neuroPASC subgroups compared with controls (pairwise p = 0.019–0.039). Within neuroPASC, higher creatine went with better Stroop Color-Word scores (see the Cognition tab).',
+             src: 'Poster · Results; Figure 2C (Control 69, neuroPASC 92) and Figure 2F' },
+      INS: { abbr: 'Ins', name: 'Myo-inositol (mI)', badge: ['plain', 'No significant group difference'], role: 'Found in high amounts in glial cells and involved in osmotic regulation.', stat: 'Not significant (no value printed)',
+             body: 'Myo-inositol levels did not differ significantly between neuroPASC and controls. Within each group, though, lower myo-inositol tracked worse fatigue and depression scores (see the Symptoms tab).',
+             src: 'Poster · Results, myo-inositol section' },
+      GLU: { abbr: 'Glu', name: 'Glutamate' },
+      GLX: { abbr: 'Glu+Gln', name: 'Glutamate + glutamine' },
+      NAA: { abbr: 'NAA+NAAG', name: 'N-acetylaspartate + N-acetylaspartylglutamate' },
+      CHO: { abbr: 'PCho+GPC', name: 'Phosphocholine + glycerophosphocholine' }
+    };
+    function renderMet(id) {
+      var m = {}, k;
+      for (k in NONE) m[k] = NONE[k];
+      for (k in MET[id]) m[k] = MET[id][k];
+      setHTML('met-detail',
+        '<div class="met-head"><span class="met-abbr">' + m.abbr + '</span><span class="badge ' + m.badge[0] + '">' + m.badge[1] + '</span></div>' +
+        '<h4>' + m.name + '</h4>' +
+        (m.role ? '<p class="met-role">' + m.role + '</p>' : '') +
+        (m.stat ? '<p class="pstat">' + m.stat + '</p>' : '') +
+        '<p>' + m.body + '</p><p class="src">' + m.src + '</p>');
+    }
+    pressGroup('.chips', function (b) { renderMet(b.dataset.met); });
+
+    V.hbar('#chart-subgroups', {
+      data: [
+        { label: 'Controls', value: 69, series: GROUP.ctrl.s },
+        { label: 'Non-hospitalized neuroPASC', value: 69, series: GROUP.nonhosp.s },
+        { label: 'Hospitalized neuroPASC', value: 23, series: GROUP.hosp.s, note: 'Hospitalized during acute COVID-19: 23 (25%) of the neuroPASC thalamic sample (Table 1)' }
+      ],
+      format: V.fmt.int, valueName: 'Participants', xLabel: 'Participants with thalamic spectra',
+      legend: [key('ctrl'), key('nonhosp'), key('hosp')],
+      ariaLabel: 'Bars: 69 controls, 69 non-hospitalized neuroPASC, 23 hospitalized neuroPASC participants with thalamic spectra.',
+      table: {
+        columns: ['Group', 'Participants', 'Where printed'],
+        rows: [
+          ['Controls', '69', 'Figure 2E–F: “Control (69)”'],
+          ['Non-hospitalized neuroPASC', '69', 'Figure 2E–F: “Non-hosp (69)”'],
+          ['Hospitalized neuroPASC', '23', 'Figure 2E–F: “Hosp (23)”; Table 1: 23 (25%)']
+        ]
+      },
+      source: SRC + ', Figure 2E–F group labels and Table 1.'
+    });
+
+    /* ---------- 4. Cognition ---------- */
+    var COG = {
+      A: { rows: [['ctrl', 0.02, '+0.02'], ['npasc', 0.31, '+0.31**']],
+           title: 'Creatine vs Stroop Color-Word score: correlation by group',
+           sub: 'In neuroPASC, higher creatine went with better Stroop Color-Word scores; controls showed no such link (r<sub>s</sub> = +0.02).', panel: 'A' },
+      B: { rows: [['ctrl', 0.02, '+0.02'], ['nonhosp', 0.28, '+0.28*'], ['hosp', 0.27, '+0.27']],
+           title: 'Creatine vs Stroop Color-Word score: correlation by hospitalization subgroup',
+           sub: 'The correlation was similar in non-hospitalized (r<sub>s</sub> = +0.28) and hospitalized (r<sub>s</sub> = +0.27) neuroPASC participants.', panel: 'B' },
+      C: { rows: [['ctrl', -0.16, '−0.16'], ['npasc', 0.20, '+0.20']],
+           title: 'Glutathione vs MoCA Blind score: correlation by group',
+           sub: 'Across all neuroPASC participants the poster prints r<sub>s</sub> = +0.20 (controls: −0.16), with no p-value for this pair.', panel: 'C' },
+      D: { rows: [['ctrl', -0.16, '−0.16'], ['nonhosp', 0.14, '+0.14'], ['hosp', 0.48, '+0.48*']],
+           title: 'Glutathione vs MoCA Blind score: correlation by hospitalization subgroup',
+           sub: 'In the hospitalized subgroup, lower glutathione went with lower MoCA Blind scores (r<sub>s</sub> = +0.48, unadj. p = 0.041); this did not survive FDR correction (FDR = 0.163).', panel: 'D' }
+    };
+    Object.keys(COG).forEach(function (id) {
+      var c = COG[id];
+      rsChart('#cog-' + id, c.rows, {
+        legend: c.rows.map(function (r) { return key(r[0]); }),
+        ariaLabel: c.title + '. ' + c.rows.map(function (r) { return GROUP[r[0]].name + ' ' + rs(r[1]); }).join(', ') + '.',
+        source: SRC + ', cognition correlations (uncaptioned figure), panel ' + c.panel + ' legend. Asterisks are reproduced as printed.'
+      });
+    });
+    var cogState = { m: 'cr', g: 'all' };
+    function updateCog() {
+      var id = cogState.m === 'cr' ? (cogState.g === 'all' ? 'A' : 'B') : (cogState.g === 'all' ? 'C' : 'D');
+      showOnly(['cog-A', 'cog-B', 'cog-C', 'cog-D'], 'cog-' + id);
+      showOnly(['cog-find-cr', 'cog-find-gsh'], cogState.m === 'cr' ? 'cog-find-cr' : 'cog-find-gsh');
+      setHTML('cog-title', COG[id].title);
+      setHTML('cog-sub', COG[id].sub);
+    }
+    pressGroup('[aria-labelledby="cog-m-label"]', function (b) { cogState.m = b.dataset.cogM; updateCog(); });
+    pressGroup('[aria-labelledby="cog-g-label"]', function (b) { cogState.g = b.dataset.cogG; updateCog(); });
+
+    /* ---------- 5. Inflammation ---------- */
+    var INF = {
+      group: { title: 'Glutathione vs blood hsCRP: correlation by group',
+               sub: 'The direction reverses in the hospitalized subgroup (r<sub>s</sub> = −0.49), where lower glutathione went with higher hsCRP.' },
+      markers: { title: 'Hospitalized subgroup: glutathione vs three blood markers',
+                 sub: 'All three correlations are below zero, strongest for hsCRP (r<sub>s</sub> = −0.49). Figure 5 outlines this row.' }
+    };
+    rsChart('#inf-group', [['ctrl', 0.21, '0.21'], ['npasc', 0.09, '0.09'], ['hosp', -0.49, '−0.49*']], {
+      legend: [key('ctrl'), key('npasc'), key('hosp')],
+      ariaLabel: 'Glutathione vs hsCRP correlation: controls +0.21, neuroPASC +0.09, hospitalized neuroPASC −0.49.',
+      source: SRC + ', Figure 5 heatmap (GSH row, hsCRP column). Asterisks are reproduced as printed.'
+    });
+    var hospRows = [['hosp', -0.49, '−0.49*'], ['hosp', -0.32, '−0.32'], ['hosp', -0.12, '−0.12']];
+    hospRows[0].label = 'hsCRP'; hospRows[1].label = 'IL-6'; hospRows[2].label = 'TNF-α';
+    rsChart('#inf-markers', hospRows, {
+      ariaLabel: 'Hospitalized subgroup, glutathione correlations: hsCRP −0.49, IL-6 −0.32, TNF-α −0.12.',
+      source: SRC + ', Figure 5 heatmap, hospitalized panel, GSH row (outlined on the poster). Asterisks are reproduced as printed.'
+    });
+    var infBox = document.getElementById('inf-markers');
+    if (infBox) {
+      var t = infBox.querySelector('.viz-table th');
+      if (t) t.textContent = 'Blood marker';
+    }
+    pressGroup('[aria-labelledby="inf-label"]', function (b) {
+      var v = b.dataset.inf;
+      showOnly(['inf-group', 'inf-markers'], 'inf-' + v);
+      setHTML('inf-title', INF[v].title);
+      setHTML('inf-sub', INF[v].sub);
+    });
+
+    /* ---------- 6. Symptoms & quality of life ---------- */
+    V.groupedHbar('#chart-symptoms', {
+      categories: ['Fatigue (MFIS)', 'Cognitive fatigue (MFIS-cognitive)', 'Depression (PHQ-8)'],
+      series: [
+        { name: 'Controls', values: [-0.51, -0.45, -0.29], notes: ['As printed: rs = −0.51*', 'As printed: rs = −0.45*', 'As printed: rs = −0.29*'] },
+        { name: 'neuroPASC', values: [-0.27, -0.25, -0.37], notes: ['As printed: rs = −0.27*; within neuroPASC p = 0.01', 'As printed: rs = −0.25*; within neuroPASC p = 0.022', 'As printed: rs = −0.37*; within neuroPASC p < 0.001'] }
+      ],
+      mark: 'dot', domain: RS_DOMAIN, ref: { value: 0 },
+      format: rs, tickFormat: tickRs, xLabel: RS_AXIS,
+      ariaLabel: 'Myo-inositol correlations. Fatigue: controls −0.51, neuroPASC −0.27. Cognitive fatigue: controls −0.45, neuroPASC −0.25. Depression: controls −0.29, neuroPASC −0.37.',
+      table: {
+        columns: ['Score', 'Controls rs (as printed)', 'neuroPASC rs (as printed)', 'p within neuroPASC'],
+        rows: [
+          ['Fatigue (MFIS)', '−0.51*', '−0.27*', '0.01'],
+          ['Cognitive fatigue (MFIS-cognitive)', '−0.45*', '−0.25*', '0.022'],
+          ['Depression (PHQ-8)', '−0.29*', '−0.37*', '< 0.001']
+        ]
+      },
+      source: SRC + ', Figure 4A–C legends and Results text. Asterisks are reproduced as printed.'
+    });
+
+    /* ---------- 7. Demographics (poster Table 1) ---------- */
+    var pct = function (v) { return v + '%'; };
+    var T1 = {
+      columns: ['Measure (Table 1)', 'Controls · thalamus', 'Controls · pons', 'neuroPASC · thalamus', 'neuroPASC · pons'],
+      rows: [
+        ['N', '69', '69', '92', '90'],
+        ['N females (%)', '44 (64%)', '43 (62%)', '67 (73%)', '65 (72%)'],
+        ['Age (median)', '41.1', '43.8', '50.2', '50.2'],
+        ['N hospitalized during acute COVID-19 (%)', 'N/A', 'N/A', '23 (25%)', '24 (26.6%)']
+      ]
+    };
+    var DEMO = {
+      age:    { ctrl: [41.1, 43.8], np: [50.2, 50.2], f: function (v) { return v.toFixed(1); }, domain: [0, 60], x: 'Median age (years)',
+                sub: 'neuroPASC participants had a higher median age than controls (50.2 vs 41.1 years in the thalamic sample). Analyses were adjusted for age and sex.' },
+      female: { ctrl: [64, 62], np: [73, 72], f: pct, domain: [0, 100], x: 'Women (% of group)',
+                notes: [['44 women', '43 women'], ['67 women', '65 women']],
+                sub: 'Most participants were women: 64% of controls and 73% of neuroPASC participants in the thalamic sample.' },
+      hosp:   { ctrl: [null, null], np: [25, 26.6], f: pct, domain: [0, 100], x: 'Hospitalized during acute COVID-19 (% of group)',
+                notes: [[null, null], ['23 participants', '24 participants (printed as 26.6%)']],
+                sub: 'One in four neuroPASC participants with thalamic spectra (23 of 92) had been hospitalized during acute COVID-19. This does not apply to controls.' },
+      n:      { ctrl: [69, 69], np: [92, 90], f: V.fmt.int, domain: [0, 100], x: 'Participants',
+                sub: 'The thalamic sample had 69 controls and 92 neuroPASC participants; the pons sample had 69 and 90.' }
+    };
+    Object.keys(DEMO).forEach(function (id) {
+      var d = DEMO[id];
+      V.groupedHbar('#demo-' + id, {
+        categories: ['Thalamus sample', 'Pons sample'],
+        series: [
+          { name: 'Controls', values: d.ctrl, notes: d.notes ? d.notes[0] : undefined },
+          { name: 'neuroPASC', values: d.np, notes: d.notes ? d.notes[1] : undefined }
+        ],
+        format: d.f, domain: d.domain, xLabel: d.x,
+        ariaLabel: d.x + ' by group and MRS region, from poster Table 1.',
+        table: T1,
+        source: SRC + ', Table 1 (“Demographic Chart”). The poster labels the control group “Healthy”. Values as printed.'
+      });
+    });
+    pressGroup('[aria-labelledby="demo-label"]', function (b) {
+      var id = b.dataset.demo;
+      showOnly(['demo-age', 'demo-female', 'demo-hosp', 'demo-n'], 'demo-' + id);
+      setHTML('demo-sub', DEMO[id].sub);
+    });
+  })();
+  </script>
+</body>
+</html>

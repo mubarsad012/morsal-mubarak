@@ -1,0 +1,67 @@
+endpoint,growth_zone,cause_group,deaths,zone_denominator,rate_per_1000
+Cohort infant death,Above empirical p90,Asphyxia/hypoxia,180,2347654.0,0.07667228646129284
+Cohort infant death,Above empirical p90,Congenital anomalies,2061,2347654.0,0.8778976799818031
+Cohort infant death,Above empirical p90,Haematologic/hydrops/IDM,982,2347654.0,0.4182899183610532
+Cohort infant death,Above empirical p90,Infection,408,2347654.0,0.17379051597893044
+Cohort infant death,Above empirical p90,Maternal complications,198,2347654.0,0.08433951510742213
+Cohort infant death,Above empirical p90,Other perinatal,533,2347654.0,0.22703515935482826
+Cohort infant death,Above empirical p90,Other/residual,1443,2347654.0,0.6146561631313643
+Cohort infant death,Above empirical p90,Perinatal respiratory,286,2347654.0,0.12182374404405419
+Cohort infant death,Above empirical p90,Placental/cord/membrane,143,2347654.0,0.060911872022027094
+Cohort infant death,Above empirical p90,Prematurity/growth-related,126,2347654.0,0.053670600522904996
+Cohort infant death,Above empirical p90,SIDS/SUID/ill-defined,990,2347654.0,0.4216975755371107
+Cohort infant death,Below empirical p10,Asphyxia/hypoxia,266,2263899.0,0.11749640774610529
+Cohort infant death,Below empirical p10,Congenital anomalies,11168,2263899.0,4.933082262062045
+Cohort infant death,Below empirical p10,Haematologic/hydrops/IDM,617,2263899.0,0.2725386600727329
+Cohort infant death,Below empirical p10,Infection,1252,2263899.0,0.5530282048801647
+Cohort infant death,Below empirical p10,Maternal complications,373,2263899.0,0.164760000335704
+Cohort infant death,Below empirical p10,Other perinatal,928,2263899.0,0.40991227965558535
+Cohort infant death,Below empirical p10,Other/residual,3819,2263899.0,1.6869127112119402
+Cohort infant death,Below empirical p10,Perinatal respiratory,1087,2263899.0,0.4801450948120919
+Cohort infant death,Below empirical p10,Placental/cord/membrane,217,2263899.0,0.09585233263498062
+Cohort infant death,Below empirical p10,Prematurity/growth-related,1144,2263899.0,0.5053228964719716
+Cohort infant death,Below empirical p10,SIDS/SUID/ill-defined,2950,2263899.0,1.3030616648534232
+Cohort infant death,Empirical p10-p90,Asphyxia/hypoxia,1341,24204382.0,0.055403191042018754
+Cohort infant death,Empirical p10-p90,Congenital anomalies,16725,24204382.0,0.6909905817880415
+Cohort infant death,Empirical p10-p90,Haematologic/hydrops/IDM,3704,24204382.0,0.1530301414016685
+Cohort infant death,Empirical p10-p90,Infection,6266,24204382.0,0.25887874352668866
+Cohort infant death,Empirical p10-p90,Maternal complications,1864,24204382.0,0.07701084869673598
+Cohort infant death,Empirical p10-p90,Other perinatal,4155,24204382.0,0.17166313108097533
+Cohort infant death,Empirical p10-p90,Other/residual,17147,24204382.0,0.7084254413105858
+Cohort infant death,Empirical p10-p90,Perinatal respiratory,3919,24204382.0,0.1619128304949079
+Cohort infant death,Empirical p10-p90,Placental/cord/membrane,1509,24204382.0,0.06234408298464303
+Cohort infant death,Empirical p10-p90,Prematurity/growth-related,2030,24204382.0,0.08386911097337664
+Cohort infant death,Empirical p10-p90,SIDS/SUID/ill-defined,15271,24204382.0,0.6309188146179481
+Fetal death,Above empirical p90,Asphyxia/hypoxia,12,2641083.0,0.004543590640657639
+Fetal death,Above empirical p90,Congenital anomalies,692,2641083.0,0.2620137269445905
+Fetal death,Above empirical p90,Haematologic/hydrops/IDM,1754,2641083.0,0.6641214986427916
+Fetal death,Above empirical p90,Infection,11,2641083.0,0.004164958087269503
+Fetal death,Above empirical p90,Maternal complications,1334,2641083.0,0.5050958262197742
+Fetal death,Above empirical p90,Other perinatal,38,2641083.0,0.014388037028749192
+Fetal death,Above empirical p90,Other/residual,112,2641083.0,0.0424068459794713
+Fetal death,Above empirical p90,Perinatal respiratory,10,2641083.0,0.0037863255338813663
+Fetal death,Above empirical p90,Placental/cord/membrane,1499,2641083.0,0.5675701975288168
+Fetal death,Above empirical p90,Prematurity/growth-related,78,2641083.0,0.029533339164274655
+Fetal death,Above empirical p90,Unspecified/ill-defined,3041,2641083.0,1.1514215948533235
+Fetal death,Below empirical p10,Asphyxia/hypoxia,30,2569428.0,0.01167575040047824
+Fetal death,Below empirical p10,Congenital anomalies,4774,2569428.0,1.8580010803961038
+Fetal death,Below empirical p10,Haematologic/hydrops/IDM,767,2569428.0,0.298510018572227
+Fetal death,Below empirical p10,Infection,29,2569428.0,0.011286558720462298
+Fetal death,Below empirical p10,Maternal complications,5680,2569428.0,2.2106087424905465
+Fetal death,Below empirical p10,Other perinatal,102,2569428.0,0.03969755136162601
+Fetal death,Below empirical p10,Other/residual,135,2569428.0,0.052540876802152074
+Fetal death,Below empirical p10,Perinatal respiratory,19,2569428.0,0.007394641920302885
+Fetal death,Below empirical p10,Placental/cord/membrane,7434,2569428.0,2.8932509492385075
+Fetal death,Below empirical p10,Prematurity/growth-related,1191,2569428.0,0.4635272908989861
+Fetal death,Below empirical p10,Unspecified/ill-defined,12945,2569428.0,5.03808629780636
+Fetal death,Empirical p10-p90,Asphyxia/hypoxia,86,27289296.0,0.003151418783394046
+Fetal death,Empirical p10-p90,Congenital anomalies,4348,27289296.0,0.15932987058368966
+Fetal death,Empirical p10-p90,Haematologic/hydrops/IDM,2523,27289296.0,0.09245383244771137
+Fetal death,Empirical p10-p90,Infection,61,27289296.0,0.0022353086719422884
+Fetal death,Empirical p10-p90,Maternal complications,11004,27289296.0,0.4032350266566056
+Fetal death,Empirical p10-p90,Other perinatal,246,27289296.0,0.009014523496685294
+Fetal death,Empirical p10-p90,Other/residual,312,27289296.0,0.011433054190917934
+Fetal death,Empirical p10-p90,Perinatal respiratory,33,27289296.0,0.0012092653471163198
+Fetal death,Empirical p10-p90,Placental/cord/membrane,20513,27289296.0,0.7516866686483961
+Fetal death,Empirical p10-p90,Prematurity/growth-related,813,27289296.0,0.029791900824411154
+Fetal death,Empirical p10-p90,Unspecified/ill-defined,27510,27289296.0,1.0080875666415139

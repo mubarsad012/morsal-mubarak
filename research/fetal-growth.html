@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NCHS Fetal-Growth and Infant-Mortality Study — Morsal Mubarak</title>
+  <meta name="description" content="Morsal Mubarak's sole-author study of 33,589,282 U.S. natality records: how size for gestational age relates to infant and fetal death, and where the Black–White gap sits. Interactive dashboard, risk calculator, paper and code.">
+  <meta property="og:title" content="NCHS Fetal-Growth and Infant-Mortality Study — Morsal Mubarak">
+  <meta property="og:description" content="Morsal Mubarak's sole-author study of 33,589,282 U.S. natality records: how size for gestational age relates to infant and fetal death, and where the Black–White gap sits. Interactive dashboard, risk calculator, paper and code.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* Page-specific styles (design tokens only) */
+    /* .section's "padding: X 0" overrides .container's side gutter on the template wrapper; restore it */
+    main > .container.section { padding-left: var(--gutter); padding-right: var(--gutter); }
+    .paper-title { font: 500 clamp(1rem, 1.5vw, 1.12rem)/1.5 var(--font-serif); color: var(--ink-2); max-width: 70ch; margin: 2px 0 10px; }
+    .page-hero .lede strong { color: var(--ink); font-weight: 600; }
+    .metrics.m6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .metrics.m4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .metrics.m6 .metric .value { font-size: clamp(1.6rem, 2.6vw, 2.3rem); }
+    .metrics.m4 .metric .value { font-size: clamp(1.3rem, 2vw, 1.7rem); }
+    @media (max-width: 960px) { .metrics.m6, .metrics.m4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px) { .metrics.m6, .metrics.m4 { grid-template-columns: minmax(0, 1fr); } }
+    .dash-tabs { margin: 6px 0 22px; }
+    @media (max-width: 760px) { .dash-tabs { border-radius: var(--radius-sm); width: 100%; } .dash-tabs button { flex: 1 1 auto; padding: 10px 12px; } }
+    .panel-head { max-width: 72ch; margin-bottom: 14px; }
+    .panel-head h3 { margin: 0 0 .4em; }
+    .panel-head p { color: var(--ink-2); margin: 0 0 .7em; }
+    .seg-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; margin: 4px 0 16px; }
+    .seg-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+    .seg-row .filters { margin: 0; }
+    .seg-label { font: 600 .74rem/1.3 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+    .chart-stack > * + * { margin-top: 16px; }
+    .panel-metrics { margin-bottom: 16px; }
+    .flow-label { font: 600 .74rem/1.3 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 22px 0 8px; }
+    .flow.flow-cont { counter-reset: step 4; }
+    .flow .step { min-height: 0; }
+    .kv { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; font-size: .92rem; }
+    .kv dt { color: var(--ink-3); font-weight: 600; }
+    .kv dd { margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+    .csv-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px 22px; }
+    .csv-list li { margin: 0; color: var(--ink-3); font-size: .84rem; line-height: 1.4; }
+    .csv-list a { display: block; font: 500 .84rem/1.4 var(--font-mono); overflow-wrap: anywhere; }
+    .embed-bar .btn-row { gap: 8px; }
+    .citation { overflow-wrap: anywhere; }
+    .cite-label { font: 600 .74rem/1.3 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 8px; }
+    details.more-box { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); padding: 12px 16px; }
+    details.more-box summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+    details.more-box[open] summary { margin-bottom: 8px; }
+    .note-line { color: var(--ink-3); font-size: .84rem; margin: 10px 0 0; overflow-wrap: anywhere; }
+    .source-note, .chart-sub { overflow-wrap: anywhere; }
+    .card ul { color: var(--ink-2); }
+    .card li { margin: .35em 0; }
+    .limits li { margin: .5em 0; }
+    .glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 0; }
+    .glossary div { padding: 14px 0; border-top: 1px solid var(--line); }
+    .glossary dt { font-weight: 700; color: var(--ink); }
+    .glossary dd { margin: 4px 0 0; color: var(--ink-2); font-size: .94rem; line-height: 1.55; }
+    @media (max-width: 640px) { .glossary { grid-template-columns: minmax(0, 1fr); } }
+    .figure figcaption strong { color: var(--ink-2); }
+    @media (max-width: 520px) { .formula { font-size: .8rem; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">NCHS Fetal-Growth Study</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge review">Under review · Scientific Reports</span><span class="badge plain">Sole author</span><span class="badge live">Live calculator</span></div>
+        <h1>NCHS Fetal-Growth and Infant-Mortality Study</h1>
+        <p class="paper-title">Paper: <em>A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of United States Vital Statistics, 2016–2024</em></p>
+        <p class="byline"><strong>Morsal Mubarak</strong> · sole author · manuscript dated August 23, 2026</p>
+        <p class="lede"><strong>A 33.5-million-record independent study analyzing the Black–White infant-mortality gap.</strong> I wrote code that turns raw U.S. birth, infant-death and fetal-death files (2016–2024) into an open benchmark, then used it to measure how a baby's size for its week of pregnancy relates to stillbirth and to death in the first year of life, and where the gap between Black and White babies sits.</p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>Sole author · independent research project</dd></div>
+          <div><dt>Status</dt><dd>Under review at <i>Scientific Reports</i></dd></div>
+          <div><dt>Data</dt><dd>33,589,282 natality records parsed (NCHS public-use files, 2016–2024)</dd></div>
+          <div><dt>Origin</dt><dd>Expanded from my IB Math HL Internal Assessment</dd></div>
+          <div><dt>Code &amp; archive</dt><dd>Open source (MIT) · Zenodo v1.1.0, Aug 23, 2026</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#calculator">Try the risk calculator</a>
+          <a class="btn" href="#explore">Explore the dashboard</a>
+          <a class="btn" href="#paper">Read the paper</a>
+          <a class="btn btn-ghost" href="https://github.com/mubarsad012/public-use-fetal-growth-benchmark" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#results">Key results</a><a href="#explore">Dashboard</a><a href="#calculator">Risk calculator</a><a href="#figures">Figures</a><a href="#methods">Methods</a><a href="#reproducibility">Reproducibility</a><a href="#limitations">Limitations</a><a href="#paper">Paper</a><a href="#cite">Cite</a><a href="#glossary">Glossary</a>
+        </nav></aside>
+        <div>
+          <!-- ===================== OVERVIEW ===================== -->
+          <section id="overview" class="prose block" style="margin-top:0">
+            <h2 style="margin-top:0">Overview</h2>
+            <p>Doctors often sort newborns by size for the week of pregnancy at delivery. A baby whose weight falls below the 10th percentile (<strong>p10</strong>) for its sex and week is usually called <em>small for gestational age</em>; above the 90th percentile (<strong>p90</strong>), <em>large for gestational age</em>. I wanted to measure, using only data that anyone can download and check, how strongly those groups track two different outcomes: <strong>fetal death</strong> (stillbirth) and <strong>infant death</strong> (death before the first birthday).</p>
+            <p>Working on my own, I wrote Python code that streams the raw fixed-width files published by the National Center for Health Statistics (NCHS), parses 33,589,282 natality (birth) records along with the linked infant-death and fetal-death files, and groups them into 19,166 model-ready cells: one for each combination of year, sex, completed week of pregnancy and 100-gram weight band. With that benchmark I asked four questions:</p>
+            <ol>
+              <li><strong>Causes.</strong> Which causes of death drive the extra risk in small and large babies?</li>
+              <li><strong>The Black–White gap.</strong> How much of the gap comes from differences in growth, and how much from higher death rates among babies in the same growth zone?</li>
+              <li><strong>The pandemic.</strong> Did the link between growth and mortality change during COVID-19?</li>
+              <li><strong>Growth charts.</strong> Does it matter which growth standard defines "expected" size?</li>
+            </ol>
+            <p>The project started as my IB Math HL Internal Assessment, and I expanded it into this independent study. The manuscript is currently under review at <em>Scientific Reports</em>.</p>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> Sole author. The paper's contribution statement lists study conception, data collection, analysis preparation, coding, maintaining the audit history and writing the paper as my work (§3.8). The data are public and de-identified, so no IRB approval was needed.</p></div>
+            <div class="callout warn mt-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg><p><strong>How to read these results.</strong> Every estimate comes from grouped cells, not individual records. The findings describe patterns across the U.S. population; they cannot predict what will happen in one pregnancy, and they do not show what causes what.</p></div>
+          </section>
+
+          <!-- ===================== KEY RESULTS ===================== -->
+          <section id="results" class="block">
+            <h2 class="prose">Key results</h2>
+            <div class="metrics m6">
+              <div class="metric"><span class="value">33,589,282</span><span class="label">natality (birth) records parsed from raw NCHS public-use files, 2016–2024</span><span class="src">Paper: Abstract (p.2), Table 1</span></div>
+              <div class="metric"><span class="value">3.445×</span><span class="label">infant death rate below p10 compared with the p10–p90 zone (95% CI 3.395–3.495)</span><span class="src">Table 6 (p.13)</span></div>
+              <div class="metric"><span class="value">5.213×</span><span class="label">fetal death rate below p10 compared with the p10–p90 zone (95% CI 5.145–5.282)</span><span class="src">Table 6 (p.13)</span></div>
+              <div class="metric accent"><span class="value">1.282</span><span class="label">above p90, the fetal-death rate ratio (1.315) is 1.282 times the infant one (1.025); 95% CI 1.241–1.325, p &lt; 0.001</span><span class="src">Abstract (p.2); §4.6 (p.14)</span></div>
+              <div class="metric"><span class="value">84.3%</span><span class="label">of the Black–White infant-mortality gap (rate ratio 1.99; 3.21 vs 6.38 per 1,000; weeks 24–42) comes from higher risk within the same growth zone</span><span class="src">Kitagawa decomposition, Table 4 (p.11)</span></div>
+              <div class="metric"><span class="value">0.777</span><span class="label">held-out AUC for both the BCA proxy and the log-cubic curve (infant death); fetal death: 0.879 for both</span><span class="src">Table 8 (p.13)</span></div>
+            </div>
+            <div class="metrics m4 mt-2">
+              <div class="metric small"><span class="value">19,166</span><span class="label">model-ready aggregate cells (year × sex × week × 100 g band)</span><span class="src">Data section (p.4)</span></div>
+              <div class="metric small"><span class="value">200</span><span class="label">robustness specifications; below-p10 rate ratio stayed above 2 for both outcomes in all of them</span><span class="src">§4.5 (p.12)</span></div>
+              <div class="metric small"><span class="value">&lt;0.0002</span><span class="label">held-out AUC difference, log-cubic vs BCA residual (2,000 bootstrap replicates)</span><span class="src">§4.7 (p.14)</span></div>
+              <div class="metric small"><span class="value">≤0.053%</span><span class="label">largest yearly difference between natality and linked-file birth counts (range 0.018–0.053%), a data-quality check</span><span class="src">Table 2 (p.5)</span></div>
+            </div>
+          </section>
+
+          <!-- ===================== DASHBOARD ===================== -->
+          <section id="explore" class="block">
+            <h2 class="prose">Interactive dashboard</h2>
+            <p class="prose ink-2">Six views of the published results. Pick a tab, use the buttons to switch outcome or growth zone, and hover over (or tab to) any point for exact values. Every chart has a data table and a source note; all numbers come from the paper and the result tables in the code repository.</p>
+            <div class="tabs dash-tabs" role="tablist" aria-label="Dashboard views" data-tabs>
+              <button type="button" role="tab" id="tab-zones" aria-controls="panel-zones" aria-selected="true" tabindex="0">Growth-zone risk</button>
+              <button type="button" role="tab" id="tab-covid" aria-controls="panel-covid" aria-selected="false" tabindex="-1">Pandemic</button>
+              <button type="button" role="tab" id="tab-bw" aria-controls="panel-bw" aria-selected="false" tabindex="-1">Black–White gap</button>
+              <button type="button" role="tab" id="tab-causes" aria-controls="panel-causes" aria-selected="false" tabindex="-1">Causes</button>
+              <button type="button" role="tab" id="tab-standards" aria-controls="panel-standards" aria-selected="false" tabindex="-1">Growth standards</button>
+              <button type="button" role="tab" id="tab-validation" aria-controls="panel-validation" aria-selected="false" tabindex="-1">Validation</button>
+            </div>
+
+            <!-- Panel 1: growth-zone risk -->
+            <div class="tab-panel" id="panel-zones" role="tabpanel" aria-labelledby="tab-zones" tabindex="0">
+              <div class="panel-head">
+                <h3>Growth-zone risk</h3>
+                <p>How much higher is the death rate for babies below p10 or above p90 than for babies in the middle (p10–p90)? A rate ratio of 1 means the same rate as the middle group. Infant deaths cover 2016–2023 birth cohorts; fetal deaths cover 2016–2024.</p>
+              </div>
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title">Mortality rate ratio by growth zone, infant vs fetal death (95% CI)</h4><p class="chart-sub">Below p10, risk is 3.445× (infant) and 5.213× (fetal). Above p90 the outcomes split: infant 1.025× but fetal 1.315×. At this scale the 95% intervals are narrower than the dots; hover or open the table for them.</p></div></div>
+                  <div id="chart-zones"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title">Endpoint asymmetry: fetal rate ratio ÷ infant rate ratio (95% CI)</h4><p class="chart-sub">Above p90 the fetal ratio is 1.282 times the infant ratio (1.241–1.325, p &lt; 0.001): the large-for-age signal is stronger for stillbirth than for infant death.</p></div></div>
+                  <div id="chart-ror"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2: pandemic -->
+            <div class="tab-panel" id="panel-covid" role="tabpanel" aria-labelledby="tab-covid" tabindex="0" hidden>
+              <div class="panel-head">
+                <h3>Across the pandemic</h3>
+                <p>The paper treats COVID-19 as a natural experiment and recomputes the growth-zone rate ratios in three pooled periods: pre-pandemic (2016–2019), pandemic (2020–2021) and post-pandemic (2022–2023 for infant death, 2022–2024 for fetal death).</p>
+                <p><strong>This is a three-period comparison, not a year-by-year trend.</strong> The study did not publish annual mortality rates, so none are shown here. The only year-by-year series of results is the model-validation AUC in the Validation tab.</p>
+              </div>
+              <div class="seg-row">
+                <div class="seg-group"><span class="seg-label" id="lbl-covid-zone">Growth zone</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-covid-zone" id="seg-covid-zone"><button type="button" data-val="below" aria-pressed="true">Below p10</button><button type="button" data-val="above" aria-pressed="false">Above p90</button></div>
+                </div>
+              </div>
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="covid-title">Rate ratio vs the p10–p90 zone in three periods, below p10 (95% CI)</h4><p class="chart-sub" id="covid-sub"></p></div></div>
+                  <div id="chart-covid"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="shift-title">Change vs 2016–2019: ratio of rate ratios, below p10 (95% CI)</h4><p class="chart-sub" id="shift-sub"></p></div></div>
+                  <div id="chart-shift"></div>
+                </div>
+              </div>
+              <p class="note-line" id="covid-transport"></p>
+            </div>
+
+            <!-- Panel 3: Black–White gap -->
+            <div class="tab-panel" id="panel-bw" role="tabpanel" aria-labelledby="tab-bw" tabindex="0" hidden>
+              <div class="panel-head">
+                <h3>The Black–White gap</h3>
+                <p>This view compares non-Hispanic Black and non-Hispanic White births at 24–42 weeks using a <strong>Kitagawa decomposition</strong>. It splits the gap between two death rates into two parts: the groups have a different mix of births across growth zones, and the groups have different death rates within the same zone.</p>
+              </div>
+              <div class="seg-row">
+                <div class="seg-group"><span class="seg-label" id="lbl-bw-end">Outcome</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-bw-end" id="seg-bw-end"><button type="button" data-val="infant" aria-pressed="true">Infant death</button><button type="button" data-val="fetal" aria-pressed="false">Fetal death</button></div>
+                </div>
+              </div>
+              <div class="metrics m4 panel-metrics" aria-live="polite">
+                <div class="metric small"><span class="value" id="bw-white">3.21</span><span class="label" id="bw-white-l">NH White deaths per 1,000 births</span></div>
+                <div class="metric small"><span class="value" id="bw-black">6.38</span><span class="label" id="bw-black-l">NH Black deaths per 1,000 births</span></div>
+                <div class="metric small"><span class="value" id="bw-rr">1.99</span><span class="label">Black–White rate ratio</span></div>
+                <div class="metric small"><span class="value" id="bw-gap">3.18</span><span class="label" id="bw-gap-l">gap, deaths per 1,000 births</span></div>
+              </div>
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="bw-stack-title">How the Black–White infant-death gap splits (Kitagawa decomposition, weeks 24–42)</h4><p class="chart-sub" id="bw-stack-sub"></p></div></div>
+                  <div id="chart-bw-stack"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="bw-zone-title">Infant deaths per 1,000 births within each growth zone, NH White vs NH Black</h4><p class="chart-sub" id="bw-zone-sub"></p></div></div>
+                  <div id="chart-bw-zone"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="bw-dist-title">Share of births in each growth zone, NH White vs NH Black</h4><p class="chart-sub" id="bw-dist-sub"></p></div></div>
+                  <div id="chart-bw-dist"></div>
+                </div>
+              </div>
+              <div class="callout mt-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>Two different comparisons.</strong> The decomposition above covers weeks 24–42: infant rate ratio 1.99 (6.38 vs 3.21 per 1,000) and fetal 2.09 (7.30 vs 3.49). Across all gestational ages, the descriptive infant rates are 9.489 vs 4.013 per 1,000 (rate ratio 2.365) and the fetal rates 10.215 vs 4.525 (2.257). These are different populations, so the two sets of numbers should not be mixed (paper Table 4 and §4.8).</p></div>
+              <div class="callout warn mt-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg><p><strong>What this can and can't show.</strong> Race and ethnicity are treated as social stratification, not biology. These aggregate data show where the gap sits; they cannot identify what drives the higher death rates within the same growth zone, or whether any particular intervention would narrow it (paper pp.11, 17).</p></div>
+            </div>
+
+            <!-- Panel 4: causes -->
+            <div class="tab-panel" id="panel-causes" role="tabpanel" aria-labelledby="tab-causes" tabindex="0" hidden>
+              <div class="panel-head">
+                <h3>What drives the excess</h3>
+                <p>For each growth zone, the paper splits the extra deaths (compared with the p10–p90 zone) into cause-of-death groups for weeks 24–42. Bars show <strong>excess deaths per 1,000</strong>: positive bars are cause groups with more deaths than in the reference zone, negative bars fewer. IDM means infant of a diabetic mother.</p>
+              </div>
+              <div class="seg-row">
+                <div class="seg-group"><span class="seg-label" id="lbl-c-end">Outcome</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-c-end" id="seg-c-end"><button type="button" data-val="infant" aria-pressed="true">Infant death</button><button type="button" data-val="fetal" aria-pressed="false">Fetal death</button></div>
+                </div>
+                <div class="seg-group"><span class="seg-label" id="lbl-c-zone">Growth zone</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-c-zone" id="seg-c-zone"><button type="button" data-val="below" aria-pressed="true">Below p10</button><button type="button" data-val="above" aria-pressed="false">Above p90</button></div>
+                </div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h4 class="chart-title" id="causes-title">Excess deaths per 1,000 by cause group: infant death, below p10</h4><p class="chart-sub" id="causes-sub"></p></div></div>
+                <div id="chart-causes"></div>
+              </div>
+              <div class="callout warn mt-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg><p><strong>Death-certificate codes, not confirmed causes.</strong> Cause groups come from the NCHS 130-cause infant recode and fetal initiating-cause codes, so they describe how deaths were coded rather than verified clinical causes. For below-p10 fetal deaths, "unspecified/ill-defined" is the largest group (38.7%). This is a descriptive breakdown, not an individual-level causal mechanism (paper pp.8–9, 18).</p></div>
+            </div>
+
+            <!-- Panel 5: growth standards -->
+            <div class="tab-panel" id="panel-standards" role="tabpanel" aria-labelledby="tab-standards" tabindex="0" hidden>
+              <div class="panel-head">
+                <h3>Growth standards</h3>
+                <p>Should "small" be judged against the U.S. population's own curve, the WHO fetal growth charts, or the INTERGROWTH-21st standard? The paper tests each one by how well it separates deaths from survivors in held-out data, measured by <strong>AUC</strong> (0.5 = chance, 1 = perfect).</p>
+              </div>
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title">Held-out AUC by growth reference, infant vs fetal death</h4><p class="chart-sub">Infant: 0.781 for all three. Fetal: 0.886, 0.886 and 0.885. How far a baby is from expected size matters; which chart defines "expected" barely does.</p></div></div>
+                  <div id="chart-std"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title">Population vs customized (sex + maternal race) standard, held-out AUC</h4><p class="chart-sub">Adding maternal race did not improve discrimination: infant 0.762 vs 0.766 for the population standard; fetal 0.876 vs 0.876.</p></div></div>
+                  <div id="chart-cust"></div>
+                </div>
+              </div>
+              <p class="note-line">The customized comparison uses only non-Hispanic White and Black cells (a different validation set), so its population-standard AUC differs from the chart above. The paper evaluates customized charts because they are still in clinical use, not as an endorsement of race-based customization; the result is consistent with the move away from it (§4.4).</p>
+            </div>
+
+            <!-- Panel 6: validation -->
+            <div class="tab-panel" id="panel-validation" role="tabpanel" aria-labelledby="tab-validation" tabindex="0" hidden>
+              <div class="panel-head">
+                <h3>Validation</h3>
+                <p>A model is only useful if it works on data it has not seen. The paper trains models on earlier years and tests them on later ones, and also repeats the test leaving out one year at a time. That leave-one-year-out AUC is the only year-by-year series of results in the study: it measures model accuracy, not mortality levels.</p>
+              </div>
+              <div class="seg-row">
+                <div class="seg-group"><span class="seg-label" id="lbl-v-end">Outcome</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-v-end" id="seg-v-end"><button type="button" data-val="infant" aria-pressed="true">Infant death</button><button type="button" data-val="fetal" aria-pressed="false">Fetal death</button></div>
+                </div>
+              </div>
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="loyo-title">Leave-one-year-out validation AUC by held-out year: infant death</h4><p class="chart-sub" id="loyo-sub"></p></div></div>
+                  <div id="chart-loyo"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h4 class="chart-title" id="held-title">Held-out AUC by model: infant death</h4><p class="chart-sub" id="held-sub"></p></div></div>
+                  <div id="chart-held"></div>
+                </div>
+              </div>
+              <div class="metrics m4 mt-2">
+                <div class="metric small"><span class="value">100%</span><span class="label">of 200 specifications kept the below-p10 rate ratio above 2 for both outcomes</span><span class="src">§4.5</span></div>
+                <div class="metric small"><span class="value">100%</span><span class="label">kept the fetal rate ratio above the infant one, both below p10 and above p90</span><span class="src">§4.5</span></div>
+                <div class="metric small"><span class="value">97.5%</span><span class="label">kept the fetal above-p90 rate ratio above 1</span><span class="src">§4.5</span></div>
+                <div class="metric small"><span class="value">52.6%</span><span class="label">of held-out infant deaths fell in the BCA-residual model's top tenth of predicted risk (fetal: 73.7%)</span><span class="src">§4.8</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================== CALCULATOR ===================== -->
+          <section id="calculator" class="block">
+            <h2 class="prose">Try the risk calculator</h2>
+            <div class="prose">
+              <p>I built a calculator on top of the benchmark so anyone can see how the model's estimates change with a baby's sex, week of pregnancy and birthweight. It is a static page served from GitHub Pages and runs in your browser, built from the released result tables.</p>
+            </div>
+            <div class="callout warn mb-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg><p><strong>A research tool, not medical advice.</strong> The calculator describes population-level patterns in U.S. vital statistics. It is not a clinical prediction tool and cannot give the risk for any individual pregnancy or baby. Questions about a real pregnancy belong with a doctor or midwife.</p></div>
+            <div class="embed app">
+              <div class="embed-bar"><span><strong>Fetal-Growth Risk Calculator</strong> · live app on GitHub Pages</span><span class="btn-row"><a class="btn btn-sm" href="https://mubarsad012.github.io/public-use-fetal-growth-benchmark/app/calculator.html" target="_blank" rel="noopener">Open full screen</a><a class="btn btn-sm btn-ghost" href="https://mubarsad012.github.io/public-use-fetal-growth-benchmark/app/" target="_blank" rel="noopener">Audit dashboard</a></span></div>
+              <iframe src="https://mubarsad012.github.io/public-use-fetal-growth-benchmark/app/calculator.html" title="Fetal-growth risk calculator by Morsal Mubarak (live app)" loading="lazy"></iframe>
+            </div>
+            <p class="note-line">The app loads a charting library of about 4.8 MB, so it can take a few seconds to appear. If it does not load here, use “Open full screen”.</p>
+
+            <div class="grid grid-2 mt-3">
+              <div class="card">
+                <h3>What you enter</h3>
+                <ul>
+                  <li><strong>Sex</strong>: female or male.</li>
+                  <li><strong>Completed weeks of pregnancy</strong>: 24 to 42.</li>
+                  <li><strong>Birthweight</strong>: 300 to 6,000 g in 50 g steps. It starts at the median (p50) for the chosen sex and week.</li>
+                  <li><strong>Optional descriptive factors</strong>: maternal BMI group, diabetes, hypertension, race/Hispanic origin and smoking (each starts at none).</li>
+                  <li><strong>Calibration outcome</strong>: infant or fetal death, for the calibration plot.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>What you get</h3>
+                <ul>
+                  <li>A <strong>growth-zone badge</strong>: below p10 (small for gestational age), p10–p90, or above p90 (large).</li>
+                  <li>The <strong>p10, p50 and p90 reference weights</strong> for that sex and week.</li>
+                  <li>Estimated <strong>infant mortality</strong> (birth-cohort) and <strong>fetal mortality</strong> (delivery-based) per 1,000.</li>
+                  <li>An interactive <strong>risk curve</strong> across birthweights from 300 to 6,000 g for both outcomes, marking your weight and the p10/p50/p90 points.</li>
+                  <li>A <strong>calibration plot</strong> by predicted-risk decile and a decision-curve table.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card mt-3">
+              <h3>How the estimate is computed</h3>
+              <p>For the chosen sex and week, the page looks up the expected birthweight from the sex- and week-specific log-cubic curve and turns the entered weight into a relative residual <em>r</em>. It then evaluates the paper's GA + log-residual grouped-binomial logistic model, fit separately for infant and fetal death:</p>
+              <pre class="formula"><code>r = (weight − expected) / expected
+z = b0 + b1·GA + b2·GA² + b3·male
+      + b4·r + b5·|r|
+risk per 1,000 = 1000 / (1 + e^−z)</code></pre>
+              <p class="mt-2">GA is completed weeks of pregnancy. Because the model includes both <em>r</em> and |<em>r</em>|, estimated risk can rise on either side of the expected weight, and the published coefficients make it rise more steeply on the low side. The growth-zone badge compares the weight with the p10 and p90 for that sex and week. The optional factors only multiply the baseline estimate by descriptive, unadjusted rate ratios; they are not fitted adjustments.</p>
+              <details class="more-box mt-2">
+                <summary>Show the published model coefficients</summary>
+                <div class="viz-table-wrap">
+                  <table class="viz-table">
+                    <caption class="visually-hidden">Risk calculator logistic model coefficients</caption>
+                    <thead><tr><th scope="col">Term</th><th scope="col">Infant death (birth-cohort)</th><th scope="col">Fetal death (delivery-based)</th></tr></thead>
+                    <tbody>
+<!--__COEF_ROWS_START__-->
+                      <tr><th scope="row" style="font-weight:500;background:none">Intercept (b0)</th><td>7.8334</td><td>−14.0472</td></tr>
+                      <tr><th scope="row" style="font-weight:500;background:none">GA, completed weeks (b1)</th><td>−0.438158</td><td>0.997465</td></tr>
+                      <tr><th scope="row" style="font-weight:500;background:none">GA² (b2)</th><td>0.001692</td><td>−0.021288</td></tr>
+                      <tr><th scope="row" style="font-weight:500;background:none">Male (b3)</th><td>0.154905</td><td>−0.0261696</td></tr>
+                      <tr><th scope="row" style="font-weight:500;background:none">r, relative residual (b4)</th><td>−1.99589</td><td>−1.92189</td></tr>
+                      <tr><th scope="row" style="font-weight:500;background:none">|r| (b5)</th><td>2.9052</td><td>3.31912</td></tr>
+                      <!--__COEF_ROWS_END__-->
+                    </tbody>
+                  </table>
+                </div>
+                <p class="note-line">Rounded to 6 significant digits. Full precision: <a href="../assets/data/fetal/risk_calculator_coefficients.csv">risk_calculator_coefficients.csv</a>; expected weights and p10/p50/p90 by sex and week: <a href="../assets/data/fetal/risk_calculator_expected_weight.csv">risk_calculator_expected_weight.csv</a>.</p>
+              </details>
+            </div>
+          </section>
+
+          <!-- ===================== FIGURES ===================== -->
+          <section id="figures" class="block">
+            <h2 class="prose">Figures from the paper</h2>
+            <p class="prose ink-2">Figure numbers follow the paper; Figure 2 (the live-birth density surface) is in the PDF below. Click or press Enter on any figure to zoom and pan.</p>
+            <figure class="figure">
+              <img class="zoomable" src="../assets/img/fetal/figure_cause_decomposition.png" alt="Four horizontal bar panels showing excess deaths per 1,000 by cause group for infant and fetal death in the below-p10 and above-p90 zones." width="3272" height="1898" loading="lazy">
+              <figcaption><strong>Figure 1.</strong> Cause-group decomposition of the below-p10 and above-p90 mortality excess (excess deaths per 1,000 vs the p10–p90 reference zone), weeks 24–42, for birth-cohort infant death and fetal death.</figcaption>
+            </figure>
+            <div class="grid grid-2 mt-3">
+              <figure class="figure">
+                <img class="zoomable" src="../assets/img/fetal/fig3_infant_mortality_surface_record_level.png" alt="Heatmap of infant mortality by gestational week (24 to 42) and birthweight band; risk is highest for the smallest, most premature babies." width="3000" height="1800" loading="lazy">
+                <figcaption><strong>Figure 3.</strong> Record-level birth-cohort linked infant mortality surface by gestational age (24–42 weeks) and birthweight band, 2016–2023 cohorts; color = log10(infant deaths per 1,000 + 0.01).</figcaption>
+              </figure>
+              <figure class="figure">
+                <img class="zoomable" src="../assets/img/fetal/fig4_fetal_mortality_surface_record_level.png" alt="Heatmap of fetal death rates by gestational week and delivery weight." width="3000" height="1800" loading="lazy">
+                <figcaption><strong>Figure 4.</strong> Delivery-based fetal mortality surface (fetal deaths divided by fetal deaths plus matched live births) by gestational age and delivery-weight band, 2016–2024; color = log10(fetal deaths per 1,000 + 0.01). The image spans weeks 20–42; the paper's fetal tables use weeks 24–42.</figcaption>
+              </figure>
+            </div>
+            <div class="grid grid-2 mt-3">
+              <figure class="figure">
+                <img class="zoomable" src="../assets/img/fetal/fig5_growth_zone_rate_ratios.png" alt="Grouped bars: below p10 about 3.4 times (infant) and 5.2 times (fetal); above p90 about 1.0 times (infant) and 1.3 times (fetal)." width="2400" height="1500" loading="lazy">
+                <figcaption><strong>Figure 5.</strong> Mortality rate ratios by empirical growth zone (p10–p90 = reference) for birth-cohort infant death and fetal death; 95% confidence intervals are in Table 6 and in the dashboard above.</figcaption>
+              </figure>
+              <div class="card">
+                <h3>How to read the heatmaps</h3>
+                <p>Each square is one week of pregnancy (across) and one weight band (down). Color shows the death rate on a log scale, so each step of 1 on the color bar is about ten times the rate.</p>
+                <p><strong>The two heatmaps use opposite color directions:</strong> in Figure 3 lighter means higher infant mortality; in Figure 4 darker means higher fetal mortality. Check each color bar.</p>
+                <p class="mb-0">Figure 4 is a delivery-based surface (fetal deaths divided by fetal deaths plus live births in the same cell), not the risk for ongoing pregnancies.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================== METHODS ===================== -->
+          <section id="methods" class="block">
+            <h2 class="prose">Methods</h2>
+            <div class="prose">
+              <p>The study is a cross-sectional, ecological (aggregate-cell) analysis of U.S. vital statistics for 2016–2024, reported following the STROBE and RECORD guidelines for observational studies of routinely collected data. Every step runs from released code; no step is done by hand.</p>
+            </div>
+            <p class="flow-label">Build the data</p>
+            <div class="flow">
+              <div class="step"><h4>Download</h4><p>Stream the fixed-width public-use ZIP files from NCHS: natality, linked birth/infant-death and fetal-death files.</p></div>
+              <div class="step"><h4>Parse</h4><p>Read sex, plurality, obstetric gestational age and birthweight from fixed character positions; keep singletons with usable values (no imputation).</p></div>
+              <div class="step"><h4>Aggregate cells</h4><p>Group records by year × sex × completed week × 100 g band. Birth-cohort infant cells join each cohort's births to deaths filed that year and the next.</p></div>
+              <div class="step"><h4>Expected weight</h4><p>Fit a sex-specific log-cubic curve of mean birthweight by week, plus the BCA proxy equation (N* = W / 3,500 g) as a demonstration candidate.</p></div>
+            </div>
+            <p class="flow-label">Analyze and audit</p>
+            <div class="flow flow-cont">
+              <div class="step"><h4>Residuals &amp; zones</h4><p>Place each weight band below p10, p10–p90 or above p90 for its sex and week, and compute each cell's residual from expected weight.</p></div>
+              <div class="step"><h4>Rate ratios &amp; decomposition</h4><p>Grouped-binomial logistic models, rate ratios with 95% CIs, delta-method tests, and cause-group and Kitagawa decompositions.</p></div>
+              <div class="step"><h4>Temporal validation</h4><p>Train on earlier years, test on later ones; leave one year out at a time; bootstrap AUC differences; 200-specification robustness check.</p></div>
+              <div class="step"><h4>Audit</h4><p>SHA-256 hashes, source manifests, count-flow tables, field maps and a script that re-checks the headline numbers; STROBE/RECORD reporting.</p></div>
+            </div>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head">
+                <div><h4 class="chart-title" id="flow-title">From raw files to model-ready cells: fetal-death analysis (counts)</h4><p class="chart-sub" id="flow-sub"></p></div>
+              </div>
+              <div class="seg-row">
+                <div class="seg-group"><span class="seg-label" id="lbl-flow">Analysis</span>
+                  <div class="filters" role="group" aria-labelledby="lbl-flow" id="seg-flow"><button type="button" data-val="fetal" aria-pressed="true">Fetal-death analysis</button><button type="button" data-val="infant" aria-pressed="false">Infant-death analysis</button></div>
+                </div>
+              </div>
+              <div id="chart-flow"></div>
+            </div>
+
+            <div class="prose mt-3">
+              <h3 style="margin-top:0">Statistical details</h3>
+              <ul>
+                <li>Death rates are modeled with grouped-binomial generalized linear models (logit link) in Python 3.13 with statsmodels 0.14.6, pandas 2.3.3 and numpy 2.4.4; expected-size curves use scipy 1.17.1.</li>
+                <li>Rate-ratio 95% intervals use the normal approximation on the log rate ratio; endpoint and period contrasts use a delta-method ratio of rate ratios with a z-test.</li>
+                <li>Temporal validation: infant models train on 2016–2020 and test on 2021–2023; fetal models train on 2016–2021 and test on 2022–2024. AUC differences use a cluster bootstrap of validation cells (2,000 replicates).</li>
+                <li>The robustness check varies the gestational-age window, weight-band width (100–500 g), minimum cell size and fetal denominator definition across 200 specifications.</li>
+                <li>The primary benchmark adjusts only for gestational age and sex; adding race/Hispanic-origin covariates changed the zone coefficients by less than 2% (sensitivity analysis, §4.6).</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ===================== REPRODUCIBILITY ===================== -->
+          <section id="reproducibility" class="block">
+            <h2 class="prose">Reproducibility</h2>
+            <p class="prose ink-2">I built the project so that someone else can check every number: the code, result tables, audit trail and archive are all public.</p>
+            <div class="grid grid-2">
+              <div class="card">
+                <div class="card-top"><span class="badge plain">Code</span><span class="card-kicker">MIT license</span></div>
+                <h3>GitHub repository</h3>
+                <p>The deterministic pipeline, sub-analysis scripts, LaTeX source of the paper and supplement, dashboard and calculator.</p>
+                <div class="card-foot"><a class="btn btn-sm btn-dark" href="https://github.com/mubarsad012/public-use-fetal-growth-benchmark" target="_blank" rel="noopener">Browse the code on GitHub</a></div>
+              </div>
+              <div class="card">
+                <div class="card-top"><span class="badge plain">Archive</span><span class="card-kicker">Zenodo</span></div>
+                <h3>Permanent DOI</h3>
+                <dl class="kv">
+                  <dt>Concept DOI</dt><dd><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">10.5281/zenodo.21894038</a> (always resolves to the latest release)</dd>
+                  <dt>Current version</dt><dd>v1.1.0, published 2026-08-23 (version DOI 10.5281/zenodo.22065415)</dd>
+                  <dt>Release notes</dt><dd>"This release archives the revision submitted to Scientific Reports"</dd>
+                  <dt>License</dt><dd>MIT</dd>
+                </dl>
+              </div>
+              <div class="card">
+                <div class="card-top"><span class="badge plain">Audit trail</span></div>
+                <h3>Hashes and manifests</h3>
+                <ul class="mb-0">
+                  <li>A SHA-256 release manifest, so anyone can confirm they have the same files.</li>
+                  <li>A source-to-result map from each raw file to each table, figure and dashboard output.</li>
+                  <li>Count-flow tables and fixed-width field maps for every parsed file.</li>
+                  <li>A claim-verification script that re-checks the paper's headline counts, rate ratios and validation metrics against the generated tables.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-top"><span class="badge plain">Raw data</span></div>
+                <h3>Public sources</h3>
+                <p class="mb-0">Large raw NCHS public-use ZIP files (natality, linked birth/infant-death and fetal-death) are not redistributed. The scripts download them from the documented source manifest, check each ZIP's integrity and regenerate every table. CDC WONDER exports and the WHO, INTERGROWTH-21st and NICHD growth standards serve as cross-checks and comparators.</p>
+              </div>
+            </div>
+            <div class="card mt-3">
+              <div class="card-top"><span class="badge plain">Re-run it</span></div>
+              <h3>Core commands</h3>
+              <pre class="mb-0"><code>python3 scripts/download_public_data.py --include-large --jobs 4
+python3 scripts/check_zip_integrity.py
+python3 scripts/run_expanded_public_data_analysis.py
+python3 scripts/verify_manuscript_claims.py</code></pre>
+              <p class="note-line">The README lists the full sequence, including each sub-analysis. A pinned lockfile reproduces the Python 3.13 environment.</p>
+            </div>
+            <div class="btn-row mt-3">
+              <a class="btn btn-sm" href="https://mubarsad012.github.io/public-use-fetal-growth-benchmark/" target="_blank" rel="noopener">Static audit portal</a>
+              <a class="btn btn-sm" href="https://mubarsad012.github.io/public-use-fetal-growth-benchmark/app/" target="_blank" rel="noopener">Audit dashboard</a>
+              <a class="btn btn-sm btn-ghost" href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo record</a>
+            </div>
+            <h3 class="mt-4">Download the result tables (CSV)</h3>
+            <ul class="csv-list mt-2">
+              <li><a href="../assets/data/fetal/growth_zone_rate_ratios.csv" download>growth_zone_rate_ratios.csv</a>Table 6: rates and rate ratios by zone</li>
+              <li><a href="../assets/data/fetal/ratio_of_rate_ratios.csv" download>ratio_of_rate_ratios.csv</a>Fetal-vs-infant asymmetry tests</li>
+              <li><a href="../assets/data/fetal/cause_excess_decomposition.csv" download>cause_excess_decomposition.csv</a>Table 3: cause-group decomposition</li>
+              <li><a href="../assets/data/fetal/disparity_kitagawa_summary.csv" download>disparity_kitagawa_summary.csv</a>Table 4: Black–White decomposition</li>
+              <li><a href="../assets/data/fetal/disparity_kitagawa_by_zone.csv" download>disparity_kitagawa_by_zone.csv</a>Zone shares and rates by race</li>
+              <li><a href="../assets/data/fetal/covid_period_zone_rate_ratios.csv" download>covid_period_zone_rate_ratios.csv</a>Three-period rate ratios</li>
+              <li><a href="../assets/data/fetal/covid_shift_tests.csv" download>covid_shift_tests.csv</a>Pandemic shift tests</li>
+              <li><a href="../assets/data/fetal/standards_adjudication.csv" download>standards_adjudication.csv</a>Growth-standard AUCs</li>
+              <li><a href="../assets/data/fetal/temporal_validation.csv" download>temporal_validation.csv</a>Table 8: held-out validation</li>
+              <li><a href="../assets/data/fetal/leave_one_year_out_validation.csv" download>leave_one_year_out_validation.csv</a>AUC by held-out year (supplement table)</li>
+              <li><a href="../assets/data/fetal/count_flow.csv" download>count_flow.csv</a>Table 1: record count flow</li>
+              <li><a href="../assets/data/fetal/risk_calculator_coefficients.csv" download>risk_calculator_coefficients.csv</a>Calculator model coefficients</li>
+            </ul>
+            <p class="note-line">Copies of the repository's <code>app_data</code> tables; the leave-one-year-out table is transcribed verbatim from the supplement's LaTeX table.</p>
+          </section>
+
+          <!-- ===================== LIMITATIONS ===================== -->
+          <section id="limitations" class="prose block">
+            <h2>Limitations</h2>
+            <ul class="limits">
+              <li><strong>Population-level, not individual.</strong> Associations measured across aggregate cells may not hold for individual pregnancies (the ecological fallacy), and no estimate adjusts for individual maternal factors such as age, parity, body-mass index or other conditions.</li>
+              <li><strong>Not causal.</strong> The results describe patterns. They do not show what causes the deaths or which interventions would help.</li>
+              <li><strong>Fetal denominator.</strong> Fetal death rates divide by deliveries (fetal deaths plus live births in the same cell), not by ongoing pregnancies, so they are not a fetuses-at-risk hazard.</li>
+              <li><strong>Coding and measurement.</strong> Gestational age from the obstetric estimate can be misclassified, a small share of infant deaths cannot be linked to a birth certificate, cause groups reflect death-certificate coding, and CDC small-cell suppression limits detail.</li>
+              <li><strong>The BCA proxy.</strong> The Binary Cellular Analysis framework is available only as preprints and has not been peer reviewed. The study uses its equation only as a demonstration of how the benchmark judges a candidate growth curve, not as evidence about cells.</li>
+              <li><strong>Next step.</strong> Adjusting for individual-level factors needs record-level modeling outside this aggregate design, which the paper names as next-stage work.</li>
+            </ul>
+          </section>
+
+          <!-- ===================== PAPER ===================== -->
+          <section id="paper" class="block">
+            <h2 class="prose">Read the paper</h2>
+            <div class="embed">
+              <div class="embed-bar"><span><strong>A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations…</strong> · PDF · 20 pages</span><span class="btn-row"><a class="btn btn-sm" href="../papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf" target="_blank" rel="noopener">Open in new tab</a><a class="btn btn-sm btn-ghost" href="../papers/Mubarak_2026_Fetal-Growth-Benchmark_Supplement.pdf" target="_blank" rel="noopener">Supplement (PDF, 29 pages)</a></span></div>
+              <object data="../papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf#view=FitH" type="application/pdf" aria-label="A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk, PDF">
+                <div class="fallback"><p>Your browser can't show PDFs inline.</p><a class="btn btn-primary" href="../papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf">Download the PDF</a></div>
+              </object>
+            </div>
+            <p class="note-line">Manuscript dated August 23, 2026. The supplementary data file (compiled July 28, 2026) holds the source inventory, field map, record counts by file, validation tables and the STROBE/RECORD-style checklist.</p>
+          </section>
+
+          <!-- ===================== CITE ===================== -->
+          <section id="cite" class="block">
+            <h2 class="prose">Cite</h2>
+            <p class="cite-label">The paper (APA)</p>
+            <div class="citation"><span id="cite-text">Mubarak, M. (2026). <em>A reproducible public-data benchmark of birthweight-for-gestational-age deviations and infant/fetal mortality risk: A cross-sectional ecological analysis of United States vital statistics, 2016–2024</em> [Manuscript submitted for publication]. Zenodo. https://doi.org/10.5281/zenodo.21894038</span><button class="btn btn-sm copy-btn" data-copy-target="#cite-text" type="button"><span class="label">Copy</span></button></div>
+            <p class="cite-label">The code and data archive (APA)</p>
+            <div class="citation"><span id="cite-text-code">Mubarak, M. (2026). <em>Public-Use Fetal-Growth Benchmark: A reproducible aggregate-cell benchmark of birthweight-for-gestational-age deviations against infant and fetal mortality (United States, 2016–2024)</em> (Version v1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21894038</span><button class="btn btn-sm copy-btn" data-copy-target="#cite-text-code" type="button"><span class="label">Copy</span></button></div>
+          </section>
+
+          <!-- ===================== GLOSSARY ===================== -->
+          <section id="glossary" class="block">
+            <h2 class="prose">Glossary</h2>
+            <dl class="glossary">
+              <div><dt>Gestational age</dt><dd>Completed weeks of pregnancy at delivery, from the obstetric estimate on the birth or fetal-death certificate.</dd></div>
+              <div><dt>p10 / p90</dt><dd>The weights below which 10% and 90% of babies of the same sex and week fall. Below p10 is usually called small for gestational age; above p90, large for gestational age. Here the cut-offs come from the U.S. births themselves.</dd></div>
+              <div><dt>Infant death (birth-cohort linked)</dt><dd>A death before age one, linked back to the baby's birth certificate and counted with the year the baby was born.</dd></div>
+              <div><dt>Fetal death (delivery-based)</dt><dd>A stillbirth (here at 24–42 weeks). The rate divides fetal deaths by fetal deaths plus live births in the same cell.</dd></div>
+              <div><dt>Rate ratio (RR)</dt><dd>One group's death rate divided by a reference group's. An RR of 3.445 means 3.445 times the rate of the p10–p90 zone.</dd></div>
+              <div><dt>95% confidence interval (CI)</dt><dd>The range of values compatible with the data. A narrow range means a precise estimate.</dd></div>
+              <div><dt>Ratio of rate ratios</dt><dd>One rate ratio divided by another, used to test whether two outcomes or periods differ. 1 means no difference.</dd></div>
+              <div><dt>Kitagawa decomposition</dt><dd>A method that splits a gap between two groups' death rates into a part from different mixes across categories and a part from different rates within the same category.</dd></div>
+              <div><dt>Aggregate cell</dt><dd>One combination of year, sex, week of pregnancy and 100 g weight band, holding counts of births and deaths. Working with cells is what makes the design ecological.</dd></div>
+              <div><dt>Expected weight and residual</dt><dd>The expected weight comes from a smooth log-cubic curve of average birthweight by week, fit separately by sex. The residual is how far a weight sits from it: r = (weight − expected) / expected.</dd></div>
+              <div><dt>BCA proxy</dt><dd>A compact growth equation from the Binary Cellular Analysis preprints (not peer reviewed), using N* = W / 3,500 g. Tested here only as a demonstration candidate.</dd></div>
+              <div><dt>AUC</dt><dd>How well a model ranks deaths above survivors: 0.5 is chance, 1.0 is perfect. "Weighted" because it is computed from cell counts.</dd></div>
+              <div><dt>Temporal validation</dt><dd>Fitting a model on some years and testing it on years it never saw, including leaving out one year at a time.</dd></div>
+              <div><dt>STROBE / RECORD</dt><dd>Reporting checklists for observational studies and for studies that use routinely collected health data.</dd></div>
+              <div><dt>SHA-256 hash</dt><dd>A fingerprint of a file. If a file changes, its hash changes, so others can confirm they have identical files.</dd></div>
+              <div><dt>Concept DOI</dt><dd>A permanent identifier that always resolves to the latest archived version of the project.</dd></div>
+            </dl>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    /* Chart data: generated from the facts file and the copied result CSVs (paper Tables 1-8, supplement, repo app_data). */
+    /*__FG_DATA_START__*/ const FG = {"zones":{"infant":[{"x":"Below p10","y":3.445,"ci_low":3.395,"ci_high":3.495,"rate_per_1000":10.522,"deaths":23821,"denominator":2263899},{"x":"p10-p90 (reference)","y":1.0,"ci_low":1.0,"ci_high":1.0,"rate_per_1000":3.054,"deaths":73931,"denominator":24204382},{"x":"Above p90","y":1.025,"ci_low":1.001,"ci_high":1.05,"rate_per_1000":3.131,"deaths":7350,"denominator":2347654}],"fetal":[{"x":"Below p10","y":5.213,"ci_low":5.145,"ci_high":5.282,"rate_per_1000":12.885,"deaths":33106,"denominator":2569428},{"x":"p10-p90 (reference)","y":1.0,"ci_low":1.0,"ci_high":1.0,"rate_per_1000":2.472,"deaths":67449,"denominator":27289296},{"x":"Above p90","y":1.315,"ci_low":1.285,"ci_high":1.344,"rate_per_1000":3.249,"deaths":8581,"denominator":2641083}]},"ror":[{"x":"Below p10","y":1.513,"ci_low":1.484,"ci_high":1.543,"infant_rr":3.445,"fetal_rr":5.213,"z_statistic":41.5,"p_value_reported":"<0.001"},{"x":"Above p90","y":1.282,"ci_low":1.241,"ci_high":1.325,"infant_rr":1.025,"fetal_rr":1.315,"z_statistic":14.87,"p_value_reported":"<0.001"}],"periods":{"below":{"infant":[{"x":"Pre-pandemic","y":3.405,"ci_low":3.337,"ci_high":3.475,"years":"2016-2019","rate_per_1000":10.413,"deaths":12237,"denominator":1175196},{"x":"Pandemic","y":3.498,"ci_low":3.396,"ci_high":3.604,"years":"2020-2021","rate_per_1000":10.485,"deaths":5687,"denominator":542383},{"x":"Post-pandemic","y":3.477,"ci_low":3.377,"ci_high":3.58,"years":"2022-2023","rate_per_1000":10.794,"deaths":5897,"denominator":546320}],"fetal":[{"x":"Pre-pandemic","y":5.392,"ci_low":5.29,"ci_high":5.495,"years":"2016-2019","rate_per_1000":13.392,"deaths":15995,"denominator":1194389},{"x":"Pandemic","y":5.09,"ci_low":4.949,"ci_high":5.234,"years":"2020-2021","rate_per_1000":12.953,"deaths":7128,"denominator":550301},{"x":"Post-pandemic","y":5.031,"ci_low":4.914,"ci_high":5.151,"years":"2022-2024","rate_per_1000":12.104,"deaths":9983,"denominator":824738}]},"above":{"infant":[{"x":"Pre-pandemic","y":1.022,"ci_low":0.989,"ci_high":1.057,"years":"2016-2019","rate_per_1000":3.126,"deaths":3783,"denominator":1210130},{"x":"Pandemic","y":0.995,"ci_low":0.947,"ci_high":1.045,"years":"2020-2021","rate_per_1000":2.981,"deaths":1726,"denominator":578968},{"x":"Post-pandemic","y":1.062,"ci_low":1.012,"ci_high":1.114,"years":"2022-2023","rate_per_1000":3.296,"deaths":1841,"denominator":558556}],"fetal":[{"x":"Pre-pandemic","y":1.304,"ci_low":1.261,"ci_high":1.348,"years":"2016-2019","rate_per_1000":3.239,"deaths":3939,"denominator":1216248},{"x":"Pandemic","y":1.257,"ci_low":1.198,"ci_high":1.319,"years":"2020-2021","rate_per_1000":3.2,"deaths":1860,"denominator":581315},{"x":"Post-pandemic","y":1.371,"ci_low":1.318,"ci_high":1.426,"years":"2022-2024","rate_per_1000":3.298,"deaths":2782,"denominator":843520}]}},"shifts":{"below":{"infant":[{"x":"Pandemic vs pre-pandemic","y":1.027,"ci_low":0.991,"ci_high":1.065,"p_value":0.142,"comparison_exact":"Pandemic (2020-2021) vs Pre-pandemic (2016-2019)"},{"x":"Post-pandemic vs pre-pandemic","y":1.021,"ci_low":0.985,"ci_high":1.058,"p_value":0.249,"comparison_exact":"Post-pandemic (2022-2023) vs Pre-pandemic (2016-2019)"}],"fetal":[{"x":"Pandemic vs pre-pandemic","y":0.944,"ci_low":0.913,"ci_high":0.976,"p_value":0.00084,"comparison_exact":"Pandemic (2020-2021) vs Pre-pandemic (2016-2019)"},{"x":"Post-pandemic vs pre-pandemic","y":0.933,"ci_low":0.905,"ci_high":0.962,"p_value":7.62e-06,"comparison_exact":"Post-pandemic (2022-2024) vs Pre-pandemic (2016-2019)"}]},"above":{"infant":[{"x":"Pandemic vs pre-pandemic","y":0.973,"ci_low":0.917,"ci_high":1.033,"p_value":0.367,"comparison_exact":"Pandemic (2020-2021) vs Pre-pandemic (2016-2019)"},{"x":"Post-pandemic vs pre-pandemic","y":1.039,"ci_low":0.98,"ci_high":1.101,"p_value":0.203,"comparison_exact":"Post-pandemic (2022-2023) vs Pre-pandemic (2016-2019)"}],"fetal":[{"x":"Pandemic vs pre-pandemic","y":0.964,"ci_low":0.909,"ci_high":1.022,"p_value":0.221,"comparison_exact":"Pandemic (2020-2021) vs Pre-pandemic (2016-2019)"},{"x":"Post-pandemic vs pre-pandemic","y":1.051,"ci_low":0.999,"ci_high":1.107,"p_value":0.057,"comparison_exact":"Post-pandemic (2022-2024) vs Pre-pandemic (2016-2019)"}]}},"transport":{"infant":[{"x":"Pre-pandemic","y":0.783,"years":"2016-2019","n_cells":3078,"total_deaths":50890},{"x":"Pandemic","y":0.778,"years":"2020-2021","n_cells":1518,"total_deaths":23709},{"x":"Post-pandemic","y":0.777,"years":"2022-2023","n_cells":1515,"total_deaths":24654}],"fetal":[{"x":"Pre-pandemic","y":0.886,"years":"2016-2019","n_cells":3145,"total_deaths":45136},{"x":"Pandemic","y":0.888,"years":"2020-2021","n_cells":1547,"total_deaths":21360},{"x":"Post-pandemic","y":0.879,"years":"2022-2024","n_cells":2315,"total_deaths":30106}]},"loyo":{"infant":{"GA only":[{"x":2016,"y":0.747},{"x":2017,"y":0.75},{"x":2018,"y":0.749},{"x":2019,"y":0.749},{"x":2020,"y":0.743},{"x":2021,"y":0.745},{"x":2022,"y":0.742},{"x":2023,"y":0.751}],"GA + p10/p90":[{"x":2016,"y":0.772},{"x":2017,"y":0.777},{"x":2018,"y":0.774},{"x":2019,"y":0.776},{"x":2020,"y":0.77},{"x":2021,"y":0.77},{"x":2022,"y":0.766},{"x":2023,"y":0.773}],"GA + log residual":[{"x":2016,"y":0.782},{"x":2017,"y":0.784},{"x":2018,"y":0.784},{"x":2019,"y":0.784},{"x":2020,"y":0.778},{"x":2021,"y":0.777},{"x":2022,"y":0.773},{"x":2023,"y":0.781}],"GA + BCA residual":[{"x":2016,"y":0.781},{"x":2017,"y":0.784},{"x":2018,"y":0.784},{"x":2019,"y":0.784},{"x":2020,"y":0.778},{"x":2021,"y":0.777},{"x":2022,"y":0.773},{"x":2023,"y":0.781}],"GA + BW surface":[{"x":2016,"y":0.783},{"x":2017,"y":0.786},{"x":2018,"y":0.784},{"x":2019,"y":0.786},{"x":2020,"y":0.781},{"x":2021,"y":0.779},{"x":2022,"y":0.774},{"x":2023,"y":0.782}]},"fetal":{"GA only":[{"x":2016,"y":0.866},{"x":2017,"y":0.869},{"x":2018,"y":0.87},{"x":2019,"y":0.869},{"x":2020,"y":0.871},{"x":2021,"y":0.872},{"x":2022,"y":0.86},{"x":2023,"y":0.867},{"x":2024,"y":0.865}],"GA + p10/p90":[{"x":2016,"y":0.879},{"x":2017,"y":0.882},{"x":2018,"y":0.882},{"x":2019,"y":0.882},{"x":2020,"y":0.884},{"x":2021,"y":0.883},{"x":2022,"y":0.873},{"x":2023,"y":0.877},{"x":2024,"y":0.876}],"GA + log residual":[{"x":2016,"y":0.883},{"x":2017,"y":0.887},{"x":2018,"y":0.887},{"x":2019,"y":0.886},{"x":2020,"y":0.888},{"x":2021,"y":0.888},{"x":2022,"y":0.877},{"x":2023,"y":0.881},{"x":2024,"y":0.879}],"GA + BCA residual":[{"x":2016,"y":0.882},{"x":2017,"y":0.887},{"x":2018,"y":0.887},{"x":2019,"y":0.886},{"x":2020,"y":0.888},{"x":2021,"y":0.887},{"x":2022,"y":0.877},{"x":2023,"y":0.881},{"x":2024,"y":0.879}],"GA + BW surface":[{"x":2016,"y":0.885},{"x":2017,"y":0.89},{"x":2018,"y":0.89},{"x":2019,"y":0.889},{"x":2020,"y":0.891},{"x":2021,"y":0.89},{"x":2022,"y":0.881},{"x":2023,"y":0.884},{"x":2024,"y":0.882}]}},"kit":{"infant":{"white":3.21,"black":6.38,"rr":1.99,"gap":3.18,"withinPct":84.34914491563623,"distPct":15.650855084363785,"withinPer1000":2.681,"distPer1000":0.497},"fetal":{"white":3.49,"black":7.3,"rr":2.09,"gap":3.81,"withinPct":78.4955635731256,"distPct":21.50443642687441,"withinPer1000":2.992,"distPer1000":0.82}},"kitZone":{"infant":{"white":[{"x":"Below p10","y":11.165},{"x":"p10-p90 (reference)","y":2.685},{"x":"Above p90","y":2.643}],"black":[{"x":"Below p10","y":12.041},{"x":"p10-p90 (reference)","y":5.516},{"x":"Above p90","y":5.97}]},"fetal":{"white":[{"x":"Below p10","y":16.322},{"x":"p10-p90 (reference)","y":2.612},{"x":"Above p90","y":2.814}],"black":[{"x":"Below p10","y":18.638},{"x":"p10-p90 (reference)","y":5.337},{"x":"Above p90","y":9.732}]}},"kitDist":{"infant":{"white":[{"x":"Below p10","y":0.0619},{"x":"p10-p90 (reference)","y":0.8415},{"x":"Above p90","y":0.0965}],"black":[{"x":"Below p10","y":0.1295},{"x":"p10-p90 (reference)","y":0.8205},{"x":"Above p90","y":0.05}]},"fetal":{"white":[{"x":"Below p10","y":0.0622},{"x":"p10-p90 (reference)","y":0.8413},{"x":"Above p90","y":0.0964}],"black":[{"x":"Below p10","y":0.1308},{"x":"p10-p90 (reference)","y":0.819},{"x":"Above p90","y":0.0502}]}},"causes":{"infant":{"below":[{"x":"Congenital anomalies","y":4.242,"rate_ratio":7.14,"pct_of_zone_excess":56.81,"zone_rate_per_1000":4.933,"reference_rate_per_1000":0.691},{"x":"Placental/cord/membrane","y":0.034,"rate_ratio":1.54,"pct_of_zone_excess":0.45,"zone_rate_per_1000":0.096,"reference_rate_per_1000":0.062},{"x":"Asphyxia/hypoxia","y":0.062,"rate_ratio":2.12,"pct_of_zone_excess":0.83,"zone_rate_per_1000":0.117,"reference_rate_per_1000":0.055},{"x":"Maternal complications","y":0.088,"rate_ratio":2.14,"pct_of_zone_excess":1.18,"zone_rate_per_1000":0.165,"reference_rate_per_1000":0.077},{"x":"Prematurity/growth-related","y":0.421,"rate_ratio":6.03,"pct_of_zone_excess":5.64,"zone_rate_per_1000":0.505,"reference_rate_per_1000":0.084},{"x":"Perinatal respiratory","y":0.318,"rate_ratio":2.97,"pct_of_zone_excess":4.26,"zone_rate_per_1000":0.48,"reference_rate_per_1000":0.162},{"x":"Infection","y":0.294,"rate_ratio":2.14,"pct_of_zone_excess":3.94,"zone_rate_per_1000":0.553,"reference_rate_per_1000":0.259},{"x":"Haematologic/hydrops/IDM","y":0.12,"rate_ratio":1.78,"pct_of_zone_excess":1.6,"zone_rate_per_1000":0.273,"reference_rate_per_1000":0.153},{"x":"SIDS/SUID/ill-defined","y":0.672,"rate_ratio":2.07,"pct_of_zone_excess":9.0,"zone_rate_per_1000":1.303,"reference_rate_per_1000":0.631},{"x":"Other perinatal","y":0.238,"rate_ratio":2.39,"pct_of_zone_excess":3.19,"zone_rate_per_1000":0.41,"reference_rate_per_1000":0.172},{"x":"Other/residual","y":0.978,"rate_ratio":2.38,"pct_of_zone_excess":13.1,"zone_rate_per_1000":1.687,"reference_rate_per_1000":0.708}],"above":[{"x":"Congenital anomalies","y":0.187,"rate_ratio":1.27,"pct_of_zone_excess":244.84,"zone_rate_per_1000":0.878,"reference_rate_per_1000":0.691},{"x":"Placental/cord/membrane","y":-0.001,"rate_ratio":0.98,"pct_of_zone_excess":-1.88,"zone_rate_per_1000":0.061,"reference_rate_per_1000":0.062},{"x":"Asphyxia/hypoxia","y":0.021,"rate_ratio":1.38,"pct_of_zone_excess":27.86,"zone_rate_per_1000":0.077,"reference_rate_per_1000":0.055},{"x":"Maternal complications","y":0.007,"rate_ratio":1.1,"pct_of_zone_excess":9.6,"zone_rate_per_1000":0.084,"reference_rate_per_1000":0.077},{"x":"Prematurity/growth-related","y":-0.03,"rate_ratio":0.64,"pct_of_zone_excess":-39.56,"zone_rate_per_1000":0.054,"reference_rate_per_1000":0.084},{"x":"Perinatal respiratory","y":-0.04,"rate_ratio":0.75,"pct_of_zone_excess":-52.52,"zone_rate_per_1000":0.122,"reference_rate_per_1000":0.162},{"x":"Infection","y":-0.085,"rate_ratio":0.67,"pct_of_zone_excess":-111.46,"zone_rate_per_1000":0.174,"reference_rate_per_1000":0.259},{"x":"Haematologic/hydrops/IDM","y":0.265,"rate_ratio":2.73,"pct_of_zone_excess":347.48,"zone_rate_per_1000":0.418,"reference_rate_per_1000":0.153},{"x":"SIDS/SUID/ill-defined","y":-0.209,"rate_ratio":0.67,"pct_of_zone_excess":-274.07,"zone_rate_per_1000":0.422,"reference_rate_per_1000":0.631},{"x":"Other perinatal","y":0.055,"rate_ratio":1.32,"pct_of_zone_excess":72.54,"zone_rate_per_1000":0.227,"reference_rate_per_1000":0.172},{"x":"Other/residual","y":-0.094,"rate_ratio":0.87,"pct_of_zone_excess":-122.83,"zone_rate_per_1000":0.615,"reference_rate_per_1000":0.708}]},"fetal":{"below":[{"x":"Congenital anomalies","y":1.699,"rate_ratio":11.66,"pct_of_zone_excess":16.31,"zone_rate_per_1000":1.858,"reference_rate_per_1000":0.159},{"x":"Placental/cord/membrane","y":2.142,"rate_ratio":3.85,"pct_of_zone_excess":20.57,"zone_rate_per_1000":2.893,"reference_rate_per_1000":0.752},{"x":"Asphyxia/hypoxia","y":0.009,"rate_ratio":3.7,"pct_of_zone_excess":0.08,"zone_rate_per_1000":0.012,"reference_rate_per_1000":0.003},{"x":"Maternal complications","y":1.807,"rate_ratio":5.48,"pct_of_zone_excess":17.36,"zone_rate_per_1000":2.211,"reference_rate_per_1000":0.403},{"x":"Prematurity/growth-related","y":0.434,"rate_ratio":15.56,"pct_of_zone_excess":4.17,"zone_rate_per_1000":0.464,"reference_rate_per_1000":0.03},{"x":"Perinatal respiratory","y":0.006,"rate_ratio":6.11,"pct_of_zone_excess":0.06,"zone_rate_per_1000":0.007,"reference_rate_per_1000":0.001},{"x":"Infection","y":0.009,"rate_ratio":5.05,"pct_of_zone_excess":0.09,"zone_rate_per_1000":0.011,"reference_rate_per_1000":0.002},{"x":"Haematologic/hydrops/IDM","y":0.206,"rate_ratio":3.23,"pct_of_zone_excess":1.98,"zone_rate_per_1000":0.299,"reference_rate_per_1000":0.092},{"x":"Unspecified/ill-defined","y":4.03,"rate_ratio":5.0,"pct_of_zone_excess":38.7,"zone_rate_per_1000":5.038,"reference_rate_per_1000":1.008},{"x":"Other perinatal","y":0.031,"rate_ratio":4.4,"pct_of_zone_excess":0.29,"zone_rate_per_1000":0.04,"reference_rate_per_1000":0.009},{"x":"Other/residual","y":0.041,"rate_ratio":4.6,"pct_of_zone_excess":0.39,"zone_rate_per_1000":0.053,"reference_rate_per_1000":0.011}],"above":[{"x":"Congenital anomalies","y":0.103,"rate_ratio":1.64,"pct_of_zone_excess":13.21,"zone_rate_per_1000":0.262,"reference_rate_per_1000":0.159},{"x":"Placental/cord/membrane","y":-0.184,"rate_ratio":0.76,"pct_of_zone_excess":-23.68,"zone_rate_per_1000":0.568,"reference_rate_per_1000":0.752},{"x":"Asphyxia/hypoxia","y":0.001,"rate_ratio":1.44,"pct_of_zone_excess":0.18,"zone_rate_per_1000":0.005,"reference_rate_per_1000":0.003},{"x":"Maternal complications","y":0.102,"rate_ratio":1.25,"pct_of_zone_excess":13.1,"zone_rate_per_1000":0.505,"reference_rate_per_1000":0.403},{"x":"Prematurity/growth-related","y":-0.0,"rate_ratio":0.99,"pct_of_zone_excess":-0.03,"zone_rate_per_1000":0.03,"reference_rate_per_1000":0.03},{"x":"Perinatal respiratory","y":0.003,"rate_ratio":3.13,"pct_of_zone_excess":0.33,"zone_rate_per_1000":0.004,"reference_rate_per_1000":0.001},{"x":"Infection","y":0.002,"rate_ratio":1.86,"pct_of_zone_excess":0.25,"zone_rate_per_1000":0.004,"reference_rate_per_1000":0.002},{"x":"Haematologic/hydrops/IDM","y":0.572,"rate_ratio":7.18,"pct_of_zone_excess":73.53,"zone_rate_per_1000":0.664,"reference_rate_per_1000":0.092},{"x":"Unspecified/ill-defined","y":0.143,"rate_ratio":1.14,"pct_of_zone_excess":18.44,"zone_rate_per_1000":1.151,"reference_rate_per_1000":1.008},{"x":"Other perinatal","y":0.005,"rate_ratio":1.6,"pct_of_zone_excess":0.69,"zone_rate_per_1000":0.014,"reference_rate_per_1000":0.009},{"x":"Other/residual","y":0.031,"rate_ratio":3.71,"pct_of_zone_excess":3.98,"zone_rate_per_1000":0.042,"reference_rate_per_1000":0.011}]}},"standards":{"external":{"infant":[{"x":"Population (empirical, sex-specific)","y":0.781,"n_validation_cells":2000},{"x":"WHO fetal growth (EFW)","y":0.781,"n_validation_cells":2000},{"x":"INTERGROWTH-21st (EFW)","y":0.781,"n_validation_cells":2000}],"fetal":[{"x":"Population (empirical, sex-specific)","y":0.886,"n_validation_cells":2041},{"x":"WHO fetal growth (EFW)","y":0.886,"n_validation_cells":2041},{"x":"INTERGROWTH-21st (EFW)","y":0.885,"n_validation_cells":2041}]},"custom":{"infant":[{"x":"Population (sex-specific)","y":0.766,"n_validation_cells":3029},{"x":"Customized (sex + maternal race)","y":0.762,"n_validation_cells":3029}],"fetal":[{"x":"Population (sex-specific)","y":0.876,"n_validation_cells":3076},{"x":"Customized (sex + maternal race)","y":0.876,"n_validation_cells":3076}]}},"heldout":{"infant":[{"x":"GA only","y":0.746,"train_years":"2016-2020","validation_years":"2021-2023"},{"x":"GA + p10/p90","y":0.769,"train_years":"2016-2020","validation_years":"2021-2023"},{"x":"GA + log residual","y":0.777,"train_years":"2016-2020","validation_years":"2021-2023"},{"x":"GA + BCA residual","y":0.777,"train_years":"2016-2020","validation_years":"2021-2023"},{"x":"GA + BW surface","y":0.779,"train_years":"2016-2020","validation_years":"2021-2023"}],"fetal":[{"x":"GA only","y":0.864,"train_years":"2016-2021","validation_years":"2022-2024"},{"x":"GA + p10/p90","y":0.875,"train_years":"2016-2021","validation_years":"2022-2024"},{"x":"GA + log residual","y":0.879,"train_years":"2016-2021","validation_years":"2022-2024"},{"x":"GA + BCA residual","y":0.879,"train_years":"2016-2021","validation_years":"2022-2024"},{"x":"GA + BW surface","y":0.882,"train_years":"2016-2021","validation_years":"2022-2024"}]},"insample":{"infant":[{"x":"GA only","y":0.747},{"x":"GA + p10/p90","y":0.772},{"x":"GA + log residual","y":0.78},{"x":"GA + BCA residual","y":0.78},{"x":"GA + BW surface","y":0.782}],"fetal":[{"x":"GA only","y":0.868},{"x":"GA + p10/p90","y":0.88},{"x":"GA + log residual","y":0.884},{"x":"GA + BCA residual","y":0.884},{"x":"GA + BW surface","y":0.887}]},"robust":[{"x":"Below-p10 RR > 2 (both endpoints)","y":1.0,"n_specifications":200},{"x":"Fetal below-p10 RR > infant below-p10 RR","y":1.0,"n_specifications":200},{"x":"Fetal above-p90 RR > infant above-p90 RR","y":1.0,"n_specifications":200},{"x":"Fetal above-p90 RR > 1","y":0.975,"n_specifications":200}],"countFlow":[{"stage":"Raw source records","years":"source-specific","unit":"records","n":63884468,"births":33589282.0,"linkedBirths":29633197.0,"infantDeaths":163804.0,"fetalDeaths":498185.0,"fetalDenom":null},{"stage":"Singleton valid natality rows","years":"2016-2024","unit":"rows","n":32448118,"births":32448118.0,"linkedBirths":null,"infantDeaths":null,"fetalDeaths":null,"fetalDenom":null},{"stage":"Singleton valid linked denominator rows","years":"2017-2024 period files","unit":"rows","n":28644762,"births":null,"linkedBirths":28644762.0,"infantDeaths":null,"fetalDeaths":null,"fetalDenom":null},{"stage":"Singleton valid linked infant-death rows","years":"2017-2024 period files","unit":"rows / weighted deaths","n":141354,"births":null,"linkedBirths":null,"infantDeaths":142632.444976,"fetalDeaths":null,"fetalDenom":null},{"stage":"Singleton valid cohort denominator rows","years":"2016-2023 birth cohorts","unit":"rows","n":28872085,"births":null,"linkedBirths":28872085.0,"infantDeaths":null,"fetalDeaths":null,"fetalDenom":null},{"stage":"Singleton valid cohort infant-death rows","years":"2016-2023 birth cohorts","unit":"rows / unweighted deaths","n":143079,"births":null,"linkedBirths":null,"infantDeaths":143079.0,"fetalDeaths":null,"fetalDenom":null},{"stage":"Singleton valid fetal-death rows","years":"2014-2024","unit":"rows","n":222075,"births":null,"linkedBirths":null,"infantDeaths":null,"fetalDeaths":222075.0,"fetalDenom":null},{"stage":"Harmonized infant model-ready cells","years":"2016-2023 birth cohorts","unit":"aggregate cells","n":15314,"births":null,"linkedBirths":28872085.0,"infantDeaths":143077.0,"fetalDeaths":null,"fetalDenom":null},{"stage":"Harmonized fetal model-ready cells","years":"2016-2024","unit":"aggregate cells","n":19101,"births":32448118.0,"linkedBirths":null,"infantDeaths":null,"fetalDeaths":179027.0,"fetalDenom":32627145.0},{"stage":"Infant model-comparison cells","years":"2016-2023 cohorts, 24-42 weeks","unit":"aggregate cells","n":6111,"births":null,"linkedBirths":28750979.0,"infantDeaths":99253.0,"fetalDeaths":null,"fetalDenom":null},{"stage":"Fetal model-comparison cells","years":"2016-2024, 24-42 weeks","unit":"aggregate cells","n":7007,"births":null,"linkedBirths":null,"infantDeaths":null,"fetalDeaths":96602.0,"fetalDenom":32419577.0}],"summary":{"natality_records":"33589282","linked_denominator_records":"29633197","linked_death_records":"163804","cohort_denominator_records":"29950846","cohort_death_records":"143079","fetal_death_records":"498185","model_ready_cells":"19166","cohort_bca_top_decile_capture":"0.525726826889208","fetal_bca_top_decile_capture":"0.7370291636218694"}}; /*__FG_DATA_END__*/
+    if (!window.Viz) { console.error('[fetal-growth] Viz chart kit not loaded'); return; }
+    const V = window.Viz;
+    const d1 = V.fmt.dec(1), d2 = V.fmt.dec(2), d3 = V.fmt.dec(3), int = V.fmt.int;
+    const EN = '–', TIMES = '×', DOT = ' · ';
+    const nz = v => (v === 0 ? 0 : v); /* turn -0 into 0 */
+    const en = s => String(s).replace(/(\d)-(\d)/g, '$1' + EN + '$2');
+    const pTxt = p => (p < 0.001 ? 'p < 0.001' : 'p = ' + p.toFixed(3));
+    const pct2 = v => (Math.round(v * 10000) / 100).toFixed(2) + '%';
+    const ciTxt = (v, lo, hi) => d3(v) + ' (' + d3(lo) + EN + d3(hi) + ')';
+    const OUT = { infant: 'Infant death (birth-cohort linked)', fetal: 'Fetal death (delivery-based)' };
+    const OUT_S = { infant: 'infant death', fetal: 'fetal death' };
+    const ZONE = { 'Below p10': 'Below p10 (small for age)', 'p10-p90 (reference)': 'p10' + EN + 'p90 (reference)', 'Above p90': 'Above p90 (large for age)' };
+    const isRef = x => x.indexOf('p10-p90') === 0;
+    const $ = s => document.querySelector(s);
+    const setText = (sel, s) => { const el = $(sel); if (el) el.textContent = s; };
+    const safe = (name, fn) => { try { fn(); } catch (e) { console.error('[fetal-growth] chart failed: ' + name, e); } };
+    const state = { covidZone: 'below', bwEnd: 'infant', cEnd: 'infant', cZone: 'below', vEnd: 'infant', flow: 'fetal' };
+
+    function bindSeg(group, onChange) {
+      if (!group) return;
+      const btns = Array.from(group.querySelectorAll('button[data-val]'));
+      btns.forEach(b => b.addEventListener('click', () => {
+        if (b.getAttribute('aria-pressed') === 'true') return;
+        btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+        onChange(b.getAttribute('data-val'));
+      }));
+    }
+
+    /* ---------- 1. Growth-zone risk ---------- */
+    function drawZones() {
+      const cats = FG.zones.infant.map(p => ZONE[p.x]);
+      const ser = k => {
+        const pts = FG.zones[k];
+        return {
+          name: OUT[k],
+          values: pts.map(p => p.y),
+          lo: pts.map(p => (isRef(p.x) ? undefined : p.ci_low)),
+          hi: pts.map(p => (isRef(p.x) ? undefined : p.ci_high)),
+          notes: pts.map(p => (isRef(p.x) ? 'Reference zone (rate ratio 1 by definition). ' : '') + d3(p.rate_per_1000) + ' deaths per 1,000 (' + int(p.deaths) + ' of ' + int(p.denominator) + ')')
+        };
+      };
+      const rows = [];
+      FG.zones.infant.forEach((p, i) => ['infant', 'fetal'].forEach(k => {
+        const q = FG.zones[k][i];
+        rows.push([ZONE[q.x] + DOT + OUT_S[k], int(q.deaths), int(q.denominator), d3(q.rate_per_1000), isRef(q.x) ? '1.000 (reference)' : ciTxt(q.y, q.ci_low, q.ci_high)]);
+      }));
+      V.groupedHbar('#chart-zones', {
+        categories: cats,
+        series: [ser('infant'), ser('fetal')],
+        mark: 'dot', format: d3,
+        ref: { value: 1, label: 'RR = 1 (same rate as p10' + EN + 'p90)' },
+        xLabel: 'Rate ratio vs the p10' + EN + 'p90 zone',
+        table: { caption: 'Deaths, denominators, rates and rate ratios by growth zone', columns: ['Zone' + DOT + 'outcome', 'Deaths', 'Births or deliveries', 'Deaths per 1,000', 'Rate ratio (95% CI)'], rows },
+        source: 'Source: paper Table 6 (p.13); repo app_data/growth_zone_rate_ratios.csv. Infant: 2016' + EN + '2023 birth cohorts; fetal: 2016' + EN + '2024, delivery-based denominator.',
+        ariaLabel: 'Dot plot of mortality rate ratios with 95% confidence intervals for infant and fetal death in three growth zones.'
+      });
+      V.hbar('#chart-ror', {
+        data: FG.ror.map(p => ({
+          label: ZONE[p.x], value: p.y, lo: p.ci_low, hi: p.ci_high, color: 'var(--chart-ink-2)',
+          note: 'Fetal RR ' + d3(p.fetal_rr) + ' ÷ infant RR ' + d3(p.infant_rr) + '; z = ' + p.z_statistic + ', p < 0.001'
+        })),
+        mark: 'dot', format: d3, valueName: 'Fetal RR ÷ infant RR',
+        ref: { value: 1, label: '1 = equal rate ratios' },
+        table: { caption: 'Fetal-over-infant ratio of rate ratios by zone', columns: ['Zone', 'Infant RR', 'Fetal RR', 'Fetal ÷ infant (95% CI)', 'z', 'p'], rows: FG.ror.map(p => [ZONE[p.x], d3(p.infant_rr), d3(p.fetal_rr), ciTxt(p.y, p.ci_low, p.ci_high), String(p.z_statistic), '< 0.001']) },
+        source: 'Source: paper Abstract (p.2) and §4.6 (p.14); repo app_data/ratio_of_rate_ratios.csv. Delta-method z-test.',
+        ariaLabel: 'Dot plot of the fetal-over-infant ratio of rate ratios with 95% confidence intervals, below p10 and above p90.'
+      });
+    }
+
+    /* ---------- 2. Across the pandemic (three pooled periods) ---------- */
+    const PERIOD = { 'Pre-pandemic': 'Pre-pandemic (2016' + EN + '2019)', 'Pandemic': 'Pandemic (2020' + EN + '2021)', 'Post-pandemic': 'Post-pandemic (2022' + EN + '2024*)' };
+    function drawCovid() {
+      const z = state.covidZone, P = FG.periods[z], S = FG.shifts[z];
+      const zt = z === 'below' ? 'below p10' : 'above p90';
+      const T = FG.transport;
+      setText('#covid-title', 'Rate ratio vs the p10' + EN + 'p90 zone in three periods, ' + zt + ' (95% CI)');
+      setText('#shift-title', 'Change vs 2016' + EN + '2019: ratio of rate ratios, ' + zt + ' (95% CI)');
+      const ri = P.infant.map(p => d3(p.y)).join(' → '), rf = P.fetal.map(p => d3(p.y)).join(' → ');
+      if (z === 'below') {
+        setText('#covid-sub', 'Infant: ' + ri + '. Fetal: ' + rf + '. Small-for-age risk stayed far above the reference in every period.');
+        setText('#shift-sub', 'Infant barely moved (pandemic vs pre-pandemic 1.027, p = 0.14). The fetal ratio dipped slightly (0.944 and 0.933, both p < 0.001), the one small change the paper reports.');
+      } else {
+        setText('#covid-sub', 'Infant: ' + ri + '. Fetal: ' + rf + '. Large-for-age infant risk stayed near 1; fetal risk stayed above 1.');
+        setText('#shift-sub', 'No shift was statistically significant for either outcome (all four p-values at or above 0.057).');
+      }
+      setText('#covid-transport', 'A model trained only on 2016' + EN + '2019 kept its accuracy in every period: weighted AUC ' + T.infant.map(p => d3(p.y)).join(', ') + ' for infant death and ' + T.fetal.map(p => d3(p.y)).join(', ') + ' for fetal death (pre-pandemic, pandemic, post-pandemic; repo app_data/covid_transportability_auc.csv; paper §4.3).');
+      const ser = k => ({
+        name: OUT[k], values: P[k].map(p => p.y), lo: P[k].map(p => p.ci_low), hi: P[k].map(p => p.ci_high),
+        notes: P[k].map(p => en(p.years) + ': ' + d3(p.rate_per_1000) + ' deaths per 1,000 (' + int(p.deaths) + ' of ' + int(p.denominator) + ')')
+      });
+      const rows = [];
+      P.infant.forEach((p, i) => ['infant', 'fetal'].forEach(k => {
+        const q = P[k][i];
+        rows.push([q.x + DOT + OUT_S[k], en(q.years), int(q.deaths), int(q.denominator), d3(q.rate_per_1000), ciTxt(q.y, q.ci_low, q.ci_high)]);
+      }));
+      V.groupedHbar('#chart-covid', {
+        categories: P.infant.map(p => PERIOD[p.x]),
+        series: [ser('infant'), ser('fetal')],
+        mark: 'dot', format: d3,
+        domain: z === 'below' ? [0, 6] : [0.8, 1.5],
+        tickFormat: z === 'below' ? V.fmt.compact : d1,
+        ref: { value: 1, label: 'RR = 1' },
+        xLabel: 'Rate ratio vs the p10' + EN + 'p90 zone in the same period',
+        table: { caption: 'Growth-zone rate ratios by pandemic period', columns: ['Period' + DOT + 'outcome', 'Years', 'Deaths', 'Denominator', 'Deaths per 1,000', 'Rate ratio (95% CI)'], rows },
+        source: 'Source: paper §4.3 (pp.11' + EN + '12); repo app_data/covid_period_zone_rate_ratios.csv. *Post-pandemic = 2022' + EN + '2023 birth cohorts for infant death and 2022' + EN + '2024 for fetal death.',
+        ariaLabel: 'Dot plot of growth-zone rate ratios with 95% confidence intervals in three pandemic periods, infant and fetal death.'
+      });
+      const srows = [];
+      S.infant.forEach((p, i) => ['infant', 'fetal'].forEach(k => {
+        const q = S[k][i];
+        srows.push([q.x + DOT + OUT_S[k], ciTxt(q.y, q.ci_low, q.ci_high), pTxt(q.p_value).replace(/^p = /, '').replace(/^p /, '')]);
+      }));
+      V.groupedHbar('#chart-shift', {
+        categories: S.infant.map(p => p.x),
+        series: ['infant', 'fetal'].map(k => ({
+          name: OUT[k], values: S[k].map(p => p.y), lo: S[k].map(p => p.ci_low), hi: S[k].map(p => p.ci_high),
+          notes: S[k].map(p => pTxt(p.p_value) + DOT + en(p.comparison_exact))
+        })),
+        mark: 'dot', format: d3, domain: [0.85, 1.15], tickFormat: d2,
+        ref: { value: 1, label: 'No change' },
+        xLabel: 'Ratio of rate ratios vs 2016' + EN + '2019',
+        table: { caption: 'Ratio-of-rate-ratio shift tests vs pre-pandemic', columns: ['Comparison' + DOT + 'outcome', 'Ratio of rate ratios (95% CI)', 'p-value'], rows: srows },
+        source: 'Source: paper §4.3 (pp.11' + EN + '12); repo app_data/covid_shift_tests.csv. Delta-method z-test.',
+        ariaLabel: 'Dot plot of ratio-of-rate-ratio shift tests with 95% confidence intervals, pandemic and post-pandemic vs pre-pandemic.'
+      });
+    }
+
+    /* ---------- 3. Black-White gap (Kitagawa) ---------- */
+    function drawBW() {
+      const e = state.bwEnd, K = FG.kit[e], Z = FG.kitZone[e], Dz = FG.kitDist[e];
+      const per = e === 'infant' ? 'per 1,000 births' : 'per 1,000 deliveries';
+      const who = e === 'infant' ? 'births' : 'deliveries';
+      setText('#bw-white', d2(K.white)); setText('#bw-black', d2(K.black)); setText('#bw-rr', d2(K.rr)); setText('#bw-gap', d2(K.gap));
+      setText('#bw-white-l', 'NH White deaths ' + per); setText('#bw-black-l', 'NH Black deaths ' + per); setText('#bw-gap-l', 'gap, deaths ' + per);
+      setText('#bw-stack-title', 'How the Black' + EN + 'White ' + OUT_S[e] + ' gap splits (Kitagawa decomposition, weeks 24' + EN + '42)');
+      setText('#bw-stack-sub', d1(K.withinPct) + '% of the ' + d2(K.gap) + '-per-1,000 gap comes from higher death rates among Black than White ' + who + ' in the same growth zone; ' + d1(K.distPct) + '% from the different mix of ' + who + ' across zones.');
+      V.stack('#chart-bw-stack', {
+        segments: [
+          { label: 'Higher death rates within the same growth zone', value: K.withinPct, series: 2, note: d3(K.withinPer1000) + ' of the ' + d2(K.gap) + ' ' + per + ' gap' },
+          { label: 'Different mix of ' + who + ' across growth zones', value: K.distPct, series: 3, note: d3(K.distPer1000) + ' of the ' + d2(K.gap) + ' ' + per + ' gap' }
+        ],
+        darkInk: [0, 1],
+        valueName: 'Deaths ' + per, valueFormat: v => (v === K.withinPct ? d3(K.withinPer1000) : d3(K.distPer1000)),
+        table: { caption: 'Kitagawa decomposition of the Black-White gap', columns: ['Component', 'Share of gap', 'Deaths ' + per], rows: [['Within-zone death rates (rate component)', d1(K.withinPct) + '%', d3(K.withinPer1000)], ['Mix across zones (distribution component)', d1(K.distPct) + '%', d3(K.distPer1000)], ['Total gap (NH Black ' + d2(K.black) + ' vs NH White ' + d2(K.white) + ')', '100%', d2(K.gap)]] },
+        source: 'Source: paper Table 4 (p.11) and Abstract; repo app_data/disparity_kitagawa_summary.csv. Non-Hispanic Black vs non-Hispanic White, gestational weeks 24' + EN + '42, pooled years.',
+        ariaLabel: 'Stacked bar splitting the Black-White ' + OUT_S[e] + ' gap into a within-zone component and a distribution component.'
+      });
+      const zw = Z.white, zb = Z.black;
+      setText('#bw-zone-title', (e === 'infant' ? 'Infant deaths per 1,000 births' : 'Fetal deaths per 1,000 deliveries') + ' within each growth zone, NH White vs NH Black');
+      const refW = zw.find(p => isRef(p.x)), refB = zb.find(p => isRef(p.x)), upW = zw.find(p => p.x === 'Above p90'), upB = zb.find(p => p.x === 'Above p90');
+      setText('#bw-zone-sub', e === 'infant'
+        ? 'The gap appears inside every zone: in the p10' + EN + 'p90 zone, ' + d3(refB.y) + ' vs ' + d3(refW.y) + ' infant deaths per 1,000.'
+        : 'The gap appears inside every zone, widest above p90: ' + d3(upB.y) + ' vs ' + d3(upW.y) + ' fetal deaths per 1,000.');
+      V.groupedHbar('#chart-bw-zone', {
+        categories: zw.map(p => ZONE[p.x]),
+        series: [{ name: 'Non-Hispanic White', values: zw.map(p => p.y) }, { name: 'Non-Hispanic Black', values: zb.map(p => p.y) }],
+        format: d3,
+        xLabel: e === 'infant' ? 'Infant deaths per 1,000 births' : 'Fetal deaths per 1,000 deliveries',
+        table: { caption: 'Zone-specific death rates by race', columns: ['Growth zone', 'NH White ' + per, 'NH Black ' + per], rows: zw.map((p, i) => [ZONE[p.x], d3(p.y), d3(zb[i].y)]) },
+        source: 'Source: supplement (Kitagawa inputs by zone); repo app_data/disparity_kitagawa_by_zone.csv. Weeks 24' + EN + '42.',
+        ariaLabel: 'Grouped bars of death rates per 1,000 by growth zone for non-Hispanic White and Black ' + who + '.'
+      });
+      const dw = Dz.white, db = Dz.black;
+      const loW = dw.find(p => p.x === 'Below p10'), loB = db.find(p => p.x === 'Below p10');
+      setText('#bw-dist-title', 'Share of ' + who + ' in each growth zone, NH White vs NH Black');
+      setText('#bw-dist-sub', 'Black ' + who + ' were more often below p10 (' + pct2(loB.y) + ' vs ' + pct2(loW.y) + '), which accounts for the smaller part of the gap.');
+      V.groupedHbar('#chart-bw-dist', {
+        categories: dw.map(p => ZONE[p.x]),
+        series: [{ name: 'Non-Hispanic White', values: dw.map(p => Math.round(p.y * 10000) / 100) }, { name: 'Non-Hispanic Black', values: db.map(p => Math.round(p.y * 10000) / 100) }],
+        format: v => v.toFixed(2) + '%', tickFormat: v => v + '%',
+        xLabel: 'Share of ' + who + ' in the zone',
+        table: { caption: 'Share of births or deliveries in each zone by race', columns: ['Growth zone', 'NH White', 'NH Black'], rows: dw.map((p, i) => [ZONE[p.x], pct2(p.y), pct2(db[i].y)]) },
+        source: 'Source: supplement (Kitagawa inputs by zone); repo app_data/disparity_kitagawa_by_zone.csv. Weeks 24' + EN + '42.',
+        ariaLabel: 'Grouped bars of the share of ' + who + ' in each growth zone for non-Hispanic White and Black groups.'
+      });
+    }
+
+    /* ---------- 4. What drives the excess (cause groups) ---------- */
+    const CAUSE_SUB = {
+      'infant|below': 'Congenital anomalies make up 56.8% of the excess (cause-group rate ratio 7.14); prematurity/growth-related codes make up 5.6%.',
+      'infant|above': 'The net infant excess above p90 is very small, so percentage shares swing far past ±100% (for example 347% and −274%); this chart shows deaths per 1,000 instead. Haematologic/hydrops/IDM is the largest positive excess (rate ratio 2.73).',
+      'fetal|below': 'Unspecified/ill-defined codes are the largest share (38.7%), then placental/cord/membrane causes (20.6%); congenital anomalies have a cause-group rate ratio of 11.66.',
+      'fetal|above': 'Haematologic/hydrops/IDM causes: cause-group rate ratio 7.18 and 73.5% of the above-p90 fetal excess.'
+    };
+    function drawCauses() {
+      const e = state.cEnd, z = state.cZone, key = e + '|' + z;
+      const unstable = key === 'infant|above';
+      const pts = FG.causes[e][z].slice().sort((a, b) => b.y - a.y);
+      const hasNeg = pts.some(p => p.y < 0);
+      setText('#causes-title', 'Excess deaths per 1,000 by cause group: ' + OUT_S[e] + ', ' + (z === 'below' ? 'below p10' : 'above p90'));
+      setText('#causes-sub', CAUSE_SUB[key]);
+      const cols = ['Cause group', 'Excess per 1,000', 'Cause-group rate ratio', 'Zone rate per 1,000', 'Reference rate per 1,000'];
+      if (!unstable) cols.push('Share of zone excess');
+      V.hbar('#chart-causes', {
+        data: pts.map(p => ({
+          label: p.x, value: nz(p.y), color: p.y < 0 ? 'var(--ramp-250)' : 'var(--series-2)',
+          note: 'Rate ratio ' + d2(p.rate_ratio) + DOT + d3(p.zone_rate_per_1000) + ' vs ' + d3(p.reference_rate_per_1000) + ' per 1,000' + (unstable ? '' : DOT + d2(p.pct_of_zone_excess) + '% of zone excess')
+        })),
+        mark: 'bar', format: v => d3(nz(v)), valueName: 'Excess deaths per 1,000',
+        xLabel: 'Excess deaths per 1,000 vs the p10' + EN + 'p90 zone',
+        legend: hasNeg ? [{ name: 'More deaths than in the p10' + EN + 'p90 zone', color: 'var(--series-2)' }, { name: 'Fewer deaths than in the p10' + EN + 'p90 zone', color: 'var(--ramp-250)' }] : null,
+        table: { caption: 'Cause-group excess decomposition', columns: cols, rows: pts.map(p => { const r = [p.x, d3(nz(p.y)), d2(p.rate_ratio), d3(p.zone_rate_per_1000), d3(p.reference_rate_per_1000)]; if (!unstable) r.push(d2(p.pct_of_zone_excess) + '%'); return r; }) },
+        source: 'Source: paper Table 3 (pp.9' + EN + '10) and Figure 1; repo app_data/cause_excess_decomposition.csv. Weeks 24' + EN + '42.' + (unstable ? ' Shares of zone excess are omitted for this panel because the net excess is close to zero.' : ''),
+        ariaLabel: 'Bar chart of excess deaths per 1,000 by cause group for ' + OUT_S[e] + (z === 'below' ? ' below p10.' : ' above p90.')
+      });
+    }
+
+    /* ---------- 5. Growth standards ---------- */
+    const STD_LABEL = { 'Population (empirical, sex-specific)': 'U.S. population (empirical, sex-specific)', 'WHO fetal growth (EFW)': 'WHO fetal growth charts (EFW)', 'INTERGROWTH-21st (EFW)': 'INTERGROWTH-21st (EFW)' };
+    function drawStandards() {
+      const E = FG.standards.external, C = FG.standards.custom;
+      V.groupedHbar('#chart-std', {
+        categories: E.infant.map(p => STD_LABEL[p.x] || p.x),
+        series: ['infant', 'fetal'].map(k => ({ name: OUT[k], values: E[k].map(p => p.y), notes: E[k].map(p => int(p.n_validation_cells) + ' validation cells') })),
+        mark: 'dot', format: d3, domain: [0.75, 0.9], tickFormat: d2,
+        xLabel: 'Held-out weighted AUC',
+        table: { caption: 'Held-out AUC by growth reference', columns: ['Growth reference', 'Infant death AUC', 'Fetal death AUC'], rows: E.infant.map((p, i) => [STD_LABEL[p.x] || p.x, d3(p.y), d3(E.fetal[i].y)]) },
+        source: 'Source: paper §4.4 (p.12); repo app_data/standards_adjudication.csv. EFW = estimated fetal weight.',
+        ariaLabel: 'Dot plot of held-out AUC for three growth references, infant and fetal death.'
+      });
+      V.groupedHbar('#chart-cust', {
+        categories: C.infant.map(p => p.x),
+        series: ['infant', 'fetal'].map(k => ({ name: OUT[k], values: C[k].map(p => p.y), notes: C[k].map(p => int(p.n_validation_cells) + ' validation cells (NH White + NH Black only)') })),
+        mark: 'dot', format: d3, domain: [0.75, 0.9], tickFormat: d2,
+        xLabel: 'Held-out weighted AUC',
+        table: { caption: 'Population vs customized standard', columns: ['Standard', 'Infant death AUC', 'Fetal death AUC'], rows: C.infant.map((p, i) => [p.x, d3(p.y), d3(C.fetal[i].y)]) },
+        source: 'Source: paper §4.4 (p.12); repo app_data/standards_adjudication.csv. Restricted to non-Hispanic White and Black cells.',
+        ariaLabel: 'Dot plot of held-out AUC for the population vs customized standard, infant and fetal death.'
+      });
+    }
+
+    /* ---------- 6. Validation ---------- */
+    const MODEL_LABEL = { 'GA only': 'GA only', 'GA + p10/p90': 'GA + p10/p90 zones', 'GA + log residual': 'GA + log-cubic residual', 'GA + BCA residual': 'GA + BCA proxy residual', 'GA + BW surface': 'GA + flexible birthweight surface' };
+    const MODEL_COLOR = { 'GA only': 'var(--series-3)', 'GA + p10/p90': 'var(--series-2)', 'GA + log residual': 'var(--series-1)', 'GA + BCA residual': 'var(--series-1)', 'GA + BW surface': 'var(--chart-muted)' };
+    function drawValidation() {
+      const e = state.vEnd, L = FG.loyo[e], H = FG.heldout[e], I = FG.insample[e];
+      const years = L['GA only'].map(p => p.x);
+      setText('#loyo-title', 'Leave-one-year-out validation AUC by held-out year: ' + OUT_S[e]);
+      setText('#held-title', 'Held-out AUC by model, trained ' + en(H[0].train_years) + ' and tested ' + en(H[0].validation_years) + ': ' + OUT_S[e]);
+      const lr = L['GA + log residual'].map(p => p.y), ga = L['GA only'].map(p => p.y);
+      setText('#loyo-sub', 'Each point is accuracy on one year the model never saw (' + years[0] + EN + years[years.length - 1] + '). The log-cubic residual model stayed between ' + d3(Math.min.apply(null, lr)) + ' and ' + d3(Math.max.apply(null, lr)) + ' and beat gestational age alone in every year.');
+      const hb = H.find(p => p.x === 'GA + BCA residual'), hl = H.find(p => p.x === 'GA + log residual'), hs = H.find(p => p.x === 'GA + BW surface');
+      setText('#held-sub', 'BCA proxy ' + d3(hb.y) + ' vs log-cubic ' + d3(hl.y) + ': a tie at three decimals (the bootstrap gap is under 0.0002). The flexible surface reaches ' + d3(hs.y) + '.');
+      V.line('#chart-loyo', {
+        series: [
+          { name: MODEL_LABEL['GA + log residual'], points: L['GA + log residual'], seriesIndex: 0 },
+          { name: MODEL_LABEL['GA + p10/p90'], points: L['GA + p10/p90'], seriesIndex: 1 },
+          { name: MODEL_LABEL['GA only'], points: L['GA only'], seriesIndex: 2 }
+        ],
+        format: d3, tickFormat: d3, xLabel: 'Held-out year (trained on all other years)', yLabel: 'Weighted AUC',
+        table: { caption: 'Leave-one-year-out validation AUC by year, all five models', columns: ['Held-out year'].concat(Object.keys(MODEL_LABEL).map(m => MODEL_LABEL[m])), rows: years.map((y, i) => [String(y)].concat(Object.keys(MODEL_LABEL).map(m => d3(L[m][i].y)))) },
+        source: 'Source: supplement leave-one-year-out table (repo manuscript/tables/table_leave_one_year_out_validation.tex), transcribed to assets/data/fetal/leave_one_year_out_validation.csv. The data table lists all five models.',
+        ariaLabel: 'Line chart of leave-one-year-out validation AUC by held-out year for three models.'
+      });
+      V.hbar('#chart-held', {
+        data: H.map(p => ({ label: MODEL_LABEL[p.x], value: p.y, color: MODEL_COLOR[p.x], note: 'In-sample AUC ' + d3(I.find(q => q.x === p.x).y) })),
+        mark: 'dot', format: d3, valueName: 'Held-out AUC',
+        domain: e === 'infant' ? [0.7, 0.8] : [0.8, 0.9], tickFormat: d2,
+        xLabel: 'Held-out weighted AUC',
+        table: { caption: 'In-sample and held-out AUC by model', columns: ['Model', 'In-sample AUC (Table 7)', 'Held-out AUC (Table 8)'], rows: H.map(p => [MODEL_LABEL[p.x], d3(I.find(q => q.x === p.x).y), d3(p.y)]) },
+        source: 'Source: paper Tables 7 and 8 (p.13); repo app_data/temporal_validation.csv and model_comparison.csv.',
+        ariaLabel: 'Dot plot of held-out AUC for five models.'
+      });
+    }
+
+    /* ---------- Data pipeline funnel (Methods) ---------- */
+    function drawFlow() {
+      const CF = {}; FG.countFlow.forEach(r => { CF[r.stage] = r; });
+      let steps, sub;
+      if (state.flow === 'infant') {
+        const a = CF['Singleton valid cohort denominator rows'], b = CF['Harmonized infant model-ready cells'], c = CF['Infant model-comparison cells'];
+        const raw = +FG.summary.cohort_denominator_records;
+        steps = [
+          { label: 'Birth-cohort birth records parsed', value: raw, note: 'Raw denominator records from the linked birth/infant-death files, 2016' + EN + '2023 birth cohorts.' },
+          { label: 'Singleton births with valid fields', value: a.n, note: 'Single births with usable sex, gestational age and birthweight; nothing imputed.' },
+          { label: 'Model-ready aggregate cells', value: b.n, note: 'Grouping, not exclusion: all ' + int(b.linkedBirths) + ' births and ' + int(b.infantDeaths) + ' infant deaths sit in year ' + TIMES + ' sex ' + TIMES + ' week ' + TIMES + ' 100 g cells.' },
+          { label: 'Model-comparison cells, weeks 24' + EN + '42', value: c.n, note: 'Weeks 24' + EN + '42 and cells with a denominator of at least 50: ' + int(c.linkedBirths) + ' births and ' + int(c.infantDeaths) + ' infant deaths.' }
+        ];
+        sub = int(raw) + ' birth-cohort records become ' + int(c.n) + ' model-comparison cells. Grouping into cells keeps every eligible birth; the last step restricts to weeks 24' + EN + '42.';
+      } else {
+        const a = CF['Singleton valid natality rows'], b = CF['Harmonized fetal model-ready cells'], c = CF['Fetal model-comparison cells'];
+        const raw = +FG.summary.natality_records;
+        steps = [
+          { label: 'Natality (birth) records parsed', value: raw, note: 'Raw NCHS natality public-use records, 2016' + EN + '2024 files.' },
+          { label: 'Singleton births with valid fields', value: a.n, note: 'Single births with usable sex, gestational age and birthweight; nothing imputed.' },
+          { label: 'Model-ready aggregate cells', value: b.n, note: 'Grouping, not exclusion: all ' + int(b.births) + ' births plus ' + int(b.fetalDeaths) + ' fetal deaths (2016' + EN + '2024) sit in year ' + TIMES + ' sex ' + TIMES + ' week ' + TIMES + ' 100 g cells.' },
+          { label: 'Model-comparison cells, weeks 24' + EN + '42', value: c.n, note: 'Weeks 24' + EN + '42 and cells with a denominator of at least 50: ' + int(c.fetalDenom) + ' deliveries and ' + int(c.fetalDeaths) + ' fetal deaths.' }
+        ];
+        sub = int(raw) + ' natality records parsed become ' + int(c.n) + ' model-comparison cells. Grouping into cells keeps every eligible birth; the last step restricts to weeks 24' + EN + '42.';
+      }
+      setText('#flow-title', 'From raw files to model-ready cells: ' + (state.flow === 'infant' ? 'infant' : 'fetal') + '-death analysis (counts)');
+      setText('#flow-sub', sub);
+      V.funnel('#chart-flow', {
+        steps, log: true, format: int,
+        table: { caption: 'Full count flow, paper Table 1', columns: ['Stage (paper Table 1)', 'Years', 'Unit', 'Rows or cells'], rows: FG.countFlow.map(r => [r.stage, en(r.years), r.unit, int(r.n)]) },
+        source: 'Source: paper Table 1 (pp.4' + EN + '5) and supplement Table 1; repo app_data/count_flow.csv. Units change along the flow (records, then rows, then aggregate cells); the data table lists every stage.',
+        ariaLabel: 'Funnel of record and cell counts from raw files to model-comparison cells.'
+      });
+    }
+
+    /* ---------- Wiring: draw each tab the first time it is shown ---------- */
+    const renderers = { 'panel-zones': ['zones', drawZones], 'panel-covid': ['covid', drawCovid], 'panel-bw': ['bw', drawBW], 'panel-causes': ['causes', drawCauses], 'panel-standards': ['standards', drawStandards], 'panel-validation': ['validation', drawValidation] };
+    const drawn = {};
+    const ensure = id => { if (renderers[id] && !drawn[id]) { drawn[id] = true; safe(renderers[id][0], renderers[id][1]); } };
+    document.addEventListener('tabchange', e => {
+      const tab = e.detail && e.detail.tab;
+      if (!tab || !tab.closest('#explore')) return;
+      ensure(tab.getAttribute('aria-controls'));
+      try { if (tab.id && history.replaceState) history.replaceState(null, '', '#' + tab.id); } catch (err) { /* ignore */ }
+    });
+    bindSeg($('#seg-covid-zone'), v => { state.covidZone = v; safe('covid', drawCovid); });
+    bindSeg($('#seg-bw-end'), v => { state.bwEnd = v; safe('bw', drawBW); });
+    bindSeg($('#seg-c-end'), v => { state.cEnd = v; safe('causes', drawCauses); });
+    bindSeg($('#seg-c-zone'), v => { state.cZone = v; safe('causes', drawCauses); });
+    bindSeg($('#seg-v-end'), v => { state.vEnd = v; safe('validation', drawValidation); });
+    bindSeg($('#seg-flow'), v => { state.flow = v; safe('flow', drawFlow); });
+    document.querySelectorAll('#explore [role="tabpanel"]').forEach(p => { if (!p.hidden) ensure(p.id); });
+    safe('flow', drawFlow);
+    /* Deep link to a dashboard tab, e.g. fetal-growth.html#tab-bw */
+    const h = location.hash.slice(1);
+    if (/^tab-/.test(h)) { const t = document.getElementById(h); if (t && t.getAttribute('role') === 'tab') t.click(); }
+  })();
+  </script>
+</body>
+</html>

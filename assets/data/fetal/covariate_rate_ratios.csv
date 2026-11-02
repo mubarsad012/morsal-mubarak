@@ -1,0 +1,45 @@
+outcome,covariate,level,rate_ratio_vs_reference,rate_per_1000
+Cohort infant death,bmi_group,Unknown,3.4704691947556263,13.728257368649532
+Cohort infant death,bmi_group,Obese III,1.8966288905980395,7.502561781067633
+Cohort infant death,bmi_group,Obese II,1.595836385177699,6.312706260894341
+Cohort infant death,bmi_group,Obese I,1.3724695605455304,5.429126236382888
+Cohort infant death,bmi_group,Underweight,1.35830683314027,5.373102236182784
+Cohort infant death,bmi_group,Overweight,1.134028062632408,4.485914795214008
+Cohort infant death,bmi_group,Normal,1.0,3.9557352617896417
+Cohort infant death,diabetes,Pregestational diabetes,2.2015778786831257,10.980631386304712
+Cohort infant death,diabetes,No diabetes,1.0,4.987618876727077
+Cohort infant death,diabetes,Gestational diabetes,0.6999102454309963,3.490885552126319
+Cohort infant death,hypertension,Pre-pregnancy hypertension,1.9694296327460157,9.41267449531211
+Cohort infant death,hypertension,Gestational hypertension,1.1133029705685085,5.320910329765937
+Cohort infant death,hypertension,No hypertension,1.0,4.779391118527971
+Cohort infant death,race_hisp,Other,2.543921565091496,10.207984792343623
+Cohort infant death,race_hisp,NH Black,2.3647276295487303,9.488933940304102
+Cohort infant death,race_hisp,NH AIAN,1.9330073479353995,7.756571539776756
+Cohort infant death,race_hisp,NH multirace,1.4480703090458025,5.810666451287475
+Cohort infant death,race_hisp,Hispanic,1.0932969978068765,4.387068878330821
+Cohort infant death,race_hisp,NH White,1.0,4.012696355273233
+Cohort infant death,race_hisp,NH Asian,0.7716948744258668,3.096577209991711
+Cohort infant death,smoking,Yes,2.2120603776194536,10.17277715604784
+Cohort infant death,smoking,No,1.0,4.598779155836355
+Fetal death,bmi_group,Unknown,7.6194202697255236,29.633896483839884
+Fetal death,bmi_group,Obese III,2.063230061784963,8.024435443759119
+Fetal death,bmi_group,Obese II,1.735469188080763,6.749688618020226
+Fetal death,bmi_group,Obese I,1.501098714800433,5.838161218533699
+Fetal death,bmi_group,Overweight,1.2302088120275965,4.784600310601674
+Fetal death,bmi_group,Underweight,1.1607475764998965,4.514447596825507
+Fetal death,bmi_group,Normal,1.0,3.8892586883001
+Fetal death,diabetes,Pregestational diabetes,3.852128816344906,19.922688930721808
+Fetal death,diabetes,No diabetes,1.0,5.171864670305979
+Fetal death,diabetes,Gestational diabetes,0.6373228300462399,3.29614742829557
+Fetal death,hypertension,Pre-pregnancy hypertension,2.662460921716528,13.348135587320453
+Fetal death,hypertension,No hypertension,1.0,5.013457842121007
+Fetal death,hypertension,Gestational hypertension,0.8982142768629131,4.503159410243422
+Fetal death,race_hisp,Other,4.467386237198494,20.216534117489807
+Fetal death,race_hisp,NH Black,2.2573316911107653,10.2152401258347
+Fetal death,race_hisp,NH AIAN,1.522225499031547,6.888619452564443
+Fetal death,race_hisp,Hispanic,1.0147382364541468,4.592056537842892
+Fetal death,race_hisp,NH White,1.0,4.525360701779758
+Fetal death,race_hisp,NH multirace,0.8418199890896212,3.809539096598836
+Fetal death,race_hisp,NH Asian,0.8246282168970768,3.7317401263247456
+Fetal death,smoking,Yes,1.7934403980539282,8.76137192459037
+Fetal death,smoking,No,1.0,4.885231722279358

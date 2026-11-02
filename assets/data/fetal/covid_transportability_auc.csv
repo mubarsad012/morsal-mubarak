@@ -1,0 +1,7 @@
+outcome,period,model,weighted_auc,n_cells,total_deaths
+Cohort infant death,Pre-pandemic (2016-2019),GA + log residual (trained pre-pandemic),0.7833167124503361,3078,50890.0
+Cohort infant death,Pandemic (2020-2021),GA + log residual (trained pre-pandemic),0.7775391411353846,1518,23709.0
+Cohort infant death,Post-pandemic (2022-2023),GA + log residual (trained pre-pandemic),0.7767990684395019,1515,24654.0
+Fetal death,Pre-pandemic (2016-2019),GA + log residual (trained pre-pandemic),0.8859694212696875,3145,45136.0
+Fetal death,Pandemic (2020-2021),GA + log residual (trained pre-pandemic),0.888116425311019,1547,21360.0
+Fetal death,Post-pandemic (2022-2024),GA + log residual (trained pre-pandemic),0.8792718116146137,2315,30106.0

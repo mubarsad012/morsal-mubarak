@@ -1,0 +1,9 @@
+outcome,model,growth_zone,rate_ratio,rr_95ci_lower,rr_95ci_upper,n_cells
+Cohort infant death,GA + sex + zone,Below empirical p10,3.119021184234137,3.0624268033798776,3.1766614428023523,20376
+Cohort infant death,GA + sex + zone,Above empirical p90,0.8525356361547762,0.8248784642202176,0.881120119435911,20376
+Cohort infant death,GA + sex + zone + race,Below empirical p10,3.073054056341604,3.0169687705127943,3.130181964592376,20376
+Cohort infant death,GA + sex + zone + race,Above empirical p90,0.8533586361589834,0.8256250377562481,0.8820238347981343,20376
+Fetal death,GA + sex + zone,Below empirical p10,3.2745772723332074,3.2100333490471358,3.3404189759162954,23277
+Fetal death,GA + sex + zone,Above empirical p90,1.1700569737531492,1.1302064773291443,1.2113125780907033,23277
+Fetal death,GA + sex + zone + race,Below empirical p10,3.2283158646170818,3.1644413288002373,3.2934797137445204,23277
+Fetal death,GA + sex + zone + race,Above empirical p90,1.1593877057574888,1.1197974168022533,1.2003777041209092,23277

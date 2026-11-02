@@ -1,0 +1,12 @@
+stage,years,unit,rows_or_cells,natality_records_or_births,linked_denominator_records_or_births,linked_infant_death_records_or_weighted,fetal_death_records_or_deaths,fetal_denominator_observations
+Raw source records,source-specific,records,63884468,33589282.0,29633197.0,163804.0,498185.0,
+Singleton valid natality rows,2016-2024,rows,32448118,32448118.0,,,,
+Singleton valid linked denominator rows,2017-2024 period files,rows,28644762,,28644762.0,,,
+Singleton valid linked infant-death rows,2017-2024 period files,rows / weighted deaths,141354,,,142632.444976,,
+Singleton valid cohort denominator rows,2016-2023 birth cohorts,rows,28872085,,28872085.0,,,
+Singleton valid cohort infant-death rows,2016-2023 birth cohorts,rows / unweighted deaths,143079,,,143079.0,,
+Singleton valid fetal-death rows,2014-2024,rows,222075,,,,222075.0,
+Harmonized infant model-ready cells,2016-2023 birth cohorts,aggregate cells,15314,,28872085.0,143077.0,,
+Harmonized fetal model-ready cells,2016-2024,aggregate cells,19101,32448118.0,,,179027.0,32627145.0
+Infant model-comparison cells,"2016-2023 cohorts, 24-42 weeks",aggregate cells,6111,,28750979.0,99253.0,,
+Fetal model-comparison cells,"2016-2024, 24-42 weeks",aggregate cells,7007,,,,96602.0,32419577.0

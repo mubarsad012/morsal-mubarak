@@ -1,0 +1,86 @@
+outcome,model,validation_year,validation_brier,validation_weighted_auc,validation_neg2_log_likelihood
+Cohort infant death,GA only,2016,4.03e-05,0.747,152598.9
+Cohort infant death,GA + p10/p90,2016,2.79e-05,0.772,150388.4
+Cohort infant death,GA + log residual,2016,2.72e-05,0.782,149500.3
+Cohort infant death,GA + BCA residual,2016,2.59e-05,0.781,149434.1
+Cohort infant death,GA + BW surface,2016,2.66e-05,0.783,148970.9
+Cohort infant death,GA only,2017,3.24e-05,0.750,148732.7
+Cohort infant death,GA + p10/p90,2017,2.08e-05,0.777,146367.1
+Cohort infant death,GA + log residual,2017,2.66e-05,0.784,145669.1
+Cohort infant death,GA + BCA residual,2017,2.61e-05,0.784,145614.4
+Cohort infant death,GA + BW surface,2017,1.87e-05,0.786,144983.0
+Cohort infant death,GA only,2018,3.57e-05,0.749,144412.0
+Cohort infant death,GA + p10/p90,2018,2.44e-05,0.774,142142.4
+Cohort infant death,GA + log residual,2018,2.60e-05,0.784,141334.5
+Cohort infant death,GA + BCA residual,2018,2.56e-05,0.784,141284.6
+Cohort infant death,GA + BW surface,2018,2.16e-05,0.784,140743.5
+Cohort infant death,GA only,2019,3.81e-05,0.749,140089.3
+Cohort infant death,GA + p10/p90,2019,2.44e-05,0.776,137844.6
+Cohort infant death,GA + log residual,2019,2.51e-05,0.784,137028.7
+Cohort infant death,GA + BCA residual,2019,2.44e-05,0.784,136973.8
+Cohort infant death,GA + BW surface,2019,2.47e-05,0.786,136516.1
+Cohort infant death,GA only,2020,2.88e-05,0.743,134281.0
+Cohort infant death,GA + p10/p90,2020,1.98e-05,0.770,132204.3
+Cohort infant death,GA + log residual,2020,2.59e-05,0.778,131579.9
+Cohort infant death,GA + BCA residual,2020,2.60e-05,0.778,131543.9
+Cohort infant death,GA + BW surface,2020,1.69e-05,0.781,130952.5
+Cohort infant death,GA only,2021,3.63e-05,0.745,142068.2
+Cohort infant death,GA + p10/p90,2021,2.25e-05,0.770,139850.0
+Cohort infant death,GA + log residual,2021,2.51e-05,0.777,139149.3
+Cohort infant death,GA + BCA residual,2021,2.46e-05,0.777,139093.7
+Cohort infant death,GA + BW surface,2021,2.25e-05,0.779,138700.1
+Cohort infant death,GA only,2022,3.36e-05,0.742,145498.3
+Cohort infant death,GA + p10/p90,2022,1.97e-05,0.766,143424.1
+Cohort infant death,GA + log residual,2022,2.45e-05,0.773,142788.3
+Cohort infant death,GA + BCA residual,2022,2.41e-05,0.773,142745.5
+Cohort infant death,GA + BW surface,2022,2.11e-05,0.774,142300.2
+Cohort infant death,GA only,2023,3.36e-05,0.751,139421.3
+Cohort infant death,GA + p10/p90,2023,2.18e-05,0.773,137372.2
+Cohort infant death,GA + log residual,2023,2.98e-05,0.781,136759.3
+Cohort infant death,GA + BCA residual,2023,3.00e-05,0.781,136726.7
+Cohort infant death,GA + BW surface,2023,1.99e-05,0.782,136171.2
+Fetal death,GA only,2016,1.08e-04,0.866,120991.7
+Fetal death,GA + p10/p90,2016,5.04e-05,0.879,117760.0
+Fetal death,GA + log residual,2016,1.86e-05,0.883,116076.3
+Fetal death,GA + BCA residual,2016,1.77e-05,0.882,116058.9
+Fetal death,GA + BW surface,2016,4.55e-05,0.885,116220.2
+Fetal death,GA only,2017,1.07e-04,0.869,116083.3
+Fetal death,GA + p10/p90,2017,5.06e-05,0.882,112938.9
+Fetal death,GA + log residual,2017,2.04e-05,0.887,111322.7
+Fetal death,GA + BCA residual,2017,1.93e-05,0.887,111296.0
+Fetal death,GA + BW surface,2017,4.79e-05,0.890,111454.1
+Fetal death,GA only,2018,1.07e-04,0.870,114361.8
+Fetal death,GA + p10/p90,2018,5.03e-05,0.882,111474.7
+Fetal death,GA + log residual,2018,1.86e-05,0.887,109860.4
+Fetal death,GA + BCA residual,2018,1.74e-05,0.887,109835.9
+Fetal death,GA + BW surface,2018,4.93e-05,0.890,110180.3
+Fetal death,GA only,2019,1.02e-04,0.869,110173.9
+Fetal death,GA + p10/p90,2019,4.97e-05,0.882,107476.2
+Fetal death,GA + log residual,2019,1.90e-05,0.886,105987.8
+Fetal death,GA + BCA residual,2019,1.75e-05,0.886,105948.2
+Fetal death,GA + BW surface,2019,4.95e-05,0.889,106244.3
+Fetal death,GA only,2020,8.80e-05,0.871,107980.9
+Fetal death,GA + p10/p90,2020,4.20e-05,0.884,105443.0
+Fetal death,GA + log residual,2020,1.82e-05,0.888,104087.9
+Fetal death,GA + BCA residual,2020,1.73e-05,0.888,104075.4
+Fetal death,GA + BW surface,2020,3.74e-05,0.891,104038.0
+Fetal death,GA only,2021,8.10e-05,0.872,109707.5
+Fetal death,GA + p10/p90,2021,4.43e-05,0.883,107520.0
+Fetal death,GA + log residual,2021,2.30e-05,0.888,106247.6
+Fetal death,GA + BCA residual,2021,2.18e-05,0.887,106245.2
+Fetal death,GA + BW surface,2021,3.73e-05,0.890,106129.8
+Fetal death,GA only,2022,7.60e-05,0.860,107789.4
+Fetal death,GA + p10/p90,2022,4.07e-05,0.873,105564.6
+Fetal death,GA + log residual,2022,2.29e-05,0.877,104365.8
+Fetal death,GA + BCA residual,2022,2.20e-05,0.877,104377.6
+Fetal death,GA + BW surface,2022,3.52e-05,0.881,104137.2
+Fetal death,GA only,2023,8.14e-05,0.867,102266.0
+Fetal death,GA + p10/p90,2023,4.02e-05,0.877,100194.2
+Fetal death,GA + log residual,2023,2.16e-05,0.881,99110.2
+Fetal death,GA + BCA residual,2023,2.06e-05,0.881,99124.4
+Fetal death,GA + BW surface,2023,3.91e-05,0.884,99128.6
+Fetal death,GA only,2024,5.99e-05,0.865,101640.0
+Fetal death,GA + p10/p90,2024,3.66e-05,0.876,100007.3
+Fetal death,GA + log residual,2024,2.35e-05,0.879,99058.3
+Fetal death,GA + BCA residual,2024,2.25e-05,0.879,99073.8
+Fetal death,GA + BW surface,2024,2.98e-05,0.882,98900.4

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TBI MRI Computational Study — Morsal Mubarak</title>
+  <meta name="description" content="Lead computational researcher on a 35-participant traumatic brain injury MR spectroscopy study: a verified Python pipeline linking brain chemistry to post-concussion symptoms.">
+  <meta property="og:title" content="TBI MRI Computational Study — Morsal Mubarak">
+  <meta property="og:description" content="A verified Python pipeline linking brain chemistry (MR spectroscopy) to post-concussion symptoms, with spectroscopy data from 35 participants.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    .demo { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 32px); align-items: start; }
+    @media (max-width: 860px) { .demo { grid-template-columns: minmax(0, 1fr); } }
+    .demo svg { width: 100%; height: auto; display: block; touch-action: none; user-select: none; }
+    .demo .pt { fill: var(--series-1); stroke: var(--chart-surface); stroke-width: 2; }
+    .demo .drag { fill: var(--series-2); stroke: var(--chart-surface); stroke-width: 2.5; cursor: grab; }
+    .demo .drag:focus { outline: none; stroke: var(--focus); stroke-width: 3; }
+    .demo .drag-ring { fill: none; stroke: var(--series-2); stroke-width: 1.5; opacity: .45; }
+    .demo .fit { stroke: var(--chart-ink); stroke-width: 2; fill: none; }
+    .demo .fit-without { stroke: var(--chart-ink-2); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+    .demo .grid line { stroke: var(--chart-grid); }
+    .demo .axis line { stroke: var(--chart-axis); }
+    .demo text { fill: var(--chart-muted); font: 11.5px var(--font-sans); }
+    .readout { display: grid; gap: 10px; }
+    .readout .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .readout .row b { font: 700 1.25rem/1 var(--font-sans); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .readout .row span { color: var(--ink-2); font-size: .9rem; }
+    .flag { padding: 12px 14px; border-radius: 10px; font-weight: 600; font-size: .92rem; display: flex; gap: 10px; align-items: center; }
+    .flag.on { background: var(--warn-soft); color: var(--warn); }
+    .flag.off { background: var(--good-soft); color: var(--good); }
+    .flag svg { width: 18px; height: 18px; flex: none; }
+    .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+    .lib { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .lib code { font-weight: 600; color: var(--ink); font-size: .95rem; }
+    .lib p { margin: 6px 0 0; color: var(--ink-2); font-size: .86rem; line-height: 1.45; }
+    .stage-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .stage-list li { margin: 0; }
+    .stage-panel { margin-top: 16px; }
+    .stage-panel ul { margin-bottom: 0; }
+    .legend-inline { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .84rem; color: var(--chart-ink-2); margin: 8px 0 0; }
+    .legend-inline i { display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--chart-ink); vertical-align: middle; margin-right: 6px; }
+    .legend-inline i.dash { border-top: 1.5px dashed var(--chart-ink-2); }
+    .legend-inline .dot { width: 10px; height: 10px; border-radius: 50%; border: 0; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">TBI MRI Computational Study</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge plain">Clinical research · 2026</span><span class="badge review">Lead Computational Researcher</span></div>
+        <h1>Traumatic Brain Injury (TBI) MRI Computational Study</h1>
+        <p class="byline"><strong>Morsal Mubarak</strong>, Lead Computational Researcher · Mass General Brigham / MGH Martinos Center</p>
+        <p class="lede">After a concussion or other traumatic brain injury, can we see recovery in the brain's chemistry, and does it match how patients say they feel? I built and verified the Python pipeline that turns raw MR spectroscopy measurements and symptom questionnaires from a two-arm treatment study into tested, audited results.</p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>Lead Computational Researcher</dd></div>
+          <div><dt>Affiliation</dt><dd>Mass General Brigham / MGH Martinos Center</dd></div>
+          <div><dt>Data</dt><dd>35 participants with MR spectroscopy · 40 with symptom scores</dd></div>
+          <div><dt>When</dt><dd>Spring 2026</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#demo">Try the outlier demo</a>
+          <a class="btn" href="#pipeline">See the pipeline</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#scale">The data</a><a href="#pipeline">Pipeline</a><a href="#demo">Outlier demo</a><a href="#stack">Python stack</a><a href="#results">Results</a>
+        </nav></aside>
+        <div>
+          <section id="overview" class="prose block">
+            <h2>Overview</h2>
+            <p>Traumatic brain injury often leaves people with headaches, fatigue, poor concentration, and other symptoms that last for months, even when standard scans look normal. <strong>Magnetic resonance spectroscopy (MRS)</strong> is an MRI technique that measures brain chemicals instead of anatomy: markers of neuron health (NAA), cell-membrane turnover (choline), energy (creatine), glial cells (myo-inositol), and the excitatory neurotransmitters glutamate and glutamine (Glx).</p>
+            <p>This two-arm treatment study measured those chemicals in several brain regions at baseline, 14 days, and 3 months, and tracked symptoms with the <strong>Rivermead Post-Concussion Symptoms Questionnaire (RPQ)</strong> through 6 months. The questions were whether brain chemistry changes differently between the treatment and control groups, and whether chemistry tracks symptoms.</p>
+            <p>Small clinical studies are easy to fool yourself with: a single unusual participant can create a "significant" result, and testing many regions and metabolites makes false positives likely. So I designed the pipeline around guardrails, including outlier and influence screening, multiple-comparison correction, and a full audit that re-runs everything from the raw data.</p>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> Lead Computational Researcher: I built the analysis and reporting pipeline (about 4,800 lines of Python across three scripts) and delivered a verified report to the study's principal investigator.</p></div>
+          </section>
+
+          <section id="scale" class="block">
+            <h2 class="prose">The data</h2>
+            <div class="metrics">
+              <div class="metric"><span class="value">35</span><span class="label">participants with MR spectroscopy data</span><span class="src">Verified report, inclusion audit</span></div>
+              <div class="metric"><span class="value">40</span><span class="label">participants with RPQ symptom questionnaires</span><span class="src">Verified report, inclusion audit</span></div>
+              <div class="metric"><span class="value">4</span><span class="label">timepoints: baseline, 14 days, 3 months, 6 months</span><span class="src">MRS through 3 months; symptoms through 6 months</span></div>
+              <div class="metric"><span class="value">4,811</span><span class="label">lines of Python in the pipeline</span><span class="src">3 scripts: analysis, verified report, printable report</span></div>
+            </div>
+            <div class="grid grid-2 mt-3">
+              <div class="card">
+                <h3>Brain regions</h3>
+                <p class="mb-0">Posterior cingulate cortex (PCC), corpus callosum (CC), thalamus, and periventricular white matter (pvWM), with left and right voxels analyzed separately as well as combined.</p>
+              </div>
+              <div class="card">
+                <h3>Measurements</h3>
+                <p class="mb-0">NAA, choline, creatine, myo-inositol, Glx, and lactate, plus metabolite ratios (e.g. Cho/NAA, NAA/Cr), filtered by each scan's quality-control flags before analysis.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="pipeline" class="block">
+            <h2 class="prose">The pipeline</h2>
+            <p class="prose ink-2">Seven stages, from a raw spreadsheet to a verified report. Select a stage to see what it does.</p>
+            <div class="tabs" role="tablist" aria-label="Pipeline stages" data-tabs>
+              <button role="tab" aria-selected="true" aria-controls="st-1" id="tab-1">1 · Ingest &amp; QC</button>
+              <button role="tab" aria-selected="false" aria-controls="st-2" id="tab-2" tabindex="-1">2 · Merge &amp; deltas</button>
+              <button role="tab" aria-selected="false" aria-controls="st-3" id="tab-3" tabindex="-1">3 · Group tests</button>
+              <button role="tab" aria-selected="false" aria-controls="st-4" id="tab-4" tabindex="-1">4 · Outlier screens</button>
+              <button role="tab" aria-selected="false" aria-controls="st-5" id="tab-5" tabindex="-1">5 · Brain ↔ symptoms</button>
+              <button role="tab" aria-selected="false" aria-controls="st-6" id="tab-6" tabindex="-1">6 · Multiplicity</button>
+              <button role="tab" aria-selected="false" aria-controls="st-7" id="tab-7" tabindex="-1">7 · Verify &amp; report</button>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-1" aria-labelledby="tab-1">
+              <h3>Ingest &amp; quality control</h3>
+              <ul class="ink-2"><li>Reads the raw MRS workbook (<code>openpyxl</code>, <code>pandas</code>) and the RPQ symptom table.</li><li>Applies each spectrum's existing QC flags: main metabolites must pass QC, and lactate is only used when fitted with high confidence.</li><li>All sheet names, session labels, and thresholds live in a JSON config, so the analysis can be re-run without editing code.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-2" aria-labelledby="tab-2" hidden>
+              <h3>Merge &amp; change scores</h3>
+              <ul class="ink-2"><li>Standardizes participant IDs across files and attaches each participant's study arm, checking that no one has two assignments and no rows are duplicated.</li><li>Maps scan sessions to baseline, 14 days, and 3 months, then computes <em>change scores</em> (later minus baseline), so each person serves as their own reference.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-3" aria-labelledby="tab-3" hidden>
+              <h3>Group comparisons</h3>
+              <ul class="ink-2"><li>Between arms: Welch's t-test (no equal-variance assumption) and the Mann–Whitney U test (no normality assumption), with Cohen's <em>d</em> effect sizes and confidence intervals.</li><li>Within arms over time: paired t-tests and Wilcoxon signed-rank tests, with Cohen's <em>d<sub>z</sub></em>.</li><li>Built with <code>SciPy</code> and <code>NumPy</code>.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-4" aria-labelledby="tab-4" hidden>
+              <h3>Objective outlier screens</h3>
+              <ul class="ink-2"><li>Every major analysis is run twice: on all data, and again after an objective, pre-set screen.</li><li>Group comparisons: modified z-score screening (flag if |z| &gt; 3.5).</li><li>Correlations and regressions: influence diagnostics, flagging a point if Cook's distance &gt; 4/<em>n</em> or |studentized residual| &gt; 3 (<code>statsmodels</code>). <a href="#demo">Try it below.</a></li><li>Results that only exist with a flagged point are reported separately instead of being presented as findings.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-5" aria-labelledby="tab-5" hidden>
+              <h3>Linking brain chemistry to symptoms</h3>
+              <ul class="ink-2"><li>Pearson and Spearman correlations between each metabolite and RPQ scores, at baseline and as changes over time.</li><li>Leave-one-out sensitivity: each correlation is recomputed with every participant removed in turn.</li><li>Optional age-adjusted baseline regressions (ordinary least squares in <code>statsmodels</code>) as a sensitivity check.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-6" aria-labelledby="tab-6" hidden>
+              <h3>Correcting for many tests</h3>
+              <ul class="ink-2"><li>Testing many regions × metabolites × timepoints makes some p &lt; 0.05 likely by chance, so the pipeline computes Bonferroni and false-discovery-rate (Benjamini–Hochberg) adjusted p-values, and the report shows adjusted p-values beside the raw ones in every relevant table.</li><li>Findings are sorted into clearly separated tiers: nominally significant, trend-level, and results that do not survive screening, so nothing exploratory is presented as confirmed.</li></ul>
+            </div>
+            <div class="card stage-panel tab-panel" role="tabpanel" id="st-7" aria-labelledby="tab-7" hidden>
+              <h3>Verify, then report</h3>
+              <ul class="ink-2"><li>The final run regenerated every number from the raw data.</li><li>A verification audit compares every saved table against a fresh recomputation, spot-checks the top rows independently, and documents which participants were included or excluded from each finding.</li><li>Outputs: publication-style figures (<code>matplotlib</code>, <code>seaborn</code>, <code>Plotly</code> + <code>Kaleido</code>), an interactive HTML report, and a printable PDF (<code>ReportLab</code>) for the principal investigator.</li></ul>
+            </div>
+          </section>
+
+          <section id="demo" class="block">
+            <h2 class="prose">Why one point can fool you: an interactive demo</h2>
+            <p class="prose ink-2">Drag the orange point (or focus it and use the arrow keys). Watch how a single participant can manufacture a correlation, and how the pipeline's influence screen catches it. <strong>These are simulated data for illustration, not study data.</strong></p>
+            <div class="chart-card">
+              <div class="chart-head"><div><h3 class="chart-title">Simulated: change in a brain metabolite vs. change in symptom score (15 people)</h3><p class="chart-sub">Fourteen fixed points have essentially no relationship; one point is yours to move.</p></div></div>
+              <div class="demo">
+                <div>
+                  <svg id="demo-svg" viewBox="0 0 560 380" role="img" aria-label="Interactive scatter plot of simulated data with one draggable point">
+                    <g class="grid" id="demo-grid"></g>
+                    <g class="axis" id="demo-axis"></g>
+                    <line class="fit-without" id="fit-without"></line>
+                    <line class="fit" id="fit-all"></line>
+                    <g id="demo-points"></g>
+                    <circle class="drag-ring" id="drag-ring" r="15"></circle>
+                    <circle class="drag" id="drag" r="9" tabindex="0" role="slider" aria-label="Movable point; use arrow keys to move" aria-valuetext=""></circle>
+                  </svg>
+                  <div class="legend-inline" aria-hidden="true"><span><i></i>Best-fit line, all 15 points</span><span><i class="dash"></i>Best-fit line without the orange point</span><span><span class="dot" style="background:var(--series-2)"></span>Movable point</span></div>
+                </div>
+                <div class="readout" aria-live="polite">
+                  <div class="row"><span>Correlation (all 15)</span><b id="r-all">–</b></div>
+                  <div class="row"><span>p-value (all 15)</span><b id="p-all">–</b></div>
+                  <div class="row"><span>Correlation without orange point</span><b id="r-wo">–</b></div>
+                  <div class="row"><span>Cook's distance of orange point</span><b id="cook">–</b></div>
+                  <div class="row"><span>Studentized residual</span><b id="stud">–</b></div>
+                  <div class="flag off" id="flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="flag-icon" d="M20 6 9 17l-5-5"/></svg><span id="flag-text">Not flagged</span></div>
+                  <p class="muted mb-0" style="font-size:.84rem">Flag rule used in the pipeline: Cook's distance &gt; 4/<em>n</em> (here 4/15 ≈ 0.27) or |studentized residual| &gt; 3.</p>
+                </div>
+              </div>
+              <p class="source-note">Simulated data generated in your browser. Statistics: Pearson r with a two-sided t-test; Cook's distance and externally studentized residual from an ordinary least-squares fit.</p>
+            </div>
+          </section>
+
+          <section id="stack" class="block">
+            <h2 class="prose">The Python stack</h2>
+            <div class="lib-grid">
+              <div class="lib"><code>pandas</code><p>Loading, reshaping, and merging the MRS and symptom tables.</p></div>
+              <div class="lib"><code>NumPy</code><p>Change scores, effect sizes, and array math.</p></div>
+              <div class="lib"><code>SciPy</code><p>Welch, Mann–Whitney, paired t, Wilcoxon, Pearson and Spearman tests.</p></div>
+              <div class="lib"><code>statsmodels</code><p>Regression, influence diagnostics (Cook's distance), and FDR/Bonferroni correction.</p></div>
+              <div class="lib"><code>matplotlib</code> · <code>seaborn</code><p>Static, publication-style figures.</p></div>
+              <div class="lib"><code>Plotly</code> · <code>Kaleido</code><p>Interactive figures for the HTML report, exported to images for print.</p></div>
+              <div class="lib"><code>openpyxl</code><p>Reading the raw spectroscopy workbook.</p></div>
+              <div class="lib"><code>ReportLab</code><p>Generating the printable PDF report.</p></div>
+            </div>
+          </section>
+
+          <section id="results" class="block">
+            <h2 class="prose">Results</h2>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><p><strong>Unpublished.</strong> The findings belong to the study team and were delivered to the principal investigator in the verified report. They're not shown here until the study is published.</p></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    /* ---------- Simulated data (deterministic, seeded) ---------- */
+    let seed = 20260214;
+    const rand = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    const gauss = () => { let u = 0, v = 0; while (u === 0) u = rand(); v = rand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    const base = Array.from({ length: 14 }, () => ({ x: gauss() * 0.6, y: gauss() * 2.5 }));
+    let drag = { x: 0.4, y: 1.5 };
+
+    /* ---------- Statistics ---------- */
+    function lnGamma(z) {
+      const g = 7, c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+      if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lnGamma(1 - z);
+      z -= 1; let x = c[0]; for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+      const t = z + g + 0.5; return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+    }
+    function betacf(a, b, x) {
+      const MAXIT = 200, EPS = 3e-14, FPMIN = 1e-300;
+      let qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap;
+      if (Math.abs(d) < FPMIN) d = FPMIN; d = 1 / d; let h = d;
+      for (let m = 1; m <= MAXIT; m++) {
+        const m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d; h *= d * c;
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d;
+        const del = d * c; h *= del; if (Math.abs(del - 1) < EPS) break;
+      }
+      return h;
+    }
+    function betai(a, b, x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      const bt = Math.exp(lnGamma(a + b) - lnGamma(a) - lnGamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+      return x < (a + 1) / (a + b + 2) ? bt * betacf(a, b, x) / a : 1 - bt * betacf(b, a, 1 - x) / b;
+    }
+    function pearson(pts) {
+      const n = pts.length, mx = pts.reduce((s, p) => s + p.x, 0) / n, my = pts.reduce((s, p) => s + p.y, 0) / n;
+      let sxx = 0, syy = 0, sxy = 0;
+      pts.forEach(p => { sxx += (p.x - mx) ** 2; syy += (p.y - my) ** 2; sxy += (p.x - mx) * (p.y - my); });
+      const r = sxy / Math.sqrt(sxx * syy), b = sxy / sxx, a = my - b * mx;
+      const df = n - 2, t = r * Math.sqrt(df / Math.max(1e-12, 1 - r * r));
+      const p = betai(df / 2, 0.5, df / (df + t * t));
+      return { n, mx, my, sxx, r, a, b, p };
+    }
+    function influence(pts, i) {
+      const f = pearson(pts), n = f.n, P = 2;
+      const e = pts.map(q => q.y - (f.a + f.b * q.x));
+      const sse = e.reduce((s, v) => s + v * v, 0), mse = sse / (n - P);
+      const h = 1 / n + (pts[i].x - f.mx) ** 2 / f.sxx;
+      const cook = (e[i] * e[i]) / (P * mse) * h / Math.pow(1 - h, 2);
+      const ri = e[i] / Math.sqrt(mse * (1 - h));
+      const ti = ri * Math.sqrt((n - P - 1) / Math.max(1e-9, n - P - ri * ri));
+      return { cook, stud: ti };
+    }
+
+    /* ---------- Drawing ---------- */
+    const W = 560, H = 380, L = 52, R = 16, T = 16, B = 46;
+    const X0 = -3, X1 = 3, Y0 = -14, Y1 = 14;
+    const sx = x => L + (x - X0) / (X1 - X0) * (W - L - R);
+    const sy = y => H - B - (y - Y0) / (Y1 - Y0) * (H - T - B);
+    const ix = px => X0 + (px - L) / (W - L - R) * (X1 - X0);
+    const iy = py => Y0 + (H - B - py) / (H - T - B) * (Y1 - Y0);
+    const NS = 'http://www.w3.org/2000/svg';
+    const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.appendChild(n); return n; };
+    const svg = document.getElementById('demo-svg');
+    const grid = document.getElementById('demo-grid'), axis = document.getElementById('demo-axis');
+    [-2, -1, 0, 1, 2].forEach(v => { mk('line', { x1: sx(v), x2: sx(v), y1: T, y2: H - B }, grid); const t = mk('text', { x: sx(v), y: H - B + 16, 'text-anchor': 'middle' }, axis); t.textContent = v; });
+    [-10, -5, 0, 5, 10].forEach(v => { mk('line', { x1: L, x2: W - R, y1: sy(v), y2: sy(v) }, grid); const t = mk('text', { x: L - 8, y: sy(v) + 4, 'text-anchor': 'end' }, axis); t.textContent = v; });
+    mk('line', { x1: L, x2: W - R, y1: H - B, y2: H - B }, axis);
+    const xl = mk('text', { x: (L + W - R) / 2, y: H - 8, 'text-anchor': 'middle' }, axis); xl.textContent = 'Change in metabolite (simulated units)';
+    const yl = mk('text', { x: 14, y: (T + H - B) / 2, 'text-anchor': 'middle', transform: `rotate(-90 14 ${(T + H - B) / 2})` }, axis); yl.textContent = 'Change in symptom score';
+    const g = document.getElementById('demo-points');
+    base.forEach(p => mk('circle', { class: 'pt', cx: sx(p.x), cy: sy(p.y), r: 6 }, g));
+    const dragEl = document.getElementById('drag'), ring = document.getElementById('drag-ring');
+    const fitAll = document.getElementById('fit-all'), fitWo = document.getElementById('fit-without');
+    const out = id => document.getElementById(id);
+    const fmtR = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2);
+    const fmtP = v => v < 0.001 ? '< 0.001' : v.toFixed(3);
+
+    function setLine(el, f) { el.setAttribute('x1', sx(X0)); el.setAttribute('x2', sx(X1)); el.setAttribute('y1', sy(f.a + f.b * X0)); el.setAttribute('y2', sy(f.a + f.b * X1)); }
+    function update() {
+      dragEl.setAttribute('cx', sx(drag.x)); dragEl.setAttribute('cy', sy(drag.y));
+      ring.setAttribute('cx', sx(drag.x)); ring.setAttribute('cy', sy(drag.y));
+      const all = base.concat([drag]);
+      const fa = pearson(all), fw = pearson(base), inf = influence(all, all.length - 1);
+      setLine(fitAll, fa); setLine(fitWo, fw);
+      out('r-all').textContent = fmtR(fa.r);
+      out('p-all').textContent = fmtP(fa.p) + (fa.p < 0.05 ? ' ✱' : '');
+      out('r-wo').textContent = fmtR(fw.r);
+      out('cook').textContent = inf.cook.toFixed(2);
+      out('stud').textContent = (inf.stud >= 0 ? '+' : '−') + Math.abs(inf.stud).toFixed(2);
+      const flagged = inf.cook > 4 / all.length || Math.abs(inf.stud) > 3;
+      const f = out('flag');
+      f.className = 'flag ' + (flagged ? 'on' : 'off');
+      out('flag-icon').setAttribute('d', flagged ? 'M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01' : 'M20 6 9 17l-5-5');
+      out('flag-text').textContent = flagged
+        ? (fa.p < 0.05 && fw.p >= 0.05 ? 'Flagged: this one point creates the "significant" result' : 'Flagged as influential: result reported with and without it')
+        : 'Not flagged: this point does not drive the fit';
+      dragEl.setAttribute('aria-valuetext', `x ${drag.x.toFixed(1)}, y ${drag.y.toFixed(1)}; correlation ${fmtR(fa.r)}, ${flagged ? 'flagged' : 'not flagged'}`);
+    }
+    function toSvg(evt) { const pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    let dragging = false;
+    dragEl.addEventListener('pointerdown', e => { dragging = true; dragEl.setPointerCapture(e.pointerId); dragEl.style.cursor = 'grabbing'; });
+    dragEl.addEventListener('pointermove', e => { if (!dragging) return; const p = toSvg(e); drag = { x: clamp(ix(p.x), X0 + 0.05, X1 - 0.05), y: clamp(iy(p.y), Y0 + 0.3, Y1 - 0.3) }; update(); });
+    const stop = () => { dragging = false; dragEl.style.cursor = 'grab'; };
+    dragEl.addEventListener('pointerup', stop); dragEl.addEventListener('pointercancel', stop);
+    svg.addEventListener('pointerdown', e => { if (e.target === dragEl) return; const p = toSvg(e); drag = { x: clamp(ix(p.x), X0 + 0.05, X1 - 0.05), y: clamp(iy(p.y), Y0 + 0.3, Y1 - 0.3) }; update(); });
+    dragEl.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 1 : 0.25, k = e.key;
+      if (k === 'ArrowLeft') drag.x = clamp(drag.x - step * 0.4, X0 + 0.05, X1 - 0.05);
+      else if (k === 'ArrowRight') drag.x = clamp(drag.x + step * 0.4, X0 + 0.05, X1 - 0.05);
+      else if (k === 'ArrowUp') drag.y = clamp(drag.y + step * 2, Y0 + 0.3, Y1 - 0.3);
+      else if (k === 'ArrowDown') drag.y = clamp(drag.y - step * 2, Y0 + 0.3, Y1 - 0.3);
+      else return;
+      e.preventDefault(); update();
+    });
+    update();
+  })();
+  </script>
+</body>
+</html>

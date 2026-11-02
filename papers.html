@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Papers &amp; Manuscripts — Morsal Mubarak</title>
+  <meta name="description" content="Every paper, poster, and policy proposal by Morsal Mubarak, with Morsal's role on each, full PDFs to read, and citations to copy in APA, MLA, or BibTeX.">
+  <meta property="og:title" content="Papers &amp; Manuscripts — Morsal Mubarak">
+  <meta property="og:description" content="Manuscripts, a conference poster, and a policy proposal in data science, neuroscience, and public health, with full PDFs and ready-made citations.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/og-card.png">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* ---- Paper library (page-specific; tokens only) ---- */
+    .lib-toolbar { display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; justify-content: space-between; }
+    .lib-toolbar .filters { margin: 0; }
+    .filters button { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; }
+    .filters button:hover { border-color: var(--line-strong); color: var(--ink); }
+    .filters button[aria-pressed="true"]:hover { color: var(--bg); }
+    .filters .count { font: 600 .72rem/1 var(--font-mono); opacity: .72; }
+    .lib-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 1 1 300px; justify-content: flex-end; }
+    .lib-search { position: relative; flex: 1 1 220px; max-width: 340px; }
+    .lib-search svg { position: absolute; left: 13px; top: 50%; width: 16px; height: 16px; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+    .lib-search input {
+      width: 100%; min-height: 40px; padding: 0 14px 0 36px; border-radius: 999px; border: 1px solid var(--line-strong);
+      background: var(--surface); color: var(--ink); font: 500 .92rem var(--font-sans);
+    }
+    .lib-search input::placeholder { color: var(--ink-3); }
+    .lib-tools select { width: auto; min-height: 40px; border-radius: 999px; font-size: .9rem; padding: 0 12px; }
+    .lib-subbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin: 18px 0 0; padding: 0 0 14px; }
+    .lib-subbar p { margin: 0; font-size: .9rem; color: var(--ink-2); }
+    .seg { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; }
+    .seg .seg-label { font: 600 .7rem/1 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding: 0 8px 0 10px; }
+    .seg button { appearance: none; border: 0; background: transparent; color: var(--ink-2); font: 600 .84rem/1 var(--font-sans); padding: 8px 12px; border-radius: 999px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+    .paper-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+    .paper-list .paper {
+      grid-template-columns: 104px minmax(0, 1fr) 200px;
+      grid-template-areas: "thumb main actions" "thumb extra extra";
+      column-gap: clamp(18px, 2.6vw, 30px); row-gap: 0; padding: 30px 0; margin: 0;
+    }
+    .paper-list .paper:first-child { border-top: 0; }
+    .paper[hidden] { display: none !important; }
+    .paper .thumb { grid-area: thumb; align-self: start; }
+    .paper .main { grid-area: main; min-width: 0; }
+    .paper .actions { grid-area: actions; }
+    .paper .extra { grid-area: extra; min-width: 0; }
+    .paper .thumb a, .paper .thumb img.zoomable { display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--line-strong); box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s; }
+    .paper .thumb a:hover, .paper .thumb img.zoomable:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .paper .thumb img { width: 100%; height: auto; }
+    .paper .thumb .ph {
+      aspect-ratio: 360 / 466; display: grid; place-items: center; text-align: center; padding: 8px; border-radius: 8px;
+      background: var(--surface-2); border: 1px dashed var(--line-strong); color: var(--ink-3);
+      font: 600 .68rem/1.35 var(--font-sans); letter-spacing: .08em; text-transform: uppercase;
+    }
+    .paper .thumb .ph svg { width: 22px; height: 22px; display: block; margin: 0 auto 6px; }
+    .paper-meta { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+    .paper .badge { white-space: normal; }
+    .paper .badge.role { background: var(--ink); color: var(--bg); border-color: transparent; }
+    .paper .badge.role::before { display: none; }
+    .paper .when { font: 600 .8rem/1.3 var(--font-mono); color: var(--ink-3); }
+    .paper h3 { font-size: clamp(1.08rem, 1.7vw, 1.24rem); line-height: 1.32; margin: 12px 0 6px; }
+    .paper .authors { overflow-wrap: anywhere; }
+    .paper .summary { color: var(--ink-2); font-size: .96rem; line-height: 1.55; margin: 12px 0 0; max-width: 74ch; }
+    .paper .summary strong { color: var(--ink); }
+    .paper .award { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; font-size: .92rem; color: var(--ink-2); }
+    .paper .award svg { width: 18px; height: 18px; flex: none; color: var(--good); margin-top: 2px; }
+    .paper .award strong { color: var(--ink); }
+    .paper .actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+    .paper .actions .btn { justify-content: flex-start; white-space: normal; text-align: left; line-height: 1.25; padding-top: 8px; padding-bottom: 8px; }
+    .paper .actions a[target="_blank"]::after { content: "\2197"; font-weight: 500; opacity: .6; margin-left: -2px; }
+    .paper .actions .btn svg { width: 16px; height: 16px; }
+    .paper .extra .citation { margin-top: 16px; font-size: .86rem; }
+    .cite-label { display: block; font: 600 .68rem/1 var(--font-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+    .cite-text { display: block; overflow-wrap: anywhere; }
+    .cite-text.is-code { white-space: pre-wrap; font: 500 .78rem/1.55 var(--font-mono); color: var(--ink); }
+    .cite-none { margin: 16px 0 0; font-size: .88rem; color: var(--ink-3); }
+    details.preview { margin-top: 14px; }
+    details.preview > summary {
+      display: inline-flex; align-items: center; gap: 10px; cursor: pointer; list-style: none; user-select: none;
+      font: 600 .9rem/1.2 var(--font-sans); color: var(--brand); padding: 6px 0;
+    }
+    details.preview > summary::-webkit-details-marker { display: none; }
+    details.preview > summary::before {
+      content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg); transition: transform .15s var(--ease);
+    }
+    details.preview[open] > summary::before { transform: rotate(45deg); }
+    details.preview > summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+    details.preview .embed, details.preview .figure { margin-top: 10px; }
+    .paper.flash { animation: flash 2.4s var(--ease); }
+    @keyframes flash { 0%, 40% { background: var(--brand-soft); } 100% { background: transparent; } }
+    .lib-empty { padding: 36px 0; text-align: center; color: var(--ink-2); border-bottom: 1px solid var(--line); }
+    .lib-empty[hidden] { display: none; }
+    .lib-foot { display: flex; flex-wrap: wrap; gap: 14px 24px; justify-content: space-between; align-items: center; margin-top: 22px; }
+    .lib-foot .note { margin: 0; font-size: .85rem; color: var(--ink-3); max-width: 60ch; }
+
+    @media (max-width: 900px) {
+      .paper-list .paper { grid-template-columns: 88px minmax(0, 1fr); grid-template-areas: "thumb main" "thumb actions" "extra extra"; }
+      .paper .actions { flex-direction: row; flex-wrap: wrap; margin-top: 16px; }
+      .lib-tools { justify-content: flex-start; }
+      .lib-search { max-width: none; }
+    }
+    @media (max-width: 560px) {
+      .paper-list .paper { grid-template-columns: 64px minmax(0, 1fr); grid-template-areas: "thumb main" "actions actions" "extra extra"; column-gap: 14px; padding: 24px 0; }
+      .paper .actions .btn { flex: 1 1 auto; justify-content: center; }
+      .seg { width: 100%; justify-content: space-between; }
+    }
+    @media print {
+      .lib-toolbar, .lib-subbar .seg, .lib-foot .btn-row, details.preview, .paper .actions { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">Papers &amp; Manuscripts</span></nav>
+        <p class="eyebrow">Library</p>
+        <h1>Papers &amp; Manuscripts</h1>
+        <p class="lede">Everything I have written or co-written, newest first, with my exact role on each. Filter by role, read the full PDFs right on this page, and copy a citation in APA, MLA, or BibTeX.</p>
+        <dl class="facts">
+          <div><dt>Works</dt><dd>5 papers &amp; manuscripts, 1 poster, 1 policy proposal, 1 unpublished analysis report</dd></div>
+          <div><dt>Sole, first, or co-first author</dt><dd>4 of the 8</dd></div>
+          <div><dt>Read here in full</dt><dd>4 PDFs</dd></div>
+          <div><dt>Open code</dt><dd>2 public GitHub repositories, 1 Zenodo DOI</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="section" style="padding-top:clamp(28px,4vw,48px)"><div class="container">
+      <div class="lib-toolbar">
+        <div class="filters" role="group" aria-label="Filter by role or type">
+          <button type="button" data-filter="all" aria-pressed="true">All <span class="count" data-count="all">8</span></button>
+          <button type="button" data-filter="first" aria-pressed="false">Sole/first author <span class="count" data-count="first">4</span></button>
+          <button type="button" data-filter="senior" aria-pressed="false">Senior author <span class="count" data-count="senior">1</span></button>
+          <button type="button" data-filter="coauthor" aria-pressed="false">Co-author <span class="count" data-count="coauthor">1</span></button>
+          <button type="button" data-filter="poster" aria-pressed="false">Posters <span class="count" data-count="poster">1</span></button>
+          <button type="button" data-filter="policy" aria-pressed="false">Policy <span class="count" data-count="policy">1</span></button>
+        </div>
+        <div class="lib-tools">
+          <div class="lib-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <label class="visually-hidden" for="lib-search">Search titles, co-authors, and topics</label>
+            <input id="lib-search" type="search" placeholder="Search papers" autocomplete="off">
+          </div>
+          <label class="visually-hidden" for="lib-sort">Sort order</label>
+          <select id="lib-sort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lib-subbar">
+        <p id="lib-status" aria-live="polite">Showing all 8 works, newest first.</p>
+        <div class="seg" role="group" aria-label="Citation style">
+          <span class="seg-label" aria-hidden="true">Cite as</span>
+          <button type="button" data-style="apa" aria-pressed="true">APA</button>
+          <button type="button" data-style="mla" aria-pressed="false">MLA</button>
+          <button type="button" data-style="bibtex" aria-pressed="false">BibTeX</button>
+        </div>
+      </div>
+
+      <ol class="paper-list" id="paper-list">
+
+        <!-- 1. COVID-BRAIN poster (Oct 2026) -->
+        <li class="paper" id="covid-brain" data-cats="coauthor poster" data-date="2026-10-30" data-order="1" data-keywords="long covid neuropasc mri magnetic resonance spectroscopy brain thalamus glutathione creatine inflammation cognition neuroscience mgh martinos center imaging multicenter">
+          <div class="thumb">
+            <div class="ph"><span>Poster</span></div>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Co-author (3rd author)</span><span class="badge plain">Conference poster</span><span class="when">Oct 30, 2026</span></div>
+            <h3><a href="research/covid-brain.html">Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b>, 3rd author · with the multicenter COVID-BRAIN study team</p>
+            <p class="venue">Poster · Clinical Research Day 2026, Mass General Brigham · Athinoula A. Martinos Center for Biomedical Imaging, Massachusetts General Hospital</p>
+            <p class="summary">A multicenter brain-imaging study of people with neurological Long COVID (neuroPASC). Using MR spectroscopy, an MRI scan that measures brain chemistry, the team found lower glutathione (an antioxidant) and creatine (an energy buffer) in the thalamus than in controls. <strong>176 participants</strong> were analyzed (102 neuroPASC, 74 controls).</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/covid-brain.html">Findings page</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Reference</span>
+              <span class="cite-text" id="cite-covid" data-cite="covid">Poster presented at Clinical Research Day 2026, Mass General Brigham, October 30, 2026: <i>Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort.</i> Morsal Mubarak, 3rd author, with the COVID-BRAIN study team.</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-covid" type="button"><span class="label">Copy</span></button>
+            </div>
+          </div>
+        </li>
+
+        <!-- 2. PoxHostAtlas (2026; manuscript PDF dated Sep 2026) -->
+        <li class="paper" id="poxhostatlas" data-cats="first" data-date="2026-09-29" data-order="2" data-keywords="poxvirus vaccinia myxoma rna-seq rna sequencing gene expression meta-analysis bioinformatics co-expression network machine learning arizona state university deon nguyen">
+          <div class="thumb">
+            <a href="papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/papers/poxhostatlas-p1.jpg" alt="" width="360" height="466" loading="lazy"></a>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">First &amp; corresponding author</span><span class="badge plain">Manuscript</span><span class="when">2026</span></div>
+            <h3><a href="research/poxhostatlas.html">PoxHostAtlas: A reproducible cross-study atlas of host gene-expression remodeling during poxvirus infection</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b> (Justice High School) and Deon Nguyen (Arizona State University)</p>
+            <p class="venue">Manuscript · 21 pages · open code on GitHub</p>
+            <p class="summary">Re-analyzes public poxvirus RNA-sequencing data (two vaccinia infections and two experiments expressing a single myxoma-virus protein) with one common workflow to test which host-cell responses repeat across studies. Across four datasets, <strong>1,834 host genes</strong> changed reproducibly (871 up, 963 down).</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/poxhostatlas.html">Explore the atlas</a>
+            <a class="btn btn-sm" href="papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" target="_blank" rel="noopener">PDF · 21 pp</a>
+            <a class="btn btn-sm btn-ghost" href="https://github.com/mubarsad012/poxhostatlas" target="_blank" rel="noopener">Code on GitHub</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Citation</span>
+              <span class="cite-text" id="cite-pox" data-cite="pox">Mubarak, M., &amp; Nguyen, D. (2026). <i>PoxHostAtlas: A reproducible cross-study atlas of host gene-expression remodeling during poxvirus infection</i> [Unpublished manuscript].</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-pox" type="button"><span class="label">Copy</span></button>
+            </div>
+            <details class="preview" data-pdf="papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" data-title="PoxHostAtlas manuscript">
+              <summary>Read the PDF here · 21 pages</summary>
+              <div class="embed">
+                <div class="embed-bar"><span><strong>PoxHostAtlas</strong> · PDF · 21 pages</span><a class="btn btn-sm" href="papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" target="_blank" rel="noopener">Open in new tab</a></div>
+                <div class="embed-slot"></div>
+              </div>
+            </details>
+          </div>
+        </li>
+
+        <!-- 3. Fetal-growth benchmark (Aug 23, 2026) -->
+        <li class="paper" id="fetal-growth" data-cats="first" data-date="2026-08-23" data-order="3" data-keywords="birthweight gestational age fetal growth infant mortality fetal death stillbirth nchs cdc vital statistics public-use data reproducible benchmark calculator zenodo scientific reports independent study black white disparity">
+          <div class="thumb">
+            <a href="papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/papers/fetal-growth-p1.jpg" alt="" width="360" height="466" loading="lazy"></a>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Sole author</span><span class="badge review">Under review · Scientific Reports</span><span class="when">Aug 23, 2026</span></div>
+            <h3><a href="research/fetal-growth.html">A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of United States Vital Statistics, 2016–2024</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b> · independent research project</p>
+            <p class="venue">Under review at <i>Scientific Reports</i> · 20 pages · code and data archived on Zenodo</p>
+            <p class="summary">Turns <strong>33,589,282 U.S. birth records</strong> (National Center for Health Statistics public-use files, 2016–2024) into an open benchmark that anyone can re-run to test measures of fetal growth against infant and fetal death. Below the 10th percentile of birthweight for gestational age, the infant-death rate was 3.4 times, and the fetal-death (stillbirth) rate 5.2 times, the rate in the 10th–90th percentile range.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-primary" href="research/fetal-growth.html#calculator">Try the risk calculator</a>
+            <a class="btn btn-sm btn-dark" href="research/fetal-growth.html">Interactive dashboard</a>
+            <a class="btn btn-sm" href="papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf" target="_blank" rel="noopener">PDF · 20 pp</a>
+            <a class="btn btn-sm btn-ghost" href="https://github.com/mubarsad012/public-use-fetal-growth-benchmark" target="_blank" rel="noopener">Code on GitHub</a>
+            <a class="btn btn-sm btn-ghost" href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo DOI</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Cite the paper</span>
+              <span class="cite-text" id="cite-fetal" data-cite="fetal">Mubarak, M. (2026, August 23). <i>A reproducible public-data benchmark of birthweight-for-gestational-age deviations and infant/fetal mortality risk: A cross-sectional ecological analysis of United States vital statistics, 2016–2024</i> [Manuscript submitted for publication].</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-fetal" type="button"><span class="label">Copy</span></button>
+            </div>
+            <div class="citation">
+              <span class="cite-label">Cite the code &amp; data (Zenodo)</span>
+              <span class="cite-text" id="cite-fetal-code" data-cite="fetal-code">Mubarak, M. (2026). <i>Public-Use Fetal-Growth Benchmark: A reproducible aggregate-cell benchmark of birthweight-for-gestational-age deviations against infant and fetal mortality (United States, 2016-2024)</i> [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21894038</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-fetal-code" type="button"><span class="label">Copy</span></button>
+            </div>
+            <details class="preview" data-pdf="papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf" data-title="Fetal-growth benchmark manuscript">
+              <summary>Read the PDF here · 20 pages</summary>
+              <div class="embed">
+                <div class="embed-bar"><span><strong>Fetal-growth benchmark</strong> · PDF · 20 pages</span><a class="btn btn-sm" href="papers/Mubarak_2026_Fetal-Growth-Benchmark.pdf" target="_blank" rel="noopener">Open in new tab</a></div>
+                <div class="embed-slot"></div>
+              </div>
+            </details>
+          </div>
+        </li>
+
+        <!-- 4. Academic pressure & mental health (Jun 9, 2026) -->
+        <li class="paper" id="student-mental-health" data-cats="first" data-date="2026-06-09" data-order="4" data-keywords="survey stress anxiety mental health help-seeking stigma south asian south-east asian high school students bay area medical explorers">
+          <div class="thumb">
+            <a href="papers/Mubarak-et-al_2026_Academic-Pressure-Mental-Health.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/papers/student-mental-health-p1.jpg" alt="" width="360" height="466" loading="lazy"></a>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">First author (of 7)</span><span class="badge plain">Research paper</span><span class="when">Jun 9, 2026</span></div>
+            <h3><a href="research/student-mental-health.html">Academic Pressure and Mental Health in South Asian American High School Students</a></h3>
+            <p class="authors"><b>M. Mubarak</b>, A. Qadir, H. Mangat, M. Ramirez, M. Raza, P. Ly, S. Sridhar</p>
+            <p class="venue">Bay Area Medical Explorers · Mental Health Research final paper · 12 pages</p>
+            <p class="summary">A survey of South Asian and South-East Asian high-school students about academic pressure, stress, coping, and asking for help. <strong>93%</strong> of respondents reported regular stress-related mental-health concerns, yet <strong>89%</strong> said they had never sought professional help because they felt they did not need it.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/student-mental-health.html">See the survey results</a>
+            <a class="btn btn-sm" href="papers/Mubarak-et-al_2026_Academic-Pressure-Mental-Health.pdf" target="_blank" rel="noopener">PDF · 12 pp</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Citation</span>
+              <span class="cite-text" id="cite-mh" data-cite="mh">Mubarak, M., Qadir, A., Mangat, H., Ramirez, M., Raza, M., Ly, P., &amp; Sridhar, S. (2026, June 9). <i>Academic pressure and mental health in South Asian American high school students</i>. Bay Area Medical Explorers.</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-mh" type="button"><span class="label">Copy</span></button>
+            </div>
+            <details class="preview" data-pdf="papers/Mubarak-et-al_2026_Academic-Pressure-Mental-Health.pdf" data-title="Academic pressure and mental health paper">
+              <summary>Read the PDF here · 12 pages</summary>
+              <div class="embed">
+                <div class="embed-bar"><span><strong>Academic pressure &amp; mental health</strong> · PDF · 12 pages</span><a class="btn btn-sm" href="papers/Mubarak-et-al_2026_Academic-Pressure-Mental-Health.pdf" target="_blank" rel="noopener">Open in new tab</a></div>
+                <div class="embed-slot"></div>
+              </div>
+            </details>
+          </div>
+        </li>
+
+        <!-- TBI MRS analysis (spring 2026; unpublished) -->
+        <li class="paper" id="tbi-neuroimaging" data-cats="" data-date="2026-04-16" data-order="5" data-keywords="traumatic brain injury tbi concussion mri magnetic resonance spectroscopy mrs rpq rivermead post-concussion symptoms python pandas numpy scipy statsmodels pipeline statistics outliers mgh martinos mass general brigham">
+          <div class="thumb">
+            <div class="ph"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M9 13h6M9 17h3"/></svg>Report</span></div>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Lead Computational Researcher</span><span class="badge draft">Unpublished analysis</span><span class="when">Spring 2026</span></div>
+            <h3><a href="research/tbi-neuroimaging.html">Traumatic Brain Injury (TBI) MRI Computational Study</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b>, Lead Computational Researcher</p>
+            <p class="venue">Verified analysis report for the study's principal investigator · Mass General Brigham / MGH Martinos Center</p>
+            <p class="summary">A Python pipeline (about 4,800 lines) that tests whether brain chemistry measured by MR spectroscopy changes with treatment after traumatic brain injury and whether it tracks post-concussion symptoms: <strong>35 participants</strong> with spectroscopy, four timepoints, outlier screening, multiple-comparison correction, and a full re-run audit.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/tbi-neuroimaging.html">Project page &amp; demo</a>
+          </div>
+          <div class="extra">
+            <p class="cite-none">The results are unpublished and belong to the study team, so no report or citation is posted.</p>
+          </div>
+        </li>
+
+        <!-- 5. Zambia ART shortages (Mar 17, 2026) -->
+        <li class="paper" id="zambia-art" data-cats="first" data-date="2026-03-17" data-order="6" data-keywords="hiv aids antiretroviral therapy art adolescents teenagers zambia demographic and health survey dhs global health sub-saharan africa supply shortage bay area medical explorers">
+          <div class="thumb">
+            <a href="papers/Cimarusti-Mubarak_2026_Zambia-ART-Shortages.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/papers/zambia-art-p1.jpg" alt="" width="360" height="466" loading="lazy"></a>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Co-first author</span><span class="badge plain">Research paper</span><span class="when">Mar 17, 2026</span></div>
+            <h3><a href="research/zambia-art.html">Assessing the Associations Between Antiretroviral Treatment Resource Shortage and HIV Prevalence Among Teenagers Residing in Zambia</a></h3>
+            <p class="authors">C. Cimarusti and <b>M. Mubarak</b></p>
+            <p class="venue">Bay Area Medical Explorers · 9 pages</p>
+            <p class="summary">Uses Zambia Demographic and Health Survey data (2018–2024) and published studies to ask whether shortages of medical resources, including antiretroviral therapy (ART, the daily HIV medicine), relate to HIV among adolescents aged <strong>15–19</strong>. The paper reports that resource shortages were significantly correlated with lower treatment access and higher HIV prevalence.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/zambia-art.html">Explore the supply-gap cascade</a>
+            <a class="btn btn-sm" href="papers/Cimarusti-Mubarak_2026_Zambia-ART-Shortages.pdf" target="_blank" rel="noopener">PDF · 9 pp</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Citation</span>
+              <span class="cite-text" id="cite-zambia" data-cite="zambia">Cimarusti, C., &amp; Mubarak, M. (2026, March 17). <i>Assessing the associations between antiretroviral treatment resource shortage and HIV prevalence among teenagers residing in Zambia</i>. Bay Area Medical Explorers.</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-zambia" type="button"><span class="label">Copy</span></button>
+            </div>
+            <details class="preview" data-pdf="papers/Cimarusti-Mubarak_2026_Zambia-ART-Shortages.pdf" data-title="Zambia ART shortages paper">
+              <summary>Read the PDF here · 9 pages</summary>
+              <div class="embed">
+                <div class="embed-bar"><span><strong>ART shortages in Zambia</strong> · PDF · 9 pages</span><a class="btn btn-sm" href="papers/Cimarusti-Mubarak_2026_Zambia-ART-Shortages.pdf" target="_blank" rel="noopener">Open in new tab</a></div>
+                <div class="embed-slot"></div>
+              </div>
+            </details>
+          </div>
+        </li>
+
+        <!-- 6. Neurocysticercosis systematic review (in preparation; undated) -->
+        <li class="paper" id="neurocysticercosis" data-cats="senior" data-date="" data-order="7" data-keywords="neurocysticercosis epilepsy parasite tapeworm protein language model esm-2 esm2 alphafold protein structure antibody diagnostics blood test systematic review ai">
+          <div class="thumb">
+            <div class="ph"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M9 13h6M9 17h3"/></svg>In prep.</span></div>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Senior (last) author</span><span class="badge draft">Manuscript in preparation</span></div>
+            <h3><a href="research/neurocysticercosis.html">AI-Guided Diagnostics for Neurocysticercosis: ESM-2 + AlphaFold (systematic review)</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b>, senior (last) author</p>
+            <p class="venue">Systematic review · manuscript in preparation</p>
+            <p class="summary">A systematic review of whether ESM-2 (a protein language model) and AlphaFold (which predicts 3D protein structures) can help find antibody targets for a lower-cost blood test for neurocysticercosis, a brain infection caused by pork tapeworm larvae.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="research/neurocysticercosis.html">Read the review summary</a>
+          </div>
+          <div class="extra">
+            <p class="cite-none">Manuscript in preparation. No PDF is posted yet.</p>
+          </div>
+        </li>
+
+        <!-- 7. Nourish to Flourish (policy proposal; date not listed) -->
+        <li class="paper" id="ebt-proposal" data-cats="policy" data-date="" data-order="8" data-keywords="ebt snap food insecurity food access nutrition workshop pantry budget policy proposal phyap public health youth ambassador fairfax county health department georgetown university school of medicine family medicine competition">
+          <div class="thumb">
+            <a href="community/ebt-proposal.html" tabindex="-1" aria-hidden="true"><img src="assets/img/papers/ebt-proposal-slide1.jpg" alt="" width="360" height="203" loading="lazy"></a>
+          </div>
+          <div class="main">
+            <div class="paper-meta"><span class="badge role">Author</span><span class="badge plain">Policy proposal</span><span class="badge live">2nd place</span></div>
+            <h3><a href="community/ebt-proposal.html">Nourish to Flourish: Empowering Communities through Food Education and EBT Access</a></h3>
+            <p class="authors"><b>Morsal Mubarak</b> · PHYAP project</p>
+            <p class="venue">Policy proposal deck · Public Health Youth Ambassador Program (PHYAP), Fairfax County Health Department · 15 slides</p>
+            <p class="award"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></svg><span><strong>2nd place</strong>, PHYAP Youth Ambassador Competition Final (Georgetown University School of Medicine, Department of Family Medicine)</span></p>
+            <p class="summary">A plan to close the food-access gap for students after high school: a one-week after-school workshop in the last month of school where graduating students apply for an EBT card (the card used for SNAP food benefits), practice telling needs from wants, find at least two food pantries near them, and learn to eat healthy on a budget from a nutritionist.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-sm btn-dark" href="community/ebt-proposal.html">Plan the workshop</a>
+            <a class="btn btn-sm" href="papers/Mubarak_Nourish-to-Flourish_EBT-Proposal.pptx" download>Slide deck · .pptx</a>
+          </div>
+          <div class="extra">
+            <div class="citation">
+              <span class="cite-label">Citation</span>
+              <span class="cite-text" id="cite-ebt" data-cite="ebt">Mubarak, M. (n.d.). <i>Nourish to Flourish: Empowering communities through food education and EBT access</i> [Policy proposal slide deck]. Public Health Youth Ambassador Program, Fairfax County Health Department.</span>
+              <button class="btn btn-sm copy-btn" data-copy-target="#cite-ebt" type="button"><span class="label">Copy</span></button>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="lib-empty" id="lib-empty" hidden>
+        <p>No works match that search.</p>
+        <button class="btn btn-sm" type="button" id="lib-reset">Show all works</button>
+      </div>
+
+      <div class="lib-foot">
+        <p class="note">Sorted by the date on each paper, poster, or manuscript file. Works without a specific date are listed last.</p>
+        <div class="btn-row">
+          <button class="btn btn-sm" type="button" id="copy-all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="label">Copy all shown citations</span></button>
+          <button class="btn btn-sm" type="button" id="download-bib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Download BibTeX (.bib)</button>
+        </div>
+      </div>
+
+      <div class="callout mt-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p><strong>Want the interactive versions?</strong> The project pages go deeper, with charts you can explore and the full papers where they are posted. The fetal-growth page also has a <a href="research/fetal-growth.html#calculator">risk calculator</a> that runs entirely in your browser.</p>
+      </div>
+    </div></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div>
+          <a class="brand-mark" href="index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+          <p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html#research">Research</a></li>
+            <li><a href="index.html#software">Software &amp; Tools</a></li>
+            <li><a href="index.html#community">Community Impact</a></li>
+            <li><a href="index.html#about">About / CV</a></li>
+            <li><a href="papers.html" aria-current="page">All papers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li>
+            <li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li>
+            <li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var list = document.getElementById('paper-list');
+    if (!list) return;
+    var items = Array.prototype.slice.call(list.querySelectorAll('.paper'));
+    var filterBtns = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+    var styleBtns = Array.prototype.slice.call(document.querySelectorAll('[data-style]'));
+    var search = document.getElementById('lib-search');
+    var sortSel = document.getElementById('lib-sort');
+    var statusEl = document.getElementById('lib-status');
+    var empty = document.getElementById('lib-empty');
+    var NAMES = { all: '', first: 'sole/first author', senior: 'senior author', coauthor: 'co-author', poster: 'posters', policy: 'policy' };
+    var state = { filter: 'all', q: '', sort: 'new', style: 'apa' };
+    var store = {
+      get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+    };
+
+    /* Citation text in the other styles. APA is the text already in the page. */
+    var CITES = {
+      'covid': {
+        mla: 'Poster presented at Clinical Research Day 2026, Mass General Brigham, October 30, 2026: Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort. Morsal Mubarak, 3rd author, with the COVID-BRAIN study team.',
+        bibtex: '@misc{covidbrain2026poster,\n  title        = {Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of {COVID-19} infection from the multicenter {COVID-BRAIN} imaging cohort},\n  howpublished = {Poster presented at Clinical Research Day 2026, Mass General Brigham},\n  year         = {2026},\n  month        = oct,\n  note         = {October 30, 2026. Morsal Mubarak, 3rd author, with the COVID-BRAIN study team}\n}'
+      },
+      'pox': {
+        mla: 'Mubarak, Morsal, and Deon Nguyen. “PoxHostAtlas: A Reproducible Cross-Study Atlas of Host Gene-Expression Remodeling during Poxvirus Infection.” 2026. Unpublished manuscript.',
+        bibtex: '@unpublished{mubarak2026poxhostatlas,\n  author = {Mubarak, Morsal and Nguyen, Deon},\n  title  = {{PoxHostAtlas}: A reproducible cross-study atlas of host gene-expression remodeling during poxvirus infection},\n  year   = {2026},\n  note   = {Unpublished manuscript. Code: https://github.com/mubarsad012/poxhostatlas}\n}'
+      },
+      'fetal': {
+        mla: 'Mubarak, Morsal. “A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of United States Vital Statistics, 2016–2024.” 23 Aug. 2026. Manuscript submitted for publication.',
+        bibtex: '@unpublished{mubarak2026benchmark,\n  author = {Mubarak, Morsal},\n  title  = {A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of {United States} Vital Statistics, 2016--2024},\n  year   = {2026},\n  month  = aug,\n  note   = {Manuscript submitted for publication}\n}'
+      },
+      'fetal-code': {
+        mla: 'Mubarak, Morsal. <i>Public-Use Fetal-Growth Benchmark: A Reproducible Aggregate-Cell Benchmark of Birthweight-for-Gestational-Age Deviations against Infant and Fetal Mortality (United States, 2016-2024)</i>. Zenodo, 2026, https://doi.org/10.5281/zenodo.21894038.',
+        bibtex: '@software{mubarak2026benchmark_code,\n  author    = {Mubarak, Morsal},\n  title     = {Public-Use Fetal-Growth Benchmark: a reproducible aggregate-cell benchmark of birthweight-for-gestational-age deviations against infant and fetal mortality ({United States}, 2016-2024)},\n  year      = {2026},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.21894038},\n  url       = {https://doi.org/10.5281/zenodo.21894038}\n}'
+      },
+      'mh': {
+        mla: 'Mubarak, Morsal, et al. <i>Academic Pressure and Mental Health in South Asian American High School Students</i>. Bay Area Medical Explorers, 9 June 2026.',
+        bibtex: '@misc{mubarak2026academic,\n  author       = {Mubarak, Morsal and Qadir, A. and Mangat, H. and Ramirez, M. and Raza, M. and Ly, P. and Sridhar, S.},\n  title        = {Academic Pressure and Mental Health in {South Asian American} High School Students},\n  howpublished = {Bay Area Medical Explorers},\n  year         = {2026},\n  month        = jun,\n  note         = {June 9, 2026}\n}'
+      },
+      'zambia': {
+        mla: 'Cimarusti, C., and Morsal Mubarak. <i>Assessing the Associations between Antiretroviral Treatment Resource Shortage and HIV Prevalence among Teenagers Residing in Zambia</i>. Bay Area Medical Explorers, 17 Mar. 2026.',
+        bibtex: '@misc{cimarusti2026zambia,\n  author       = {Cimarusti, C. and Mubarak, Morsal},\n  title        = {Assessing the Associations Between Antiretroviral Treatment Resource Shortage and {HIV} Prevalence Among Teenagers Residing in {Zambia}},\n  howpublished = {Bay Area Medical Explorers},\n  year         = {2026},\n  month        = mar,\n  note         = {March 17, 2026}\n}'
+      },
+      'ebt': {
+        mla: 'Mubarak, Morsal. <i>Nourish to Flourish: Empowering Communities through Food Education and EBT Access</i>. Public Health Youth Ambassador Program, Fairfax County Health Department. Slide presentation.',
+        bibtex: '@misc{mubarak_nourish,\n  author       = {Mubarak, Morsal},\n  title        = {Nourish to Flourish: Empowering Communities through Food Education and {EBT} Access},\n  howpublished = {Policy proposal slide deck, Public Health Youth Ambassador Program (PHYAP), Fairfax County Health Department}\n}'
+      }
+    };
+    var citeEls = Array.prototype.slice.call(document.querySelectorAll('[data-cite]'));
+    citeEls.forEach(function (el) { var c = CITES[el.getAttribute('data-cite')]; if (c) c.apa = el.innerHTML; });
+
+    /* Search index: title, authors, venue, summary, plus topic keywords */
+    items.forEach(function (li) {
+      var parts = ['h3', '.authors', '.venue', '.summary', '.award', '.paper-meta'].map(function (s) {
+        var n = li.querySelector(s); return n ? n.textContent : '';
+      });
+      parts.push(li.getAttribute('data-keywords') || '');
+      li._text = parts.join(' ').toLowerCase().replace(/\s+/g, ' ');
+    });
+
+    /* Live counts on the filter buttons */
+    function countFor(f) { return items.filter(function (li) { return f === 'all' || (' ' + li.getAttribute('data-cats') + ' ').indexOf(' ' + f + ' ') !== -1; }).length; }
+    document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = countFor(el.getAttribute('data-count')); });
+
+    function matches(li) {
+      var cats = ' ' + (li.getAttribute('data-cats') || '') + ' ';
+      if (state.filter !== 'all' && cats.indexOf(' ' + state.filter + ' ') === -1) return false;
+      var q = state.q.trim().toLowerCase();
+      if (!q) return true;
+      return q.split(/\s+/).every(function (w) { return li._text.indexOf(w) !== -1; });
+    }
+
+    function apply(opts) {
+      opts = opts || {};
+      var shown = 0;
+      items.forEach(function (li) { var on = matches(li); li.hidden = !on; if (on) shown++; });
+      var sorted = items.slice().sort(function (a, b) {
+        var da = a.getAttribute('data-date'), db = b.getAttribute('data-date');
+        if (!da && !db) return (+a.getAttribute('data-order')) - (+b.getAttribute('data-order'));
+        if (!da) return 1;
+        if (!db) return -1;
+        return state.sort === 'old' ? da.localeCompare(db) : db.localeCompare(da);
+      });
+      sorted.forEach(function (li) { list.appendChild(li); });
+      filterBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === state.filter)); });
+
+      var total = items.length;
+      var order = state.sort === 'old' ? 'oldest first' : 'newest first';
+      var msg;
+      if (shown === total) msg = 'Showing all ' + total + ' works, ' + order + '.';
+      else {
+        msg = 'Showing ' + shown + ' of ' + total + ' works';
+        if (state.filter !== 'all') msg += ' · ' + NAMES[state.filter];
+        if (state.q.trim()) msg += ' · matching “' + state.q.trim() + '”';
+        msg += shown ? ', ' + order + '.' : '.';
+      }
+      statusEl.textContent = msg;
+      empty.hidden = shown !== 0;
+
+      if (!opts.keepHash) {
+        var h = state.filter !== 'all' ? '#filter=' + state.filter : '';
+        try { history.replaceState(null, '', location.pathname + location.search + h); } catch (e) { /* file:// or sandbox */ }
+      }
+    }
+
+    filterBtns.forEach(function (b) {
+      b.addEventListener('click', function () { state.filter = b.getAttribute('data-filter'); apply(); });
+    });
+    var t;
+    search.addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { state.q = search.value; apply({ keepHash: true }); }, 120); });
+    search.addEventListener('keydown', function (e) { if (e.key === 'Escape') { search.value = ''; state.q = ''; apply({ keepHash: true }); } });
+    sortSel.addEventListener('change', function () { state.sort = sortSel.value; apply({ keepHash: true }); });
+    document.getElementById('lib-reset').addEventListener('click', function () {
+      state.filter = 'all'; state.q = ''; search.value = ''; apply(); search.focus();
+    });
+
+    /* Citation style */
+    function setStyle(s) {
+      if (s !== 'apa' && s !== 'mla' && s !== 'bibtex') s = 'apa';
+      state.style = s;
+      styleBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-style') === s)); });
+      citeEls.forEach(function (el) {
+        var c = CITES[el.getAttribute('data-cite')];
+        if (!c) return;
+        if (s === 'bibtex') { el.textContent = c.bibtex; el.classList.add('is-code'); }
+        else { el.innerHTML = c[s]; el.classList.remove('is-code'); }
+      });
+    }
+    styleBtns.forEach(function (b) {
+      b.addEventListener('click', function () { setStyle(b.getAttribute('data-style')); store.set('citeStyle', state.style); });
+    });
+
+    /* Copy helpers (clipboard API with a fallback) */
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta); return ok;
+    }
+    function copyText(text, btn) {
+      var label = btn.querySelector('.label') || btn, old = label.textContent;
+      var done = function (ok) { label.textContent = ok ? 'Copied' : 'Press ⌘/Ctrl+C'; setTimeout(function () { label.textContent = old; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
+      else done(fallbackCopy(text));
+    }
+    function shownCites() {
+      return items.filter(function (li) { return !li.hidden; }).reduce(function (acc, li) {
+        li.querySelectorAll('[data-cite]').forEach(function (el) { acc.push(el); }); return acc;
+      }, []);
+    }
+    document.getElementById('copy-all').addEventListener('click', function () {
+      var text = shownCites().map(function (el) { return el.innerText.trim(); }).join('\n\n');
+      if (text) copyText(text, this);
+    });
+    document.getElementById('download-bib').addEventListener('click', function () {
+      var bib = shownCites().map(function (el) { var c = CITES[el.getAttribute('data-cite')]; return c ? c.bibtex : ''; }).filter(Boolean).join('\n\n') + '\n';
+      var blob = new Blob([bib], { type: 'application/x-bibtex;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'Morsal_Mubarak_works.bib';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    });
+
+    /* Lazy PDF previews: the PDF only loads when a reader opens the panel */
+    document.querySelectorAll('details.preview[data-pdf]').forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (!d.open || d.getAttribute('data-loaded')) return;
+        d.setAttribute('data-loaded', '1');
+        var src = d.getAttribute('data-pdf');
+        var obj = document.createElement('object');
+        obj.setAttribute('data', src + '#view=FitH');
+        obj.setAttribute('type', 'application/pdf');
+        obj.setAttribute('aria-label', (d.getAttribute('data-title') || 'Paper') + ' (PDF)');
+        obj.innerHTML = '<div class="fallback"><p>Your browser can’t show PDFs inline.</p><a class="btn btn-primary" href="' + src + '">Download the PDF</a></div>';
+        d.querySelector('.embed-slot').appendChild(obj);
+      });
+    });
+
+    /* Initial state: saved citation style, #filter=… or #paper-id in the URL */
+    setStyle(store.get('citeStyle') || 'apa');
+    var hash = decodeURIComponent((location.hash || '').slice(1));
+    if (hash.indexOf('filter=') === 0 && NAMES.hasOwnProperty(hash.slice(7))) { state.filter = hash.slice(7); apply({ keepHash: true }); }
+    else {
+      apply({ keepHash: true });
+      var target = hash && document.getElementById(hash);
+      if (target && target.classList.contains('paper')) {
+        target.classList.add('flash');
+        setTimeout(function () { target.scrollIntoView({ block: 'start' }); }, 60);
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

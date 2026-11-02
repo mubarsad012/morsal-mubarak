@@ -1,0 +1,11 @@
+comparison,outcome,standard,validation_weighted_auc,n_validation_cells
+External standards,Cohort infant death,"Population (empirical, sex-specific)",0.7809240467214744,2000
+External standards,Cohort infant death,WHO fetal growth (EFW),0.7808731619247529,2000
+External standards,Cohort infant death,INTERGROWTH-21st (EFW),0.7814492570787651,2000
+External standards,Fetal death,"Population (empirical, sex-specific)",0.8858304963366461,2041
+External standards,Fetal death,WHO fetal growth (EFW),0.8863102795058965,2041
+External standards,Fetal death,INTERGROWTH-21st (EFW),0.8849413564625801,2041
+Population vs customized (NH White + NH Black cells),Cohort infant death,Population (sex-specific),0.7658489726118124,3029
+Population vs customized (NH White + NH Black cells),Cohort infant death,Customized (sex + maternal race),0.762479414442549,3029
+Population vs customized (NH White + NH Black cells),Fetal death,Population (sex-specific),0.8761484692961876,3076
+Population vs customized (NH White + NH Black cells),Fetal death,Customized (sex + maternal race),0.8762153663974949,3076

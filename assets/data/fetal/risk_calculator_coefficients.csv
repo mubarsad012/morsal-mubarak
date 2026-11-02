@@ -1,0 +1,13 @@
+outcome,term,coefficient
+Cohort infant death,const,7.833399936050019
+Cohort infant death,ga,-0.4381577341180583
+Cohort infant death,ga2,0.0016919998235639308
+Cohort infant death,sex_Male,0.15490506126814788
+Cohort infant death,relative_residual,-1.9958857533647645
+Cohort infant death,abs_relative_residual,2.9052000811489584
+Fetal death,const,-14.0472275912273
+Fetal death,ga,0.9974646851482376
+Fetal death,ga2,-0.021287986819558877
+Fetal death,sex_Male,-0.026169563409370614
+Fetal death,relative_residual,-1.921886116266549
+Fetal death,abs_relative_residual,3.319117433188271

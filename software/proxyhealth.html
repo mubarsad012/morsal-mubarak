@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProxyHealth AI — Morsal Mubarak</title>
+  <meta name="description" content="ProxyHealth AI explains an official paper, such as a medical bill or an immigration notice, in the reader's own language, with every date and amount quoted from the paper and checked in code. In beta; built by Morsal Mubarak.">
+  <meta property="og:title" content="ProxyHealth AI — Morsal Mubarak">
+  <meta property="og:description" content="An AI web app in beta that explains an official paper in the reader's own language, with every date and amount quoted from the paper and checked in code.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <!-- Rohingya (Hanifi script) has no built-in font on many devices; unicode-range means it only downloads when used. -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hanifi+Rohingya:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* ProxyHealth AI page. Tokens only, so light and dark themes both work. */
+
+    /* Theme-matched screenshots: light image in light theme, dark image in dark theme (mirrors site.css). */
+    img.theme-dark { display: none; }
+    :root[data-theme="dark"] img.theme-light { display: none; }
+    :root[data-theme="dark"] img.theme-dark { display: block; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) img.theme-light { display: none; }
+      :root:not([data-theme="light"]) img.theme-dark { display: block; }
+    }
+
+    /* Hero */
+    .ph-hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
+    .ph-hero-grid h1 { margin-bottom: .2em; }
+    .ph-hero-grid .lede { max-width: 46ch; margin-bottom: 0; }
+    .ph-motto { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin: 18px 0 0; padding-left: 14px; border-left: 3px solid var(--accent); }
+    .ph-motto strong { font: 600 clamp(1.2rem, 2.1vw, 1.5rem)/1.3 var(--font-serif); color: var(--ink); letter-spacing: -.01em; }
+    .ph-motto span { color: var(--ink-3); font-size: .84rem; }
+    .ph-note { color: var(--ink-3); font-size: .86rem; max-width: 58ch; margin: 10px 0 0; }
+    .ph-shot figcaption { margin-top: 10px; color: var(--ink-3); font-size: .84rem; }
+    @media (max-width: 960px) { .ph-hero-grid { grid-template-columns: minmax(0, 1fr); } }
+
+    /* Live server status */
+    .ph-status { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); font-size: .88rem; line-height: 1.4; color: var(--ink-2); max-width: 100%; }
+    .ph-status .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; color: var(--ink-3); flex: none; }
+    .ph-status[data-state="checking"] .dot { color: var(--brand-2); animation: pulse 1.6s infinite; }
+    .ph-status[data-state="waking"] .dot { color: var(--warn); animation: pulse 1.6s infinite; }
+    .ph-status[data-state="awake"] .dot { color: var(--good); }
+    .ph-status-text { flex: 1 1 200px; min-width: 0; }
+    .ph-status-timer { font: 600 .82rem/1 var(--font-mono); color: var(--ink); }
+    .ph-status-timer:empty { display: none; }
+    .ph-retry[hidden] { display: none !important; }
+    .no-js [data-ph-status] { display: none; }
+
+    /* Sections */
+    .ph-main > section { padding: clamp(28px, 4vw, 48px) 0; }
+    .ph-main > section:first-child { padding-top: 0; }
+    .ph-main > section + section { border-top: 1px solid var(--line); }
+    .ph-main h2 { margin-bottom: .45em; }
+    .ph-intro { color: var(--ink-2); max-width: 68ch; }
+    .ph-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 640px) { .ph-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    /* Why */
+    .ph-why { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); align-items: start; }
+    @media (max-width: 760px) { .ph-why { grid-template-columns: minmax(0, 1fr); } }
+    .ph-why-langs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ph-big-lang { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 10px 12px; text-align: center; }
+    .ph-big-lang [lang] { display: block; font-size: clamp(1.9rem, 4vw, 2.4rem); line-height: 1.5; color: var(--ink); font-weight: 600; }
+    .ph-big-lang small { display: block; color: var(--ink-2); font-size: .86rem; }
+    .ph-why-langs p { grid-column: 1 / -1; margin: 0; color: var(--ink-3); font-size: .84rem; }
+
+    /* How it works: the flow steps are tabs (site.js handles [data-tabs]) */
+    .ph-flow .step { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; transition: background .15s, box-shadow .15s; }
+    .ph-flow .step:hover { background: var(--surface-2); }
+    .ph-flow .step[aria-selected="true"] { background: var(--brand-soft); box-shadow: inset 0 -3px 0 var(--accent); }
+    .ph-flow .step:focus-visible { outline-offset: -4px; }
+    .ph-flow .st { display: block; font-size: .95rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); margin: 0 0 6px; }
+    .ph-flow .sd { display: block; font-size: .84rem; color: var(--ink-2); line-height: 1.45; }
+    .ph-step-panel { margin-top: 14px; }
+    .ph-step-panel h3 { font-size: 1.15rem; }
+    .ph-step-panel p:last-child { margin-bottom: 0; }
+    .ph-step-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+    .ph-step-nav .btn:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+    .ph-step-count { color: var(--ink-3); font-size: .86rem; }
+
+    /* Try it */
+    .ph-try { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 48px); align-items: center; }
+    @media (max-width: 760px) { .ph-try { grid-template-columns: minmax(0, 1fr); } }
+    .phone { position: relative; width: min(100%, 290px); margin: 0 auto; padding: 30px 11px 16px; border-radius: 44px; background: var(--surface-2); border: 1px solid var(--line-strong); box-shadow: var(--shadow-lg); }
+    .phone::before { content: ""; position: absolute; top: 12px; left: 50%; width: 60px; height: 6px; margin-left: -30px; border-radius: 999px; background: var(--line-strong); }
+    .phone .screen { border-radius: 28px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+    .phone .screen img { width: 100%; }
+    .ph-phone-fig figcaption { text-align: center; margin-top: 12px; color: var(--ink-3); font-size: .84rem; }
+    .ph-steps { list-style: none; counter-reset: s; padding: 0; margin: 0 0 18px; }
+    .ph-steps li { counter-increment: s; display: flex; gap: 12px; align-items: flex-start; margin: 0; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+    .ph-steps li:last-child { border-bottom: 0; }
+    .ph-steps li::before { content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 .8rem/1 var(--font-mono); background: var(--accent); color: var(--accent-ink); }
+    .ph-steps strong { color: var(--ink); }
+
+    /* Search + filter controls */
+    .ph-controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; margin: 14px 0; }
+    .ph-controls .filters { margin: 0; }
+    .ph-search { position: relative; flex: 1 1 240px; max-width: 340px; }
+    .ph-search svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; margin-top: -9px; color: var(--ink-3); pointer-events: none; }
+    .ph-search input { padding-left: 38px; }
+    .ph-count { color: var(--ink-3); font-size: .84rem; margin: 0 0 10px; }
+    .ph-empty { color: var(--ink-2); background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 12px; padding: 14px 16px; margin: 0; }
+
+    /* Sample papers */
+    .ph-samples, .ph-langs { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .ph-samples { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+    .ph-sample { display: flex; gap: 12px; align-items: flex-start; margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+    .ph-sample > svg { width: 18px; height: 18px; flex: none; margin-top: 2px; color: var(--ink-3); }
+    .ph-sample .t { display: block; font-weight: 600; font-size: .93rem; line-height: 1.35; color: var(--ink); }
+    .ph-sample .k { display: block; margin-top: 3px; font-size: .78rem; color: var(--ink-3); }
+    .ph-sample.is-pick { border-color: color-mix(in srgb, var(--accent) 65%, var(--line)); }
+    .ph-sample[hidden], .ph-lang[hidden], .ph-more[hidden] { display: none !important; }
+    .ph-more { margin-top: 12px; }
+    .ph-jump { display: none; }
+    @media (max-width: 960px) {
+      /* The sidebar TOC is hidden below 960 px; give phones and tablets a jump list instead */
+      .ph-jump { display: flex; flex-wrap: wrap; gap: 8px; }
+      .ph-jump a { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: .84rem; font-weight: 600; line-height: 1.2; text-decoration: none; }
+      .ph-jump a:hover { color: var(--ink); border-color: var(--line-strong); }
+    }
+
+    /* Features + safety cards */
+    .ph-feature { display: flex; flex-direction: column; }
+    .ph-feature h3 { font-size: 1.06rem; margin-bottom: .35em; }
+    .ph-feature p { font-size: .92rem; margin: 0; }
+    .ph-feature p + p { margin-top: .75rem; }
+    @media (max-width: 640px) {
+      /* Phones: icon beside the title instead of above it, to shorten the page */
+      .ph-feature { display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 14px; }
+      .ph-feature > .ph-ico { grid-column: 1; grid-row: 1 / span 2; margin: 2px 0 0; }
+      .ph-feature > h3 { grid-column: 2; grid-row: 1; }
+      .ph-feature > h3 + p { grid-column: 2; grid-row: 2; }
+      .ph-feature > :not(.ph-ico):not(h3):not(h3 + p) { grid-column: 1 / -1; }
+    }
+    .ph-ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); margin-bottom: 14px; flex: none; }
+    .ph-ico svg { width: 20px; height: 20px; }
+    .ph-ico.warn { background: var(--warn-soft); color: var(--warn); }
+    .ph-ico.good { background: var(--good-soft); color: var(--good); }
+    .ph-lines { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 6px; }
+    .ph-lines li { margin: 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); font-size: .88rem; color: var(--ink-2); }
+    .ph-lines b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+    /* Languages */
+    .ph-langs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+    .ph-lang { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 14px 14px 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); min-height: 112px; }
+    .ph-lang .native { font-size: 1.2rem; font-weight: 600; line-height: 1.5; color: var(--ink); text-align: left; overflow-wrap: break-word; }
+    .ph-lang .en { font-size: .86rem; color: var(--ink-2); line-height: 1.35; }
+    .ph-lang .meta { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .ph-lang code { font: 500 .74rem/1.4 var(--font-mono); color: var(--ink-3); }
+    .ph-pill { font: 700 .66rem/1.5 var(--font-sans); letter-spacing: .06em; text-transform: uppercase; padding: 1px 7px; border-radius: 6px; }
+    .ph-pill.rtl { background: var(--warn-soft); color: var(--warn); }
+    .ph-pill.pack { background: var(--good-soft); color: var(--good); }
+    .ph-pill abbr { text-decoration: none; }
+    [lang="rhg"] { font-family: "Noto Sans Hanifi Rohingya", var(--font-sans); }
+    .ph-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; color: var(--ink-3); font-size: .84rem; margin: 14px 0 0; }
+
+    /* Tech stack table */
+    .ph-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .ph-table { width: 100%; border-collapse: collapse; font-size: .92rem; line-height: 1.55; }
+    .ph-table th, .ph-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .ph-table tbody tr:last-child th, .ph-table tbody tr:last-child td { border-bottom: 0; }
+    .ph-table thead th { background: var(--surface-2); color: var(--ink-2); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; }
+    .ph-table tbody th { width: 24%; color: var(--ink); font-weight: 700; }
+    .ph-table td { color: var(--ink-2); }
+    .ph-table td strong { color: var(--ink); }
+    @media (max-width: 560px) {
+      .ph-table, .ph-table tbody, .ph-table tr, .ph-table th, .ph-table td { display: block; width: auto; }
+      .ph-table thead { display: none; }
+      .ph-table tbody th { border-bottom: 0; padding-bottom: 2px; width: auto; }
+      .ph-table tbody tr:last-child th { border-bottom: 0; }
+    }
+  </style>
+</head>
+<body data-prewarm="https://proxyhealth-ai-api.onrender.com/health">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#software">Software &amp; Tools</a><span aria-hidden="true">/</span><span aria-current="page">ProxyHealth AI</span></nav>
+        <div class="ph-hero-grid">
+          <div>
+            <div class="flex wrap gap-1 mb-2"><span class="badge live">In beta · Released October 2026</span><span class="badge plain">Python · AI · Accessibility</span></div>
+            <h1>ProxyHealth AI</h1>
+            <p class="byline">By <strong>Morsal Mubarak</strong></p>
+            <p class="lede">An AI web application translating dense medical documents into plain language for local families and refugees.</p>
+            <p class="ph-motto"><strong>“Your paper, explained.”</strong><span>The project’s own one-line summary, from its README</span></p>
+            <div class="btn-row mt-3">
+              <a class="btn btn-primary" href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">
+                <span class="pulse-dot" aria-hidden="true"></span>
+                Launch ProxyHealth AI (Beta)
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+              </a>
+              <a class="btn" href="https://github.com/mubarsad012/ProxyHealth-AI" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub repository
+              </a>
+            </div>
+            <div class="ph-status mt-2" data-ph-status data-state="idle">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="ph-status-text" role="status" aria-live="polite">AI server status: not checked yet.</span>
+              <span class="ph-status-timer" aria-hidden="true"></span>
+              <button type="button" class="btn btn-sm btn-ghost ph-retry" hidden>Check again</button>
+            </div>
+            <p class="ph-note">The AI server runs on a free tier. After it has been idle, it can take 30–60 seconds to wake up, so this page sends it a wake-up request as soon as you arrive.</p>
+          </div>
+          <figure class="ph-shot">
+            <div class="browser">
+              <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="url">proxyhealth-ai.onrender.com</span></div>
+              <img class="zoomable theme-light" src="../assets/img/proxyhealth/proxyhealth-desktop-light.png" alt="ProxyHealth AI’s first screen in a desktop browser: “Which language?”, with English suggested and tiles for Spanish, Pashto, Dari, Arabic and more, each marked “Translated by a computer”" width="1440" height="1000" loading="lazy">
+              <img class="zoomable theme-dark" src="../assets/img/proxyhealth/proxyhealth-desktop.png" data-full="../assets/img/proxyhealth/proxyhealth-full.png" alt="ProxyHealth AI’s first screen in a desktop browser, dark theme: “Which language?”, with English suggested and tiles for Spanish, Pashto, Dari, Arabic and more, each marked “Translated by a computer”" width="1440" height="1000" loading="lazy">
+            </div>
+            <figcaption>The live app’s first screen, captured Nov 1, 2026, shown in the same light or dark theme as this page. Click to enlarge.</figcaption>
+          </figure>
+        </div>
+        <dl class="facts">
+          <div><dt>Status</dt><dd>Public beta on the web, released October 2026</dd></div>
+          <div><dt>Author</dt><dd>Morsal Mubarak (all 50 commits)</dd></div>
+          <div><dt>Runs on</dt><dd>Web now; iPhone and Android share the same code (not in app stores yet)</dd></div>
+          <div><dt>Source</dt><dd>Source code public on GitHub</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- .section and .container are nested (as on index.html): combined on one element, .section's
+         "padding: X 0" cancels .container's side gutter, and content touches the screen edge on narrow screens. -->
+    <div class="section" style="padding-top:clamp(36px,5vw,64px)">
+     <div class="container">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#glance">At a glance</a><a href="#why">Why I built it</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#features">Features</a><a href="#languages">Languages</a><a href="#safety">Privacy &amp; safety</a><a href="#stack">Tech stack</a><a href="#build">Build log</a>
+        </nav>
+        <nav class="ph-jump" aria-label="Jump to a section">
+          <a href="#glance">At a glance</a><a href="#why">Why I built it</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#features">Features</a><a href="#languages">Languages</a><a href="#safety">Privacy</a><a href="#stack">Tech stack</a><a href="#build">Build log</a>
+        </nav></aside>
+        <div class="ph-main">
+
+          <!-- ================= AT A GLANCE ================= -->
+          <section id="glance" aria-labelledby="glance-h">
+            <h2 class="prose" id="glance-h">At a glance</h2>
+            <div class="metrics ph-metrics">
+              <div class="metric accent"><span class="value">BETA</span><span class="label">Status: public beta, released October 2026</span><span class="src">Live at proxyhealth-ai.onrender.com</span></div>
+              <div class="metric"><span class="value">Python</span><span class="label">Backend language, fully self-taught</span><span class="src">Server code: apps/api (FastAPI)</span></div>
+              <div class="metric"><span class="value" data-count-to="27">27</span><span class="label">Languages, 6 of them written right to left</span><span class="src">Live API, /v1/config</span></div>
+              <div class="metric"><span class="value" data-count-to="50">50</span><span class="label">Commits, Sep 27 – Oct 26, 2026</span><span class="src">GitHub commit history</span></div>
+              <div class="metric"><span class="value" data-count-to="12">12</span><span class="label">Cited deadline rules that count dates in code</span><span class="src">Live API, /v1/rules</span></div>
+              <div class="metric"><span class="value" data-count-to="101">101</span><span class="label">Vetted help resources, national and Northern Virginia</span><span class="src">Live API, /health · README</span></div>
+            </div>
+          </section>
+
+          <!-- ================= WHY ================= -->
+          <section id="why" aria-labelledby="why-h">
+            <h2 class="prose" id="why-h">Why I built it</h2>
+            <div class="ph-why">
+              <div class="prose">
+                <div class="story mb-3"><p class="pull-quote">I interpret between English and Pashto for my family and for refugee community members.</p></div>
+                <p>ProxyHealth AI is for people in that position: immigrants and other adults who get official papers in a language they do not read well, such as a medical bill, an immigration notice, an eviction letter or a benefits letter. A person photographs the paper, and the app explains it in their own language: what it is, what it asks for, and a step-by-step plan, with every deadline quoted from the paper.</p>
+                <p class="mb-0">The app supports <strong>Pashto and Dari</strong>, along with 25 other languages.</p>
+              </div>
+              <aside class="ph-why-langs" aria-label="Pashto and Dari in ProxyHealth AI">
+                <div class="ph-big-lang"><span lang="ps" dir="rtl">پښتو</span><small>Pashto</small></div>
+                <div class="ph-big-lang"><span lang="prs" dir="rtl">دری</span><small>Dari</small></div>
+                <p>Both are written right to left, and both have language packs bundled with the app.</p>
+              </aside>
+            </div>
+            <div class="callout mt-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>Information, not advice.</strong> The app explains what a paper says. It presents itself as information, not legal or medical advice, and its chat refuses questions about outcomes or eligibility.</p></div>
+          </section>
+
+          <!-- ================= HOW IT WORKS ================= -->
+          <section id="how" aria-labelledby="how-h">
+            <h2 class="prose" id="how-h">How it works</h2>
+            <p class="ph-intro">The AI reads the paper, but code decides what counts as a fact: dates, amounts and requested documents are checked against words quoted from the page. Click a step to see what happens.</p>
+            <div class="flow ph-flow" id="how-steps" data-tabs role="tablist" aria-label="How ProxyHealth AI works, step by step">
+              <button class="step" type="button" role="tab" id="how-t1" aria-controls="how-p1" aria-selected="true"><span class="st">Photograph or PDF</span><span class="sd">Take photos of the paper or choose a PDF.</span></button>
+              <button class="step" type="button" role="tab" id="how-t2" aria-controls="how-p2" aria-selected="false" tabindex="-1"><span class="st">Gemini reads the page</span><span class="sd">Google’s Gemini model reads the page image.</span></button>
+              <button class="step" type="button" role="tab" id="how-t3" aria-controls="how-p3" aria-selected="false" tabindex="-1"><span class="st">Every fact checked in code</span><span class="sd">Dates and amounts must match words quoted from the paper.</span></button>
+              <button class="step" type="button" role="tab" id="how-t4" aria-controls="how-p4" aria-selected="false" tabindex="-1"><span class="st">Three cards in your language</span><span class="sd">What is it? What does it ask? Your plan.</span></button>
+              <button class="step" type="button" role="tab" id="how-t5" aria-controls="how-p5" aria-selected="false" tabindex="-1"><span class="st">Reminders, read-aloud, help nearby</span><span class="sd">Follow-through after you understand it.</span></button>
+            </div>
+            <div class="card ph-step-panel tab-panel" role="tabpanel" id="how-p1" aria-labelledby="how-t1">
+              <h3>1 · You photograph the paper</h3>
+              <p>Take or pick 1 to 12 photos, or choose one PDF. Before anything is uploaded, the app shrinks each photo to a 1600-pixel JPEG and strips its EXIF data (hidden details a camera stores in a photo file).</p>
+              <p>No paper handy? Sample mode has 18 made-up papers, watermarked SAMPLE, so you can try the app without uploading anything.</p>
+            </div>
+            <div class="card ph-step-panel tab-panel" role="tabpanel" id="how-p2" aria-labelledby="how-t2" hidden>
+              <h3>2 · Gemini reads the page</h3>
+              <p>There is no separate text-recognition (OCR) engine. Page images go to the Google Gemini API, where the gemini-3.8-flash model reads and explains the paper. PDF pages are first turned into images on the server with pypdfium2.</p>
+              <p>The dates, amounts and requested documents it reports then go through the checks in the next step.</p>
+            </div>
+            <div class="card ph-step-panel tab-panel" role="tabpanel" id="how-p3" aria-labelledby="how-t3" hidden>
+              <h3>3 · Every fact is checked in code</h3>
+              <p>Each date, amount and requested document is shown next to the exact words quoted from the paper, and those quotes are checked in code. Tap a fact to see the words highlighted on the page. Anything that cannot be confirmed is listed separately.</p>
+              <p>Dates and urgency are computed by code, not by the AI. A date comes only from the paper itself, or from a relative phrase printed on it, counted with one of 12 deadline rules that each cite a source.</p>
+            </div>
+            <div class="card ph-step-panel tab-panel" role="tabpanel" id="how-p4" aria-labelledby="how-t4" hidden>
+              <h3>4 · Three cards, in your language</h3>
+              <p>The explanation arrives as three cards: <strong>What is this?</strong>, <strong>What is it asking for?</strong> and <strong>Your step-by-step plan</strong>, plus an urgency banner. Any of the 27 languages can be used, and every paragraph can be read aloud.</p>
+              <p>For anything the cards don’t cover, <strong>Ask about this paper</strong> is a chat that answers only from the paper.</p>
+            </div>
+            <div class="card ph-step-panel tab-panel" role="tabpanel" id="how-p5" aria-labelledby="how-t5" hidden>
+              <h3>5 · Reminders, read-aloud and help nearby</h3>
+              <p>Reminders arrive 7, 3 and 1 days before each verified date (as an .ics calendar file on the web). There is also a printable or PDF quick sheet, and a high-contrast <strong>Show the clerk</strong> card in English to hand to the person at a counter.</p>
+              <p><strong>Get help nearby</strong> lists 101 vetted resources, national and in Northern Virginia, with a what-to-bring checklist; every resource carries the date it was verified.</p>
+            </div>
+            <div class="ph-step-nav">
+              <button type="button" class="btn btn-sm" data-step="prev" aria-controls="how-steps">← Previous</button>
+              <span class="ph-step-count" id="how-count">Step 1 of 5</span>
+              <button type="button" class="btn btn-sm" data-step="next" aria-controls="how-steps">Next step →</button>
+            </div>
+          </section>
+
+          <!-- ================= TRY IT ================= -->
+          <section id="try" aria-labelledby="try-h">
+            <h2 class="prose" id="try-h">Try it yourself</h2>
+            <div class="ph-try">
+              <figure class="ph-phone-fig">
+                <div class="phone">
+                  <div class="screen">
+                    <img class="zoomable theme-light" src="../assets/img/proxyhealth/proxyhealth-mobile-light.png" alt="ProxyHealth AI on a phone: the “Which language?” screen with English suggested and language tiles in two columns, under a “Need help now?” link" width="860" height="1864" loading="lazy">
+                    <img class="zoomable theme-dark" src="../assets/img/proxyhealth/proxyhealth-mobile.png" alt="ProxyHealth AI on a phone, dark theme: the “Which language?” screen with English suggested and language tiles in two columns, under a “Need help now?” link" width="860" height="1864" loading="lazy">
+                  </div>
+                </div>
+                <figcaption>The same screen at phone size (430 px wide), captured Nov 1, 2026.</figcaption>
+              </figure>
+              <div>
+                <p class="ph-intro">The beta runs in a phone or desktop browser. To see a full explanation, follow the demo path from the project’s README:</p>
+                <ol class="ph-steps">
+                  <li><span><strong>Open the app</strong> with the button below.</span></li>
+                  <li><span><strong>Pick a language.</strong></span></li>
+                  <li><span><strong>Read and accept</strong> the data-use consent screen.</span></li>
+                  <li><span>Tap <strong>“Try a sample paper first.”</strong></span></li>
+                  <li><span>Choose the <strong>Medicaid letter</strong>.</span></li>
+                </ol>
+                <div class="btn-row">
+                  <a class="btn btn-primary" href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener"><span class="pulse-dot" aria-hidden="true"></span>Launch ProxyHealth AI (Beta)</a>
+                </div>
+                <div class="ph-status mt-2" data-ph-status data-state="idle">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="ph-status-text">AI server status: not checked yet.</span>
+                  <span class="ph-status-timer" aria-hidden="true"></span>
+                  <button type="button" class="btn btn-sm btn-ghost ph-retry" hidden>Check again</button>
+                </div>
+                <p class="ph-note">If the first explanation is slow, the free-tier server is probably waking up; give it up to a minute.</p>
+              </div>
+            </div>
+
+            <div class="chart-card mt-4">
+              <div class="chart-head"><div>
+                <h3 class="chart-title">How long the AI server takes to answer, asleep vs. awake (seconds)</h3>
+                <p class="chart-sub">The free-tier server sleeps after 15 idle minutes. On Nov 1, 2026, the first request after idle took 32.3 s; two checks once it was awake took about 0.1 s.</p>
+              </div></div>
+              <div id="chart-latency"></div>
+            </div>
+
+            <h3 class="mt-4">All 18 sample papers</h3>
+            <p class="ph-intro">Every sample is synthetic: made-up names, watermarked SAMPLE. Search them or filter by topic.</p>
+            <div class="ph-controls">
+              <div class="ph-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <label class="visually-hidden" for="sample-q">Search the sample papers</label>
+                <input type="text" id="sample-q" placeholder="Search, e.g. “court” or “USCIS”" autocomplete="off" enterkeyhint="search">
+              </div>
+              <div class="filters" data-filter="samples" role="group" aria-label="Filter sample papers by topic">
+                <button type="button" data-value="all" aria-pressed="true">All 18</button>
+                <button type="button" data-value="health" aria-pressed="false">Health &amp; school 4</button>
+                <button type="button" data-value="benefits" aria-pressed="false">Benefits 3</button>
+                <button type="button" data-value="immigration" aria-pressed="false">Immigration 3</button>
+                <button type="button" data-value="housing" aria-pressed="false">Housing 2</button>
+                <button type="button" data-value="courts" aria-pressed="false">Courts 2</button>
+                <button type="button" data-value="money" aria-pressed="false">Money &amp; taxes 2</button>
+                <button type="button" data-value="tricky" aria-pressed="false">Scams &amp; tricky cases 2</button>
+              </div>
+            </div>
+            <p class="ph-count" id="sample-count" aria-live="polite">Showing all 18 sample papers</p>
+            <ul class="ph-samples" id="samples">
+                <li class="ph-sample" data-topic="health" data-q="Health &amp; school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Hospital bill marked final notice</span><span class="k">Health &amp; school</span></span></li>
+                <li class="ph-sample" data-topic="health" data-q="Health &amp; school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Insurance denial letter with 180 days to appeal</span><span class="k">Health &amp; school</span></span></li>
+                <li class="ph-sample" data-topic="health" data-q="Health &amp; school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Prescription label from a pharmacy</span><span class="k">Health &amp; school</span></span></li>
+                <li class="ph-sample" data-topic="health" data-q="Health &amp; school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">School notice about your child&#x27;s vaccines</span><span class="k">Health &amp; school</span></span></li>
+                <li class="ph-sample" data-topic="benefits" data-q="Benefits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Benefits portal: file too large</span><span class="k">Benefits</span></span></li>
+                <li class="ph-sample is-pick" data-topic="benefits" data-q="Benefits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Medicaid letter asking to confirm your address</span><span class="k">Benefits · the README’s suggested first try</span></span></li>
+                <li class="ph-sample" data-topic="benefits" data-q="Benefits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">SNAP letter with an interview appointment</span><span class="k">Benefits</span></span></li>
+                <li class="ph-sample" data-topic="immigration" data-q="Immigration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Immigration court notice with a hearing date</span><span class="k">Immigration</span></span></li>
+                <li class="ph-sample" data-topic="immigration" data-q="Immigration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">USCIS receipt notice for a work permit (Form I-765)</span><span class="k">Immigration</span></span></li>
+                <li class="ph-sample" data-topic="immigration" data-q="Immigration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">USCIS request for evidence with an 87-day deadline</span><span class="k">Immigration</span></span></li>
+                <li class="ph-sample" data-topic="housing" data-q="Housing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Apartment lease written in Spanish</span><span class="k">Housing</span></span></li>
+                <li class="ph-sample" data-topic="housing" data-q="Housing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Virginia 14-day pay-or-quit notice from a landlord</span><span class="k">Housing</span></span></li>
+                <li class="ph-sample" data-topic="courts" data-q="Courts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Jury summons from a court</span><span class="k">Courts</span></span></li>
+                <li class="ph-sample" data-topic="courts" data-q="Courts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Traffic court notice with a court date</span><span class="k">Courts</span></span></li>
+                <li class="ph-sample" data-topic="money" data-q="Money &amp; taxes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">IRS letter about your taxes</span><span class="k">Money &amp; taxes</span></span></li>
+                <li class="ph-sample" data-topic="money" data-q="Money &amp; taxes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">W-2 wage and tax form from an employer</span><span class="k">Money &amp; taxes</span></span></li>
+                <li class="ph-sample" data-topic="tricky" data-q="Scams &amp; tricky cases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Blurry page that cannot be read</span><span class="k">Scams &amp; tricky cases</span></span></li>
+                <li class="ph-sample" data-topic="tricky" data-q="Scams &amp; tricky cases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg><span><span class="t">Letter claiming to be USCIS and demanding gift cards</span><span class="k">Scams &amp; tricky cases</span></span></li>
+            </ul>
+            <button type="button" class="btn btn-sm ph-more" id="sample-more" aria-controls="samples" hidden>Show all 18 sample papers</button>
+            <p class="ph-empty mt-2" id="sample-empty" hidden>No sample paper matches that search.</p>
+          </section>
+
+          <!-- ================= FEATURES ================= -->
+          <section id="features" aria-labelledby="features-h">
+            <h2 class="prose" id="features-h">Features</h2>
+            <p class="ph-intro">Fourteen things the app does, grouped by what they are for.</p>
+            <div class="filters" data-filter="features" role="group" aria-label="Filter features">
+              <button type="button" data-value="all" aria-pressed="true">All 14</button>
+              <button type="button" data-value="understand" aria-pressed="false">Understand the paper 5</button>
+              <button type="button" data-value="help" aria-pressed="false">Get help 4</button>
+              <button type="button" data-value="safety" aria-pressed="false">Safety &amp; privacy 2</button>
+              <button type="button" data-value="access" aria-pressed="false">Access 3</button>
+            </div>
+            <p class="ph-count" id="feature-count" aria-live="polite">Showing all 14 features</p>
+            <div class="grid grid-3" id="feature-grid">
+              <article class="card ph-feature" data-cat="understand">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg></span>
+                <h3>Three cards</h3>
+                <p><em>What is this?</em> · <em>What is it asking for?</em> · <em>Your step-by-step plan</em>, plus an urgency banner.</p>
+              </article>
+              <article class="card ph-feature" data-cat="understand">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6H3M21 12H8M21 18H8M3 12v6"/></svg></span>
+                <h3>Every fact is a quote</h3>
+                <p>Each date, amount and requested document sits next to the exact words on the paper. Tap one to highlight it on the page; anything unconfirmed is listed separately.</p>
+              </article>
+              <article class="card ph-feature" data-cat="understand">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg></span>
+                <h3>Dates computed in code</h3>
+                <p>Dates and urgency come from code, not the AI: only from the paper, or from a printed relative phrase plus one of 12 cited deadline rules.</p>
+              </article>
+              <article class="card ph-feature" data-cat="understand">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
+                <h3>Ask about this paper</h3>
+                <p>A chat that answers only from the paper and refuses questions about outcomes or eligibility.</p>
+              </article>
+              <article class="card ph-feature" data-cat="understand">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></span>
+                <h3>Read aloud, reminders, quick sheet</h3>
+                <p>Read-aloud on every paragraph; reminders 7, 3 and 1 days before verified dates (.ics on the web); a printable or PDF quick sheet.</p>
+              </article>
+              <article class="card ph-feature" data-cat="help">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/></svg></span>
+                <h3>Show the clerk</h3>
+                <p>A high-contrast English card to hand to the person at a counter.</p>
+              </article>
+              <article class="card ph-feature" data-cat="help">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                <h3>Get help nearby</h3>
+                <p>A vetted database of 101 help resources, national plus Northern Virginia, with a what-to-bring checklist and verified-on dates.</p>
+              </article>
+              <article class="card ph-feature" data-cat="help">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+                <h3>Stuck on a website? / Is this a scam?</h3>
+                <p>Explains a screenshot, naming the buttons exactly as the screen writes them.</p>
+              </article>
+              <article class="card ph-feature" data-cat="help">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                <h3>Need help now?</h3>
+                <p>One tap from every screen: 911, 988 (call or text), Poison Help and a domestic-violence helpline.</p>
+              </article>
+              <article class="card ph-feature" data-cat="safety">
+                <span class="ph-ico warn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4M12 16h.01"/></svg></span>
+                <h3>Scam and emergency detection</h3>
+                <p>A fixed scam warning for gift-card, wire, payment-app, crypto or arrest/deportation demands, and an emergency card for words about chest pain, overdose or self-harm in 26 languages.</p>
+              </article>
+              <article class="card ph-feature" data-cat="safety">
+                <span class="ph-ico good" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                <h3>Privacy by design</h3>
+                <p>The server keeps uploads in memory only and logs no content; the family vault stays on the device; a “Hide parts” masking tool is built in.</p>
+              </article>
+              <article class="card ph-feature" data-cat="access">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span>
+                <h3>Accessibility</h3>
+                <p>The “Big Calm” design system: 18 pt base text, 56 and 72 pt controls, 7:1 body-text contrast, 200 % text scaling, and WCAG 2.2 AA (the main web-accessibility standard) as the floor.</p>
+              </article>
+              <article class="card ph-feature" data-cat="access">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg></span>
+                <h3>Sample mode</h3>
+                <p>18 synthetic sample papers (made-up names, watermarked SAMPLE) to try the app without uploading anything.</p>
+              </article>
+              <article class="card ph-feature" data-cat="access">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span>
+                <h3>Photos or a PDF</h3>
+                <p>1 to 12 photos or one PDF per paper. The app compresses photos to 1600 px JPEG and strips EXIF data before upload.</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- ================= LANGUAGES ================= -->
+          <section id="languages" aria-labelledby="languages-h">
+            <h2 class="prose" id="languages-h">27 languages, 6 written right to left</h2>
+            <p class="ph-intro">These are the languages the live app lists. Packs for English, Spanish, Arabic, Dari and Pashto are bundled with the app; other languages get a generated pack. If a reader’s language is not listed, they can type its name, in any language. In the app, every language except English is labelled “Translated by a computer.”</p>
+            <div class="ph-controls">
+              <div class="ph-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <label class="visually-hidden" for="lang-q">Search the 27 languages</label>
+                <input type="text" id="lang-q" placeholder="Search in English or in the language" autocomplete="off" enterkeyhint="search">
+              </div>
+              <div class="filters" data-filter="langs" role="group" aria-label="Filter languages">
+                <button type="button" data-value="all" aria-pressed="true">All 27</button>
+                <button type="button" data-value="rtl" aria-pressed="false">Right to left 6</button>
+                <button type="button" data-value="pack" aria-pressed="false">Bundled packs 5</button>
+              </div>
+            </div>
+            <p class="ph-count" id="lang-count" aria-live="polite">Showing all 27 languages</p>
+            <ul class="ph-langs" id="langs">
+                <li class="ph-lang" data-dir="ltr" data-pack="1" data-q="English English en  bundled"><span class="native" lang="en">English</span><span class="en">English</span><span class="meta"><code>en</code><span class="ph-pill pack">Bundled</span></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="1" data-q="Spanish Español es  bundled"><span class="native" lang="es">Español</span><span class="en">Spanish</span><span class="meta"><code>es</code><span class="ph-pill pack">Bundled</span></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Chinese (Simplified) 简体中文 zh-Hans"><span class="native" lang="zh-Hans">简体中文</span><span class="en">Chinese (Simplified)</span><span class="meta"><code>zh-Hans</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Chinese (Traditional) 繁體中文 zh-Hant"><span class="native" lang="zh-Hant">繁體中文</span><span class="en">Chinese (Traditional)</span><span class="meta"><code>zh-Hant</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Vietnamese Tiếng Việt vi"><span class="native" lang="vi">Tiếng Việt</span><span class="en">Vietnamese</span><span class="meta"><code>vi</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Tagalog (Filipino) Tagalog tl"><span class="native" lang="tl">Tagalog</span><span class="en">Tagalog (Filipino)</span><span class="meta"><code>tl</code></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="1" data-q="Arabic العربية ar right to left rtl bundled"><span class="native" lang="ar" dir="rtl">العربية</span><span class="en">Arabic</span><span class="meta"><code>ar</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span><span class="ph-pill pack">Bundled</span></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Haitian Creole Kreyòl ayisyen ht"><span class="native" lang="ht">Kreyòl ayisyen</span><span class="en">Haitian Creole</span><span class="meta"><code>ht</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Portuguese (Brazil) Português (Brasil) pt-BR"><span class="native" lang="pt-BR">Português (Brasil)</span><span class="en">Portuguese (Brazil)</span><span class="meta"><code>pt-BR</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Russian Русский ru"><span class="native" lang="ru">Русский</span><span class="en">Russian</span><span class="meta"><code>ru</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Ukrainian Українська uk"><span class="native" lang="uk">Українська</span><span class="en">Ukrainian</span><span class="meta"><code>uk</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Korean 한국어 ko"><span class="native" lang="ko">한국어</span><span class="en">Korean</span><span class="meta"><code>ko</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="French Français fr"><span class="native" lang="fr">Français</span><span class="en">French</span><span class="meta"><code>fr</code></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="1" data-q="Dari دری prs right to left rtl bundled"><span class="native" lang="prs" dir="rtl">دری</span><span class="en">Dari</span><span class="meta"><code>prs</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span><span class="ph-pill pack">Bundled</span></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="1" data-q="Pashto پښتو ps right to left rtl bundled"><span class="native" lang="ps" dir="rtl">پښتو</span><span class="en">Pashto</span><span class="meta"><code>ps</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span><span class="ph-pill pack">Bundled</span></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="0" data-q="Persian (Farsi) فارسی fa right to left rtl"><span class="native" lang="fa" dir="rtl">فارسی</span><span class="en">Persian (Farsi)</span><span class="meta"><code>fa</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="0" data-q="Urdu اردو ur right to left rtl"><span class="native" lang="ur" dir="rtl">اردو</span><span class="en">Urdu</span><span class="meta"><code>ur</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Hindi हिन्दी hi"><span class="native" lang="hi">हिन्दी</span><span class="en">Hindi</span><span class="meta"><code>hi</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Punjabi (Gurmukhi) ਪੰਜਾਬੀ pa"><span class="native" lang="pa">ਪੰਜਾਬੀ</span><span class="en">Punjabi (Gurmukhi)</span><span class="meta"><code>pa</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Bengali বাংলা bn"><span class="native" lang="bn">বাংলা</span><span class="en">Bengali</span><span class="meta"><code>bn</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Somali Soomaali so"><span class="native" lang="so">Soomaali</span><span class="en">Somali</span><span class="meta"><code>so</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Swahili Kiswahili sw"><span class="native" lang="sw">Kiswahili</span><span class="en">Swahili</span><span class="meta"><code>sw</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Amharic አማርኛ am"><span class="native" lang="am">አማርኛ</span><span class="en">Amharic</span><span class="meta"><code>am</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Burmese မြန်မာ my"><span class="native" lang="my">မြန်မာ</span><span class="en">Burmese</span><span class="meta"><code>my</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Nepali नेपाली ne"><span class="native" lang="ne">नेपाली</span><span class="en">Nepali</span><span class="meta"><code>ne</code></span></li>
+                <li class="ph-lang" data-dir="ltr" data-pack="0" data-q="Kinyarwanda Ikinyarwanda rw"><span class="native" lang="rw">Ikinyarwanda</span><span class="en">Kinyarwanda</span><span class="meta"><code>rw</code></span></li>
+                <li class="ph-lang" data-dir="rtl" data-pack="0" data-q="Rohingya 𐴌𐴟𐴇𐴥𐴝𐴚𐴒𐴙𐴝 rhg right to left rtl"><span class="native" lang="rhg" dir="rtl">𐴌𐴟𐴇𐴥𐴝𐴚𐴒𐴙𐴝</span><span class="en">Rohingya</span><span class="meta"><code>rhg</code><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span></span></li>
+            </ul>
+            <p class="ph-empty mt-2" id="lang-empty" hidden>That language isn’t in the list, but the app has a “My language is not here” box where a reader can type its name.</p>
+            <p class="ph-legend"><span><span class="ph-pill rtl"><abbr title="right to left">RTL</abbr></span> written right to left</span><span><span class="ph-pill pack">Bundled</span> pack ships with the app</span><span><code>ps</code> language tag</span></p>
+          </section>
+
+          <!-- ================= PRIVACY & SAFETY ================= -->
+          <section id="safety" aria-labelledby="safety-h">
+            <h2 class="prose" id="safety-h">Privacy &amp; safety</h2>
+            <p class="ph-intro">People photograph sensitive papers. Here is how the app handles them, and how it reacts to scams and emergencies.</p>
+            <div class="grid grid-2">
+              <article class="card ph-feature">
+                <span class="ph-ico good" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                <h3>Papers are processed in memory</h3>
+                <p>The server keeps uploads in memory only and logs no content. Saved papers go into a family vault that stays on the device. Photos are shrunk and stripped of EXIF data on the device before upload, and a “Hide parts” tool can mask parts of a page.</p>
+              </article>
+              <article class="card ph-feature">
+                <span class="ph-ico warn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4M12 16h.01"/></svg></span>
+                <h3>Scam warnings</h3>
+                <p>Demands for gift cards, wire transfers, payment apps or crypto, and arrest or deportation threats, trigger a fixed scam warning. The patterns cover English, Spanish, Arabic, Dari and Pashto. One of the sample papers is this kind of letter: one claiming to be USCIS and demanding gift cards.</p>
+              </article>
+              <article class="card ph-feature">
+                <span class="ph-ico warn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                <h3>Emergency help</h3>
+                <p>Words about chest pain, overdose or self-harm, in 26 languages, bring up an emergency card. The “Need help now?” screen, one tap away, lists:</p>
+                <ul class="ph-lines">
+                  <li><span>Someone in danger or very sick</span><b>911</b></li>
+                  <li><span>Call or text</span><b>988</b></li>
+                  <li><span>Poison Help</span><b>1-800-222-1222</b></li>
+                  <li><span>Domestic-violence helpline</span><b>1-800-799-7233 · text START to 88788</b></li>
+                </ul>
+              </article>
+              <article class="card ph-feature">
+                <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+                <h3>Information, not advice</h3>
+                <p>The app explains what a paper says. It presents itself as information, not legal or medical advice, and its chat answers only from the paper, refusing questions about outcomes or eligibility.</p>
+                <p class="mt-2">The live web app also sends security headers: HSTS, X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy no-referrer, a Permissions-Policy that allows the camera only for the app itself, and a Content-Security-Policy in report-only mode.</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- ================= TECH STACK ================= -->
+          <section id="stack" aria-labelledby="stack-h">
+            <h2 class="prose" id="stack-h">Tech stack</h2>
+            <p class="ph-intro">A Python server, one TypeScript app for every platform, and the Gemini API. Source code public on GitHub.</p>
+            <div class="ph-table-wrap">
+              <table class="ph-table">
+                <caption class="visually-hidden">ProxyHealth AI technology, by part of the system</caption>
+                <thead><tr><th scope="col">Part</th><th scope="col">What it uses</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Server (API)</th><td><strong>Python 3.13 + FastAPI</strong> 0.141.1, with Pydantic 2.13.5 and uvicorn 0.53.0. Pillow handles images, pypdfium2 renders PDF pages to images, and reportlab (with arabic-reshaper and python-bidi) builds the quick-sheet PDF. slowapi adds rate limiting.</td></tr>
+                  <tr><th scope="row">App (iPhone, Android, web)</th><td><strong>TypeScript + Expo / React Native</strong>, one codebase for web, iOS and Android: Expo SDK 57, React Native 0.86.3, React 19.2.3, Expo Router, and react-native-web for the static web export. On the device: expo-camera, image-picker and document-picker to capture papers, expo-speech to read aloud, expo-sqlite for the on-device vault, expo-notifications for reminders.</td></tr>
+                  <tr><th scope="row">AI</th><td><strong>Google Gemini API</strong> through the google-genai 2.25.0 SDK. gemini-3.8-flash reads and explains papers and screenshots; gemini-3.5-flash-lite builds language packs and answers chat. No separate OCR engine: quotes are verified in code. A built-in mock provider runs sample mode with no API key.</td></tr>
+                  <tr><th scope="row">Hosting</th><td><strong>Docker on Render</strong>: a python:3.13-slim image with one uvicorn worker, on Render’s free plan in the Virginia region, plus a Render static site for the web app, served through Cloudflare. Both are defined in the repo’s render.yaml.</td></tr>
+                  <tr><th scope="row">Quality</th><td>pytest and Jest + Testing Library (the README reports 3,403 API tests and 566 app tests), ruff, strict mypy, ESLint, and GitHub Actions CI.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div>
+                <h3 class="chart-title">What the code is written in: share of the repository’s code by language</h3>
+                <p class="chart-sub">Python, the backend language, is 58.5% of the code; TypeScript, the app’s language, is 39.5%.</p>
+              </div></div>
+              <div id="chart-code"></div>
+            </div>
+
+            <p class="ph-intro mt-3">Running it locally in sample mode takes four commands and needs Python 3.13, Node 24 and make on macOS or Linux. Sample mode needs no API keys.</p>
+            <div class="btn-row">
+              <a class="btn btn-dark" href="https://github.com/mubarsad012/ProxyHealth-AI#run-it-yourself-in-sample-mode-no-keys" target="_blank" rel="noopener">Run it yourself: README</a>
+              <a class="btn" href="https://github.com/mubarsad012/ProxyHealth-AI" target="_blank" rel="noopener">GitHub repository</a>
+            </div>
+          </section>
+
+          <!-- ================= BUILD LOG ================= -->
+          <section id="build" aria-labelledby="build-h">
+            <h2 class="prose" id="build-h">Build log</h2>
+            <p class="ph-intro">All 50 commits in the repository are authored as Morsal Mubarak.</p>
+            <div class="chart-card">
+              <div class="chart-head"><div>
+                <h3 class="chart-title">Commits to the ProxyHealth AI repository: running total by day</h3>
+                <p class="chart-sub">The first commit was Sep 27; 35 of the 50 commits landed in three days, Oct 22–24.</p>
+              </div></div>
+              <div id="chart-commits"></div>
+            </div>
+            <ol class="timeline mt-4">
+              <li><span class="when">Sep 27, 2026</span><h4>First commit</h4><p>Commit message: “Scaffold ProxyHealth AI monorepo with design backbone and research”. By Oct 4 there were 12 commits.</p></li>
+              <li><span class="when">Oct 22 – 24, 2026</span><h4>35 commits in three days</h4><p>19 of them on Oct 22, the busiest day in the commit history.</p></li>
+              <li><span class="when">Oct 26, 2026</span><h4>Code pushed to GitHub; live app updated</h4><p>The repository was created on GitHub, the 50th commit landed, and the live web app was last updated.</p></li>
+              <li><span class="when">Next</span><h4>App stores and a production host</h4><p>The iPhone and Android store builds are not submitted yet, and the project docs name Google Cloud Run as the planned production host.</p></li>
+            </ol>
+          </section>
+
+        </div>
+      </div>
+     </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var V = window.Viz;
+
+    /* ---------- Data, generated from the project facts file (collected Nov 1, 2026) ---------- */
+    var COMMITS_BY_DAY = {"2026-09-27": 3, "2026-09-29": 1, "2026-09-30": 2, "2026-10-01": 1, "2026-10-02": 3, "2026-10-04": 2, "2026-10-22": 19, "2026-10-23": 8, "2026-10-24": 8, "2026-10-26": 3};   // commits per UTC day (GitHub API)
+    var LANG_BYTES = {"Python": 2256059, "TypeScript": 1523016, "Shell": 57233, "HTML": 13683, "Makefile": 3691, "Dockerfile": 2217, "CSS": 1773, "JavaScript": 259};   // bytes per language (GitHub API)
+    var TTFB_COLD = 32.290287, TTFB_WARM = [0.114037, 0.105854];   // seconds, GET /health, Nov 1, 2026
+
+    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    function fmtSec(s) { return (s < 1 ? s.toFixed(2) : s.toFixed(1)) + ' s'; }
+    function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
+    function pressed(bar, btn) { bar.querySelectorAll('button[data-value]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); }); }
+
+    /* ---------- Chart: server response time, cold vs. warm (+ this visitor's own check) ---------- */
+    function latencyChart(mine) {
+      var el = document.getElementById('chart-latency');
+      if (!el || !V) return;
+      var data = [
+        { label: 'Asleep: first request after idle', value: TTFB_COLD, note: 'Nov 1, 2026, 19:45 UTC. The free server had to wake up first.' },
+        { label: 'Awake: check 1', value: TTFB_WARM[0] },
+        { label: 'Awake: check 2', value: TTFB_WARM[1] }
+      ];
+      if (typeof mine === 'number') data.push({ label: 'Your browser, just now', value: mine, series: 1, note: 'Timed by this page when it loaded, including your own network.' });
+      V.hbar(el, {
+        data: data,
+        format: fmtSec,
+        tickFormat: function (v) { return v + ' s'; },
+        xLabel: 'Seconds until the server answered',
+        valueName: 'Time to answer',
+        ariaLabel: 'Bar chart: the first request after idle took ' + fmtSec(TTFB_COLD) + '; two checks once the server was awake took ' + fmtSec(TTFB_WARM[0]) + ' and ' + fmtSec(TTFB_WARM[1]) + (typeof mine === 'number' ? '; your browser just now: ' + fmtSec(mine) : '') + '.',
+        table: {
+          caption: 'Time for the ProxyHealth AI server to answer a health check',
+          columns: ['Request', 'Seconds to answer'],
+          rows: data.map(function (d) { return [d.label, fmtSec(d.value)]; })
+        },
+        source: 'Source: timed requests to the API health check (GET /health) on Nov 1, 2026: one after idle, two once the server was awake. Render’s free plan puts the server to sleep after 15 idle minutes (render.yaml).' + (typeof mine === 'number' ? ' “Your browser” is measured live by this page.' : ' After this page checks the server, your own timing is added as a fourth bar.')
+      });
+    }
+
+    /* ---------- Chart: running total of commits by day ---------- */
+    function commitsChart() {
+      var el = document.getElementById('chart-commits');
+      if (!el || !V) return;
+      var start = Date.UTC(2026, 8, 27), end = Date.UTC(2026, 9, 26), DAY = 864e5;
+      var labels = [], pts = [], rows = [], total = 0, i = 0;
+      for (var t = start; t <= end; t += DAY, i++) {
+        var d = new Date(t), key = d.toISOString().slice(0, 10), n = COMMITS_BY_DAY[key] || 0;
+        var lab = MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate();
+        total += n;
+        labels.push(lab);
+        pts.push({ x: i, y: total, note: n ? n + (n === 1 ? ' commit' : ' commits') + ' that day' : 'No commits that day' });
+        if (n) rows.push([lab + ', 2026', String(n), String(total)]);
+      }
+      V.line(el, {
+        series: [{ name: 'Total commits', points: pts }],
+        format: V.fmt.int,
+        xFormat: function (x) { return labels[x]; },
+        yLabel: 'Commits so far',
+        zeroBased: true,
+        ariaLabel: 'Line chart of the running total of commits from Sep 27 to Oct 26, 2026, rising from 3 to 50, with a jump from 12 to 47 between Oct 22 and Oct 24. Use the arrow keys to step through days.',
+        table: { caption: 'Commits per day', columns: ['Day (UTC)', 'Commits that day', 'Running total'], rows: rows },
+        source: 'Source: GitHub API commit list for mubarsad012/ProxyHealth-AI, retrieved Nov 1, 2026. Days are in UTC; days without commits are not listed in the table.'
+      });
+    }
+
+    /* ---------- Chart: share of code by language ---------- */
+    function codeChart() {
+      var el = document.getElementById('chart-code');
+      if (!el || !V) return;
+      var names = Object.keys(LANG_BYTES), total = 0;
+      names.forEach(function (n) { total += LANG_BYTES[n]; });
+      var py = LANG_BYTES.Python, ts = LANG_BYTES.TypeScript, others = names.filter(function (n) { return n !== 'Python' && n !== 'TypeScript'; });
+      var pct = function (v) { return (v / total * 100).toFixed(1) + '%'; };
+      V.stack(el, {
+        segments: [
+          { label: 'Python', value: py, note: 'The backend language (FastAPI server)' },
+          { label: 'TypeScript', value: ts, note: 'The app’s language (Expo / React Native)' },
+          { label: 'Other', value: total - py - ts, note: others.join(', ') }
+        ],
+        darkInk: [1],
+        valueFormat: function (v) { return v.toLocaleString('en-US') + ' bytes'; },
+        valueName: 'Size',
+        ariaLabel: 'Stacked bar: Python ' + pct(py) + ', TypeScript ' + pct(ts) + ', other languages ' + pct(total - py - ts) + ' of the code.',
+        table: {
+          caption: 'Bytes of code per language',
+          columns: ['Language', 'Bytes', 'Share'],
+          rows: names.map(function (n) { return [n, LANG_BYTES[n].toLocaleString('en-US'), (LANG_BYTES[n] / total * 100).toFixed(2) + '%']; })
+        },
+        source: 'Source: GitHub API, languages endpoint for mubarsad012/ProxyHealth-AI (bytes of code per language), retrieved Nov 1, 2026.'
+      });
+    }
+
+    latencyChart();
+    commitsChart();
+    codeChart();
+
+    /* ---------- Live check: is the free-tier AI server awake? ----------
+       The API only allows cross-origin reads from the app's own site, so this uses a
+       no-cors request: the response body is unreadable here, but the time until the
+       server answers is measurable. Nothing is sent except the request itself. */
+    (function () {
+      var url = document.body.getAttribute('data-prewarm');
+      var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-ph-status]'));
+      if (!url || !boxes.length || !window.fetch) return;
+      var busy = false;
+      function set(state, text, timer, retry) {
+        boxes.forEach(function (b) {
+          b.setAttribute('data-state', state);
+          var tx = b.querySelector('.ph-status-text'); if (tx && tx.textContent !== text) tx.textContent = text;
+          var tm = b.querySelector('.ph-status-timer'); if (tm) tm.textContent = timer || '';
+          var r = b.querySelector('.ph-retry'); if (r) r.hidden = !retry;
+        });
+      }
+      function check() {
+        if (busy) return;
+        busy = true;
+        var t0 = performance.now();
+        set('checking', 'Checking whether the AI server is awake…');
+        var tick = setInterval(function () {
+          var s = (performance.now() - t0) / 1000;
+          if (s >= 3) set('waking', 'The AI server is waking up. This can take 30–60 seconds.', Math.floor(s) + ' s');
+        }, 1000);
+        var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+        var limit = setTimeout(function () { if (ctrl) ctrl.abort(); }, 90000);
+        function done() { busy = false; clearInterval(tick); clearTimeout(limit); }
+        fetch(url, { mode: 'no-cors', cache: 'no-store', credentials: 'omit', signal: ctrl ? ctrl.signal : undefined })
+          .then(function () {
+            var s = (performance.now() - t0) / 1000;
+            done();
+            set('awake', s < 10
+              ? 'The AI server is awake. It answered in ' + fmtSec(s) + '.'
+              : 'The AI server is awake now. It took ' + fmtSec(s) + ' to answer, most likely the free-tier wake-up.');
+            latencyChart(s);
+          })
+          .catch(function (err) {
+            done();
+            if (err && err.name === 'AbortError') set('unknown', 'No answer after 90 seconds. The server may still be waking up; check again in a minute.', '', true);
+            else set('unknown', 'This page could not reach the AI server (a network or browser setting may be blocking it). The app itself may still work.', '', true);
+          });
+      }
+      boxes.forEach(function (b) { var r = b.querySelector('.ph-retry'); if (r) r.addEventListener('click', check); });
+      check();
+    })();
+
+    /* ---------- How it works: previous / next buttons for the step tabs ---------- */
+    (function () {
+      var list = document.getElementById('how-steps'), label = document.getElementById('how-count');
+      if (!list || !label) return;
+      var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+      var prev = document.querySelector('[data-step="prev"]'), next = document.querySelector('[data-step="next"]');
+      function cur() { for (var i = 0; i < tabs.length; i++) if (tabs[i].getAttribute('aria-selected') === 'true') return i; return 0; }
+      function update() { var i = cur(); label.textContent = 'Step ' + (i + 1) + ' of ' + tabs.length; prev.disabled = i === 0; next.disabled = i === tabs.length - 1; }
+      prev.addEventListener('click', function () { var i = cur(); if (i > 0) tabs[i - 1].click(); });
+      next.addEventListener('click', function () { var i = cur(); if (i < tabs.length - 1) tabs[i + 1].click(); });
+      document.addEventListener('tabchange', update);
+      update();
+    })();
+
+    /* ---------- Search + filter lists (sample papers, languages) ---------- */
+    function listFilter(cfg) {
+      var bar = document.querySelector('[data-filter="' + cfg.name + '"]');
+      var input = document.getElementById(cfg.input), count = document.getElementById(cfg.count), empty = document.getElementById(cfg.empty);
+      var items = Array.prototype.slice.call(document.querySelectorAll(cfg.items));
+      if (!bar || !input || !items.length) return;
+      items.forEach(function (it) { it._q = norm(it.getAttribute('data-q') + ' ' + it.textContent); });
+      var value = 'all';
+      // On phones a long list starts collapsed; searching, filtering or "Show all" expands it.
+      var more = cfg.more ? document.getElementById(cfg.more) : null;
+      var collapsed = !!(more && window.matchMedia && window.matchMedia('(max-width: 640px)').matches);
+      function apply() {
+        var q = norm(input.value), shown = 0;
+        if (q || value !== 'all') collapsed = false;
+        items.forEach(function (it, idx) {
+          var on = cfg.match(it, value) && (!q || it._q.indexOf(q) !== -1) && !(collapsed && idx >= cfg.collapseTo);
+          it.hidden = !on;
+          if (on) shown++;
+        });
+        if (more) more.hidden = !collapsed;
+        count.textContent = shown === items.length ? 'Showing all ' + items.length + ' ' + cfg.noun : 'Showing ' + shown + ' of ' + items.length + ' ' + cfg.noun;
+        if (empty) empty.hidden = shown !== 0;
+      }
+      if (more) more.addEventListener('click', function () {
+        collapsed = false;
+        apply();
+        var first = items[cfg.collapseTo];
+        if (first) { first.setAttribute('tabindex', '-1'); first.focus(); }
+      });
+      if (collapsed) apply();
+      input.addEventListener('input', apply);
+      bar.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-value]');
+        if (!b) return;
+        value = b.getAttribute('data-value');
+        pressed(bar, b);
+        apply();
+      });
+    }
+    listFilter({ name: 'samples', input: 'sample-q', count: 'sample-count', empty: 'sample-empty', items: '#samples .ph-sample', noun: 'sample papers', more: 'sample-more', collapseTo: 6,
+      match: function (it, v) { return v === 'all' || it.getAttribute('data-topic') === v; } });
+    listFilter({ name: 'langs', input: 'lang-q', count: 'lang-count', empty: 'lang-empty', items: '#langs .ph-lang', noun: 'languages',
+      match: function (it, v) { return v === 'all' || (v === 'rtl' && it.getAttribute('data-dir') === 'rtl') || (v === 'pack' && it.getAttribute('data-pack') === '1'); } });
+
+    /* ---------- Feature filter ---------- */
+    (function () {
+      var bar = document.querySelector('[data-filter="features"]'), count = document.getElementById('feature-count');
+      var cards = Array.prototype.slice.call(document.querySelectorAll('#feature-grid > [data-cat]'));
+      if (!bar || !cards.length) return;
+      bar.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-value]');
+        if (!b) return;
+        var v = b.getAttribute('data-value'), shown = 0;
+        pressed(bar, b);
+        cards.forEach(function (c) { var on = v === 'all' || c.getAttribute('data-cat') === v; c.hidden = !on; if (on) shown++; });
+        count.textContent = shown === cards.length ? 'Showing all ' + cards.length + ' features' : 'Showing ' + shown + ' of ' + cards.length + ' features';
+      });
+    })();
+  })();
+  </script>
+</body>
+</html>

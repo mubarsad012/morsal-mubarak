@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI-Guided Diagnostics for Neurocysticercosis — Morsal Mubarak</title>
+  <meta name="description" content="A systematic review asking whether ESM-2 protein language model embeddings and AlphaFold-derived structures can identify diagnostic B-cell epitopes for neurocysticercosis.">
+  <meta property="og:title" content="AI-Guided Diagnostics for Neurocysticercosis — Morsal Mubarak">
+  <meta property="og:description" content="A systematic review asking whether ESM-2 protein language model embeddings and AlphaFold-derived structures can identify diagnostic B-cell epitopes for neurocysticercosis.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* page-local helpers — tokens only, so dark mode keeps working */
+    .q-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .q-list li { display: flex; gap: 12px; align-items: flex-start; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--ink-2); }
+    .q-list .n { font: 600 .78rem/1.6 var(--font-mono); color: var(--accent); flex: none; }
+    .chart-stack { display: grid; gap: clamp(16px, 2.4vw, 24px); }
+    .tab-panel { margin-top: 18px; }
+    .mini-note { color: var(--ink-3); font-size: .84rem; margin: 10px 0 0; }
+    .kv { display: grid; grid-template-columns: minmax(0,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .kv > div { background: var(--surface); padding: 16px 18px; }
+    .kv h4 { margin: 0 0 4px; }
+    .kv p { margin: 0; color: var(--ink-2); font-size: .94rem; }
+    .kv .src-line { display: block; margin-top: 6px; color: var(--ink-3); font-size: .78rem; }
+    .evidence-note { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--ink-2); font-size: .9rem; margin-bottom: 18px; }
+    .evidence-note strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">Neurocysticercosis</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge review">Systematic review · manuscript in preparation</span><span class="badge plain">Senior (last) author</span></div>
+        <h1>AI-Guided Diagnostics for Neurocysticercosis: A Systematic Review of ESM-2 + AlphaFold</h1>
+        <p class="byline">Chensa Makin, Akansha Tiwari, and <strong>Morsal Mubarak</strong> (senior, last author)</p>
+        <p class="lede">Neurocysticercosis is the leading cause of acquired epilepsy worldwide, and confirming it still depends on CT or MRI scans that are expensive and scarce where the disease is most common. This review asks a narrower, testable question: can a protein language model (ESM-2) and AI-predicted protein structures (AlphaFold) pick out the antibody targets a cheap blood test would need? We screened the published evidence and found the idea is plausible — but nobody has tested it on the parasite itself.</p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>Senior (last) author</dd></div>
+          <div><dt>Review type</dt><dd>PRISMA-informed narrative synthesis</dd></div>
+          <div><dt>Search</dt><dd>5 databases + bioRxiv, 2016–2026</dd></div>
+          <div><dt>Appraisal</dt><dd>PROBAST &amp; QUADAS-2</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#evidence">See the evidence</a>
+          <a class="btn" href="#search">How the search worked</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#why">Why it matters</a><a href="#question">The question</a><a href="#search">Search &amp; screening</a><a href="#evidence">The evidence</a><a href="#antigens">The targets</a><a href="#limits">Limits &amp; bias</a><a href="#verdict">The verdict</a>
+        </nav></aside>
+        <div>
+          <section id="overview" class="prose block">
+            <h2>Overview</h2>
+            <p>A blood test needs a target: a small patch on a parasite protein that a patient's antibodies actually latch onto. That patch is called a <strong>B-cell epitope</strong>. For <em>Taenia solium</em>, the tapeworm behind neurocysticercosis (NCC), finding those patches experimentally is slow and expensive, and the parasite has almost no solved 3-D protein structures to work from.</p>
+            <p>Two recent tools change what is possible on a laptop. <strong>ESM-2</strong> is a protein language model: trained on hundreds of millions of protein sequences, it turns a raw amino-acid sequence into a numerical representation that already encodes structural and functional information, without needing a known relative to copy from. <strong>AlphaFold</strong> predicts a protein's three-dimensional shape at close to experimental accuracy. This review asks whether putting the two together is a credible way to identify and rank diagnostic epitope candidates for NCC — and what the published evidence can and cannot support.</p>
+            <p>The short answer: every ingredient works on its own, and four independent tools show that combining sequence and structure beats either one alone. But the combination only helps when the system knows how much to trust the predicted structure, and no study has yet run the full pipeline on a <em>T. solium</em> antigen that is already used to diagnose patients. So the finding is <strong>feasibility is plausible, not yet established</strong>.</p>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> Senior (last) author. The manuscript is in preparation, so no formal citation and no PDF are posted here yet.</p></div>
+          </section>
+
+          <section id="why" class="block">
+            <h2 class="prose">Why neurocysticercosis matters</h2>
+            <div class="metrics">
+              <div class="metric"><span class="value">20–50<span class="unit">%</span></span><span class="label">of late-onset epilepsy in <em>T. solium</em>-endemic regions is attributable to NCC</span><span class="src">Manuscript, abstract &amp; introduction</span></div>
+              <div class="metric"><span class="value">2.5–8.3<span class="unit">M</span></span><span class="label">people affected globally, with up to 4.36 million cases directly linked to epilepsy</span><span class="src">Manuscript, abstract</span></div>
+              <div class="metric"><span class="value">&gt;80<span class="unit">%</span></span><span class="label">of the global epilepsy burden falls on low- and middle-income countries</span><span class="src">Manuscript, abstract</span></div>
+              <div class="metric accent"><span class="value">0</span><span class="label">studies have applied the integrated ESM-2 + AlphaFold pipeline to a known <em>T. solium</em> diagnostic antigen</span><span class="src">Manuscript, abstract &amp; conclusion</span></div>
+            </div>
+            <div class="prose mt-3">
+              <p>Confirmatory diagnosis leans on neuroimaging, which is costly and scarce in endemic settings. Blood-based assays exist but are limited by cost, technical demands, and cross-reactivity with related tapeworm species. That bottleneck is the reason to care about epitope-guided tests: a synthetic peptide assay would not depend on sourcing live-parasite material for antigen production.</p>
+            </div>
+          </section>
+
+          <section id="question" class="prose block">
+            <h2>The question we set out to answer</h2>
+            <p>The primary question was whether existing evidence supports using ESM-2-based protein representations together with AlphaFold-derived structural information to identify and prioritize diagnostic B-cell epitope candidates relevant to neurocysticercosis, with the goal of more accessible diagnostics in low- and middle-income countries. Four secondary questions organized the synthesis.</p>
+            <ol class="q-list">
+              <li><span class="n">01</span><span>How has ESM-2 been applied to B-cell epitope identification or prediction, and through what mechanism?</span></li>
+              <li><span class="n">02</span><span>What advantages and limitations do ESM-2-based approaches have relative to conventional sequence-based or structure-based methods?</span></li>
+              <li><span class="n">03</span><span>How far do these approaches apply to the known diagnostic antigens of <em>Taenia solium</em> and NCC?</span></li>
+              <li><span class="n">04</span><span>How could the approach support more accessible diagnostic tools in low- and middle-income countries?</span></li>
+            </ol>
+            <p class="mini-note">A conventional PICO structure was not used: the included studies span protein language modeling, structural bioinformatics, immunoinformatics, and <em>T. solium</em> parasitology, with different outcome metrics and validation standards, so a meta-analysis would have compared things that are not comparable.</p>
+          </section>
+
+          <section id="search" class="block">
+            <h2 class="prose">How the search and screening worked</h2>
+            <div class="flow mt-3">
+              <div class="step"><h4>Four search strands</h4><p>One Boolean strand per component of the question, so a study that covered only one piece would still surface.</p></div>
+              <div class="step"><h4>Six sources, 2016–2026</h4><p>PubMed, Google Scholar, IEDB, Europe PMC, LILACS, plus bioRxiv for preprints. LILACS was limited to English-language records.</p></div>
+              <div class="step"><h4>Two screening tracks</h4><p>Rayyan for de-duplication and title/abstract screening; SciSpace for parallel discovery, keeping records scoring above 75/100 on its relevancy metric.</p></div>
+              <div class="step"><h4>Quality appraisal</h4><p>PROBAST for prediction-model studies, QUADAS-2 for diagnostic-accuracy studies. Citations managed in Zotero, APA style.</p></div>
+            </div>
+
+            <h3 class="prose mt-4">What each strand was looking for</h3>
+            <div class="tabs" data-tabs role="tablist" aria-label="Search strands">
+              <button role="tab" id="t-s1" aria-controls="p-s1" aria-selected="true" type="button">Strand 1</button>
+              <button role="tab" id="t-s2" aria-controls="p-s2" aria-selected="false" tabindex="-1" type="button">Strand 2</button>
+              <button role="tab" id="t-s3" aria-controls="p-s3" aria-selected="false" tabindex="-1" type="button">Strand 3</button>
+              <button role="tab" id="t-s4" aria-controls="p-s4" aria-selected="false" tabindex="-1" type="button">Strand 4</button>
+            </div>
+            <div class="tab-panel prose" id="p-s1" role="tabpanel" aria-labelledby="t-s1">
+              <p><strong>ESM-2 and B-cell epitope prediction — computational feasibility.</strong> Does the protein language model help find epitopes at all?</p>
+            </div>
+            <div class="tab-panel prose" id="p-s2" role="tabpanel" aria-labelledby="t-s2" hidden>
+              <p><strong>ESM-2 and structural information — structural feasibility.</strong> Does adding predicted structure to the language model help, and how is it added?</p>
+            </div>
+            <div class="tab-panel prose" id="p-s3" role="tabpanel" aria-labelledby="t-s3" hidden>
+              <p><strong><em>Taenia solium</em> / NCC and diagnostic epitopes — biological and diagnostic feasibility.</strong> What is already known about the antigens used to diagnose this disease?</p>
+            </div>
+            <div class="tab-panel prose" id="p-s4" role="tabpanel" aria-labelledby="t-s4" hidden>
+              <p><strong><em>Taenia solium</em> and computational methods — research-gap identification.</strong> Has anyone already pointed these tools at this parasite?</p>
+            </div>
+
+            <h3 class="prose mt-4">Screening, track by track</h3>
+            <div class="chart-stack">
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Track 1: records identified, screened, and extracted</h3><p class="chart-sub">Fewer than 1 in 40 records identified in Track 1 survived to data extraction.</p></div></div>
+                <div id="c-track1" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Track 2: records retrieved, screened, and included</h3><p class="chart-sub">The SciSpace-assisted track was smaller but kept a higher share: 10 of 238.</p></div></div>
+                <div id="c-track2" data-chart></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="evidence" class="block">
+            <h2 class="prose">The evidence, chart by chart</h2>
+            <div class="evidence-note"><strong>Read these as a map of other people's results.</strong> Every number below was reported by a study included in the review. We ran no new experiments and trained no models; the contribution is the systematic search, the appraisal, and the synthesis.</div>
+            <div class="tabs" data-tabs role="tablist" aria-label="Evidence views">
+              <button role="tab" id="t-e1" aria-controls="p-e1" aria-selected="true" type="button">Sequence encoding</button>
+              <button role="tab" id="t-e2" aria-controls="p-e2" aria-selected="false" tabindex="-1" type="button">Predicted vs. real structure</button>
+              <button role="tab" id="t-e3" aria-controls="p-e3" aria-selected="false" tabindex="-1" type="button">Does combining help?</button>
+              <button role="tab" id="t-e4" aria-controls="p-e4" aria-selected="false" tabindex="-1" type="button">How you combine matters</button>
+            </div>
+
+            <div class="tab-panel" id="p-e1" role="tabpanel" aria-labelledby="t-e1">
+              <div class="chart-stack">
+                <div class="chart-card">
+                  <div class="chart-head"><div><h3 class="chart-title">BepiPred-3.0: epitope-prediction AUC by how the sequence is encoded</h3><p class="chart-sub">Swapping classical encodings for ESM-2 embeddings raised AUC from 0.63–0.64 to 0.762 (p &lt; 0.001).</p></div></div>
+                  <div id="c-bepipred" data-chart></div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-head"><div><h3 class="chart-title">GraphBepi: AUC from each feature type on its own</h3><p class="chart-sub">ESM-2 alone outperformed both the evolutionary profiles and the structural descriptors it replaced.</p></div></div>
+                  <div id="c-graphbepi" data-chart></div>
+                </div>
+              </div>
+              <p class="mini-note">AUC is the chance that the model ranks a true epitope residue above a non-epitope one. 0.5 is a coin flip, so the bars start there.</p>
+            </div>
+
+            <div class="tab-panel" id="p-e2" role="tabpanel" aria-labelledby="t-e2" hidden>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">AlphaFold-predicted structures vs. experimental structures vs. no structure</h3><p class="chart-sub">Predicted structures land within about 0.01 AUC of experimentally solved ones in both tools — which is what makes this approach possible for a parasite with almost no solved structures.</p></div></div>
+                <div id="c-structure" data-chart></div>
+              </div>
+              <p class="mini-note">DiscoTope-3.0 reported the same pattern a third way: moving from solved structures to AlphaFold2 (ColabFold) models cost only 0.6 of a percentile point.</p>
+            </div>
+
+            <div class="tab-panel" id="p-e3" role="tabpanel" aria-labelledby="t-e3" hidden>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Four tools that ablated their own inputs: sequence only, structure only, or both</h3><p class="chart-sub">In all four, the combination beat either input on its own — the single most consistent finding in the review.</p></div></div>
+                <div id="c-ablation" data-chart></div>
+              </div>
+              <p class="mini-note">EpiCluster went furthest: 83 hand-crafted structural features lifted AUC from 0.64 to 0.71, and adding a spatial clustering layer that forces predictions into contiguous surface patches raised it to 0.89 — a bigger gain than the structural features themselves.</p>
+            </div>
+
+            <div class="tab-panel" id="p-e4" role="tabpanel" aria-labelledby="t-e4" hidden>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">AlphaEpi: AUC by fusion strategy, against the ESM-2-only baseline</h3><p class="chart-sub">The dashed line is ESM-2 alone (0.751–0.753). Naive fusion scored below it; only the confidence-aware dynamic selector beat it.</p></div></div>
+                <div id="c-fusion" data-chart></div>
+              </div>
+              <p class="mini-note">For context from the same study: AlphaFold3 structure alone reached only 0.619–0.620, and ESM-2 alone 0.751–0.753. Integration is conditional, not automatic — which is the caveat that drives the review's conclusion.</p>
+              <div class="kv mt-3">
+                <div><h4>Confidence gates the whole thing</h4><p>DiscoTope-3.0 loses roughly 5 percentile points for every 10-point drop in pLDDT, AlphaFold's own confidence score.<span class="src-line">Manuscript, p. 16</span></p></div>
+                <div><h4>Low-confidence models cost accuracy</h4><p>GraphBepi's F1 score nearly doubles between high- and low-confidence structures: 0.406 vs. 0.241.<span class="src-line">Manuscript, p. 16</span></p></div>
+                <div><h4>Filtering rescues raw predictions</h4><p>Raw AlphaFold3 co-folding gave acceptable docking geometry for only about 37% of antibody-antigen pairs; Rosetta-based filtering (AFilter) reached 96–98% reliability.<span class="src-line">Manuscript, p. 16 &amp; Table 2</span></p></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="antigens" class="block">
+            <h2 class="prose">The targets this would have to work on</h2>
+            <div class="prose">
+              <p>This is the part that makes the method worth testing on NCC specifically. Over 90% of natural B-cell epitopes are <strong>conformational</strong> — they only exist when the protein is folded, and they stop working the moment it is denatured. And every validated <em>T. solium</em> diagnostic epitope identified so far is conformational, not linear: T24/rT24H, Ts8B2, GP50, sTs14, TsF78, and TsP62/TsC28. Conformational epitopes are exactly the class that sequence-only methods handle worst and that structure-aware methods are built for.</p>
+            </div>
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">Reported sensitivity and specificity of validated NCC diagnostic antigens</h3><p class="chart-sub">These are the benchmarks any computationally designed test would be measured against.</p></div></div>
+              <div id="c-antigens" data-chart></div>
+            </div>
+            <div class="kv mt-3">
+              <div><h4>T24H / rT24H</h4><p>94% sensitivity (101/107) in patients with two or more viable cysts, 98% specificity — but 63% (10/16) in single-cyst disease. Its epitope is disulfide-dependent: chemically reducing the protein abolishes antibody recognition entirely.<span class="src-line">Hancock et al., 2006, as reported in the manuscript, p. 20 &amp; Table 1</span></p></div>
+              <div><h4>Ts8B2 / CyDA</h4><p>91.3% sensitivity in active NCC, 92.5–97.8% specificity, falling to 68.6% sensitivity in inactive disease. Synthetic linear peptides of this antigen were not recognized at all.<span class="src-line">Ferrer et al., 2012, as reported in the manuscript, p. 20 &amp; Table 1</span></p></div>
+              <div><h4>Three-antigen MAPIA panel</h4><p>Combining rGP50, rT24H and sTs14 detected 97.5% of parenchymal and 100% of subarachnoid cases at 98.5% specificity.<span class="src-line">Toribio et al., 2023, as reported in the manuscript, p. 20</span></p></div>
+            </div>
+            <div class="prose mt-3">
+              <h3>Two studies came close, then stopped</h3>
+              <p>Only two included studies touched <em>T. solium</em> with any part of this toolkit. Muñoz et al. (2025) screened 586 <em>T. solium</em> sequences with BepiPred-2.0 and SignalP 5.0 to prioritize 22 antigenic proteins and confirmed two by Western blot — but that work predates ESM-2 and was never validated against patient serum. Sánchez-Juárez et al. (2025) used AlphaFold2 to build a validated homology model of a <em>T. solium</em> glutathione S-transferase, which demonstrates structural modeling is feasible but does no epitope identification. Neither integrated the two, and neither tested a diagnostic antigen.</p>
+            </div>
+          </section>
+
+          <section id="limits" class="block">
+            <h2 class="prose">What the evidence cannot carry</h2>
+            <div class="prose">
+              <h3>Quality of the included studies</h3>
+            </div>
+            <div class="metrics">
+              <div class="metric small"><span class="value">20</span><span class="label">studies appraised with PROBAST: 85% unclear risk of bias, 15% high, none rated low</span><span class="src">Manuscript, section 9</span></div>
+              <div class="metric small"><span class="value">4</span><span class="label">studies appraised with QUADAS-2: 75% high risk of bias overall</span><span class="src">Manuscript, section 9</span></div>
+              <div class="metric small"><span class="value">4</span><span class="label">studies excluded from formal risk-of-bias assessment</span><span class="src">Manuscript, section 9</span></div>
+            </div>
+            <div class="prose mt-3">
+              <h3>Practical limits on the method itself</h3>
+              <ul>
+                <li><strong>Length ceiling.</strong> ESM-2 truncates sequences beyond 1,023 residues, so longer antigens cannot be embedded whole.</li>
+                <li><strong>Compute cost.</strong> Generating embeddings takes 14.34 seconds per protein, against 0.08 seconds for random embeddings.</li>
+                <li><strong>Precision stays modest.</strong> Favorable AUC hides weak precision in practice: EpiTune reported precision of 0.36, and CALIBER PR-AUC of 0.12–0.38. A ranked shortlist still needs wet-lab confirmation.</li>
+                <li><strong>Access.</strong> AlphaFold3 is not open-source and enforces daily request limits, which constrains the throughput of any pipeline built on it.</li>
+                <li><strong>Epitope-type dependence.</strong> The advantage concentrates on conformational epitopes; for linear epitopes CALIBER found randomly initialized embeddings beating ESM-2 (0.789 vs. 0.768) at over 170-fold less computation.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="verdict" class="prose block">
+            <h2>The verdict</h2>
+            <p>The proposed ESM-2 + AlphaFold integration is computationally coherent and biologically justified for NCC epitope discovery: all validated diagnostic antigens are conformational, which is precisely the structural class this method addresses, and the approach sidesteps the absence of experimental <em>T. solium</em> structures. The evidence for each component is consistent across independent tools.</p>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>Feasibility is plausible rather than established.</strong> No included study has tested this pipeline directly against <em>T. solium</em>'s own diagnostic antigens. The honest next step is the obvious one: run the integrated pipeline on an antigen such as T24H, where the ground truth is already known, and see whether it recovers the epitope that two decades of serology found the hard way.</p></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var d3 = Viz.fmt.dec(3), d1 = Viz.fmt.dec(1);
+    var SRC = 'Values reported by the studies included in the review (Makin, Tiwari & Mubarak, manuscript in preparation). No new experiments were run.';
+
+    var builders = {
+      'c-track1': function () {
+        Viz.funnel('#c-track1', {
+          steps: [
+            { label: 'Records identified', value: 1067, note: 'PubMed, Google Scholar, IEDB, Europe PMC and the bioRxiv preprint server' },
+            { label: 'Eligible for full-text screening', value: 100, note: '441 duplicates were removed in Rayyan before title and abstract screening' },
+            { label: 'Carried to data extraction', value: 23, note: 'Assessed against the predefined eligibility criteria' }
+          ],
+          format: Viz.fmt.int,
+          ariaLabel: 'Track 1 screening: 1,067 records identified, 100 eligible for full-text screening, 23 carried to data extraction',
+          table: { caption: 'Track 1 screening counts', columns: ['Stage', 'Records'], rows: [['Records identified', '1,067'], ['Duplicates removed (Rayyan)', '441'], ['Eligible for full-text screening', '100'], ['Carried to data extraction', '23']] },
+          source: 'Manuscript, section 3.3 (Study Selection).'
+        });
+      },
+      'c-track2': function () {
+        Viz.funnel('#c-track2', {
+          steps: [
+            { label: 'Records retrieved', value: 238, note: 'PubMed and LILACS, with SciSpace-assisted discovery' },
+            { label: 'Title / abstract screened', value: 105, note: 'SciSpace Copilot assisted abstract review; inclusion decisions stayed with the reviewer' },
+            { label: 'Advanced to full text', value: 30 },
+            { label: 'Included', value: 10 }
+          ],
+          format: Viz.fmt.int,
+          ariaLabel: 'Track 2 screening: 238 records retrieved, 105 screened, 30 full text, 10 included',
+          table: { caption: 'Track 2 screening counts', columns: ['Stage', 'Records'], rows: [['Records retrieved', '238'], ['Title / abstract screened', '105'], ['Advanced to full text', '30'], ['Included', '10']] },
+          source: 'Manuscript, section 3.3 (Study Selection).'
+        });
+      },
+      'c-bepipred': function () {
+        Viz.hbar('#c-bepipred', {
+          data: [
+            { label: 'ESM-2 embeddings', value: 0.762, series: 0, note: 'p < 0.001 against the classical encodings' },
+            { label: 'BLOSUM62 encoding', value: 0.641, series: 1 },
+            { label: 'One-hot / sparse encoding', value: 0.633, series: 1 }
+          ],
+          format: d3, domain: [0.5, 0.8], baseline: 0.5,
+          xLabel: 'AUC (0.5 = chance)', valueName: 'AUC',
+          ariaLabel: 'BepiPred-3.0 AUC: 0.762 with ESM-2 embeddings, 0.641 with BLOSUM62, 0.633 with one-hot encoding',
+          table: { caption: 'BepiPred-3.0 AUC by sequence encoding', columns: ['Sequence encoding', 'AUC'], rows: [['ESM-2 embeddings', '0.762'], ['BLOSUM62 encoding', '0.641'], ['One-hot / sparse encoding', '0.633']] },
+          source: 'Reported for BepiPred-3.0 (Clifford et al.) in the review manuscript, abstract, p. 15 and Table 2. ' + SRC
+        });
+      },
+      'c-graphbepi': function () {
+        Viz.hbar('#c-graphbepi', {
+          data: [
+            { label: 'ESM-2 embeddings alone', value: 0.736, series: 0 },
+            { label: 'PSSM / HMM profiles', value: 0.717, series: 1, note: 'Evolutionary profile features' },
+            { label: 'DSSP descriptors', value: 0.680, series: 1, note: 'Classical structural descriptors' }
+          ],
+          format: d3, domain: [0.5, 0.78], baseline: 0.5,
+          xLabel: 'AUC (0.5 = chance)', valueName: 'AUC',
+          ariaLabel: 'GraphBepi AUC: 0.736 from ESM-2 alone, 0.717 from PSSM or HMM profiles, 0.680 from DSSP descriptors',
+          table: { caption: 'GraphBepi AUC by feature type', columns: ['Feature type', 'AUC'], rows: [['ESM-2 embeddings alone', '0.736'], ['PSSM / HMM profiles', '0.717'], ['DSSP descriptors', '0.680']] },
+          source: 'Reported for GraphBepi in the review manuscript, p. 15. ' + SRC
+        });
+      },
+      'c-structure': function () {
+        Viz.groupedHbar('#c-structure', {
+          categories: ['GraphBepi (AlphaFold2)', 'MsgaBpred (AlphaFold3)'],
+          series: [
+            { name: 'AlphaFold-predicted structure', values: [0.751, 0.744] },
+            { name: 'Experimental structure', values: [0.759, 0.753] },
+            { name: 'Sequence only, no structure', values: [0.698, 0.708] }
+          ],
+          format: d3, domain: [0.6, 0.8], xLabel: 'AUC',
+          ariaLabel: 'GraphBepi scores 0.751 with AlphaFold2 structures versus 0.759 with experimental ones and 0.698 sequence-only; MsgaBpred scores 0.744, 0.753 and 0.708',
+          table: { caption: 'AUC by structure source', columns: ['Tool', 'AlphaFold-predicted', 'Experimental', 'Sequence only'], rows: [['GraphBepi (AlphaFold2)', '0.751', '0.759', '0.698'], ['MsgaBpred (AlphaFold3)', '0.744', '0.753', '0.708']] },
+          source: 'Review manuscript, abstract, p. 16 and Table 2. ' + SRC
+        });
+      },
+      'c-ablation': function () {
+        Viz.groupedHbar('#c-ablation', {
+          categories: ['EpiGraph', 'GraphBepi', 'MsgaBpred', 'EpiCluster'],
+          series: [
+            { name: 'Sequence only (ESM-2)', values: [0.70, 0.698, 0.708, 0.64] },
+            { name: 'Structure only', values: [0.70, null, null, 0.63], notes: ['ESM-IF1 alone', null, null, '83 hand-crafted structural features'] },
+            { name: 'Both combined', values: [0.73, 0.751, 0.744, 0.71], notes: [null, 'AlphaFold2 structures', 'AlphaFold3 structures', 'Adding a spatial clustering layer raised this further, to 0.89'] }
+          ],
+          format: d3, domain: [0.6, 0.78], xLabel: 'AUC',
+          ariaLabel: 'In EpiGraph, GraphBepi, MsgaBpred and EpiCluster the combined sequence-plus-structure model scores higher than either input alone',
+          table: { caption: 'Ablation results across four tools', columns: ['Tool', 'Sequence only', 'Structure only', 'Combined'], rows: [['EpiGraph', '0.70', '0.70 (ESM-IF1)', '0.73'], ['GraphBepi', '0.698', 'not reported', '0.751'], ['MsgaBpred', '0.708', 'not reported', '0.744'], ['EpiCluster', '0.64', '0.63', '0.71 (0.89 with spatial clustering)']] },
+          source: 'Review manuscript, pp. 17–19 and Table 2. ' + SRC
+        });
+      },
+      'c-fusion': function () {
+        Viz.hbar('#c-fusion', {
+          data: [
+            { label: 'Naive / unfiltered fusion', value: 0.740, series: 1, note: 'Below the sequence-only baseline' },
+            { label: 'Confidence-weighted averaging', value: 0.743, series: 1 },
+            { label: 'Fixed learnable weighting', value: 0.746, series: 1 },
+            { label: 'Dynamic selector', value: 0.766, series: 0, note: 'Confidence-aware: adaptively weights structure against sequence by prediction confidence' }
+          ],
+          format: d3, domain: [0.6, 0.79], baseline: 0.6,
+          ref: { value: 0.751, label: 'ESM-2 alone' },
+          xLabel: 'AUC', valueName: 'AUC',
+          ariaLabel: 'AlphaEpi fusion strategies: naive 0.740, confidence-weighted 0.743, fixed learnable 0.746, dynamic selector 0.766, against an ESM-2-only baseline of 0.751 to 0.753',
+          table: { caption: 'AlphaEpi AUC by fusion strategy', columns: ['Fusion strategy', 'AUC'], rows: [['AlphaFold3 structure alone', '0.619–0.620'], ['ESM-2 alone', '0.751–0.753'], ['Naive / unfiltered fusion', '0.740'], ['Confidence-weighted averaging', '0.743'], ['Fixed learnable weighting', '0.746'], ['Dynamic selector (confidence-aware)', '0.766']] },
+          source: 'Review manuscript, pp. 16, 19 and 23, and Table 2. ' + SRC
+        });
+      },
+      'c-antigens': function () {
+        Viz.groupedHbar('#c-antigens', {
+          categories: ['T24H / rT24H', 'Ts8B2 / CyDA', 'TsF78', 'TsP62 / TsP43', 'TsC28', 'Crude cyst-fluid antigen'],
+          series: [
+            { name: 'Sensitivity (%)', values: [94, 91.3, 93.8, 91.7, 85.4, 87.5], notes: ['101 of 107 patients with two or more viable cysts; 63% (10/16) in single-cyst disease', 'Active NCC; 68.6% in inactive disease', null, null, null, 'Comparator, not a defined antigen'] },
+            { name: 'Specificity (%)', values: [98, null, 95.0, 93.3, 93.3, 76.7], notes: [null, 'Reported as a range, 92.5–97.8%, so it is not plotted', null, null, null, null] }
+          ],
+          format: d1, domain: [0, 100], xLabel: 'Percent',
+          ariaLabel: 'Reported sensitivity and specificity for six validated neurocysticercosis diagnostic antigens',
+          table: { caption: 'Reported performance of validated NCC diagnostic antigens', columns: ['Antigen', 'Sensitivity (%)', 'Specificity (%)', 'Study'], rows: [['T24H / rT24H', '94', '98', 'Hancock et al., 2006'], ['Ts8B2 / CyDA', '91.3', '92.5–97.8', 'Ferrer et al., 2012'], ['TsF78', '93.8', '95.0', 'Rivera et al., 2025'], ['TsP62 / TsP43', '91.7', '93.3', 'Rivera et al., 2025'], ['TsC28', '85.4', '93.3', 'Rivera et al., 2025'], ['Crude cyst-fluid antigen', '87.5', '76.7', 'Rivera et al., 2025']] },
+          source: 'Review manuscript, p. 20 and Table 1. ' + SRC
+        });
+      }
+    };
+
+    var drawn = {};
+    function drawIn(node) {
+      if (!node) return;
+      node.querySelectorAll('[data-chart]').forEach(function (el) {
+        if (drawn[el.id] || !builders[el.id]) return;
+        drawn[el.id] = true;
+        builders[el.id]();
+      });
+    }
+    // draw everything that is visible on load
+    document.querySelectorAll('[data-chart]').forEach(function (el) {
+      var panel = el.closest('.tab-panel');
+      if (!panel || !panel.hidden) { if (builders[el.id] && !drawn[el.id]) { drawn[el.id] = true; builders[el.id](); } }
+    });
+    // draw a tab's charts the first time it is opened, so widths are correct
+    document.addEventListener('tabchange', function (e) {
+      var tab = e.detail && e.detail.tab;
+      if (!tab) return;
+      drawIn(document.getElementById(tab.getAttribute('aria-controls')));
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Morsal Mubarak</title>
+  <meta name="description" content="One-page CV of Morsal Mubarak: research, software, leadership, honors, and skills.">
+  <meta property="og:title" content="CV — Morsal Mubarak">
+  <meta property="og:description" content="Research, software, leadership, honors, and skills on one page, with a downloadable PDF.">
+  <meta property="og:type" content="profile">
+  <meta property="og:image" content="../assets/img/og-card.png">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* ---- CV (page-specific). Screen uses site tokens; print forces a light page. ---- */
+    @page { size: Letter; margin: 0.45in; }
+    .cv-wrap { padding: clamp(24px, 4vw, 44px) 0 clamp(48px, 7vw, 88px); }
+    .cv-toolbar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; max-width: 8.5in; margin: 0 auto 18px; }
+    .cv-toolbar .breadcrumb { margin: 0; }
+    .cv-sheet {
+      --cv-ink: var(--ink); --cv-ink-2: var(--ink-2); --cv-ink-3: var(--ink-3); --cv-rule: var(--line-strong);
+      --cv-accent: var(--accent); --cv-head: var(--brand);
+      width: calc(8.5in + 2px); max-width: 100%; min-height: calc(11in + 2px); margin: 0 auto; padding: 0.5in;
+      background: var(--surface); color: var(--cv-ink); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-lg);
+      font: 400 9.6pt/1.31 var(--font-sans); font-feature-settings: "cv11", "ss01";
+    }
+    .cv-sheet p { margin: 0; }
+    .cv-sheet a { color: inherit; text-decoration: none; }
+    .cv-sheet a:hover { text-decoration: underline; text-underline-offset: 2px; }
+    .cv-sheet i { font-style: italic; }
+    .cv-head { padding-bottom: 8pt; border-bottom: 1.25pt solid var(--cv-ink); }
+    .cv-head::before { content: ""; display: block; width: 26pt; height: 2.5pt; border-radius: 2pt; background: var(--cv-accent); margin-bottom: 7pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cv-sheet h1 { font: 600 24pt/1.05 var(--font-serif); letter-spacing: -0.02em; margin: 0; color: var(--cv-ink); max-width: none; }
+    .cv-tagline { margin-top: 4pt !important; font-size: 9.6pt; color: var(--cv-ink-2); }
+    .cv-tagline strong { color: var(--cv-ink); font-weight: 600; }
+    .cv-contact { display: flex; flex-wrap: wrap; gap: 2pt 0; margin-top: 5pt !important; font-size: 9.5pt; color: var(--cv-ink-2); }
+    .cv-contact > span + span::before { content: "·"; margin: 0 7pt; color: var(--cv-ink-3); }
+    .cv-contact a { color: var(--cv-ink); font-weight: 500; }
+    .cv-sec { margin-top: 9pt; }
+    .cv-sec h2 {
+      font: 700 9pt/1 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--cv-head);
+      margin: 0 0 5pt; padding-bottom: 3pt; border-bottom: .75pt solid var(--cv-rule);
+    }
+    .cv-item + .cv-item { margin-top: 5pt; }
+    .cv-row { display: flex; justify-content: space-between; align-items: baseline; gap: 14pt; }
+    .cv-what { font-size: 9.8pt; color: var(--cv-ink-2); }
+    .cv-what strong { color: var(--cv-ink); font-weight: 600; }
+    .cv-what .role::before { content: " · "; color: var(--cv-ink-3); }
+    .cv-when { flex: none; font-size: 9pt; color: var(--cv-ink-3); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .cv-pts { margin: 2pt 0 0; padding-left: 12pt; }
+    .cv-pts li { margin: 1.2pt 0; color: var(--cv-ink-2); }
+    .cv-pts li::marker { color: var(--cv-ink-3); }
+    .cv-pts strong { color: var(--cv-ink); font-weight: 600; }
+    .cv-skills { color: var(--cv-ink-2); }
+    .cv-skills strong { color: var(--cv-ink); font-weight: 600; }
+    .cv-skills .dot { color: var(--cv-ink-3); margin: 0 4pt; }
+    .cv-note { max-width: 8.5in; margin: 16px auto 0; font-size: .86rem; color: var(--ink-3); }
+
+    @media screen and (max-width: 880px) {
+      .cv-sheet { width: 100%; min-height: 0; padding: 26px 20px; border-radius: 14px; font-size: 14.5px; }
+      .cv-sheet h1 { font-size: 30px; }
+      .cv-tagline, .cv-contact, .cv-what { font-size: 14.5px; }
+      .cv-when { font-size: 13px; }
+      .cv-sec h2 { font-size: 12.5px; }
+    }
+    @media screen and (max-width: 560px) {
+      .cv-row { flex-direction: column; gap: 0; }
+      .cv-contact { flex-direction: column; }
+      .cv-contact > span + span::before { content: none; }
+
+    }
+    @media print {
+      html, body { background: #fff !important; }
+      .site-header, .site-footer, .skip-link, .cv-toolbar, .cv-note { display: none !important; }
+      .cv-wrap { padding: 0 !important; }
+      .cv-wrap > .container { padding: 0 !important; max-width: none !important; }
+      .cv-sheet {
+        --cv-ink: #0e1726; --cv-ink-2: #39404d; --cv-ink-3: #5d6472; --cv-rule: #cfcabd; --cv-accent: #ff5c35; --cv-head: #1d3a72;
+        width: auto; max-width: none; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none;
+        background: #fff; color: var(--cv-ink);
+      }
+      .cv-sheet a:hover { text-decoration: none; }
+      .cv-item, .cv-head { break-inside: avoid; }
+      .cv-sheet { line-height: 1.26; }
+      .cv-sec { margin-top: 7pt; }
+      .cv-item + .cv-item { margin-top: 3.5pt; }
+      .cv-pts li { margin: .8pt 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="cv-wrap">
+    <div class="container">
+      <div class="cv-toolbar">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#about">About</a><span aria-hidden="true">/</span><span aria-current="page">CV</span></nav>
+        <div class="btn-row">
+          <a class="btn btn-sm btn-ghost" href="../index.html#about">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to portfolio
+          </a>
+          <button class="btn btn-sm" type="button" id="print-cv">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+            Print
+          </button>
+          <a class="btn btn-sm btn-primary" href="Morsal_Mubarak_CV.pdf" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download PDF
+          </a>
+        </div>
+      </div>
+
+      <article class="cv-sheet" aria-labelledby="cv-name">
+        <header class="cv-head">
+          <h1 id="cv-name">Morsal Mubarak</h1>
+          <p class="cv-tagline"><strong>Computational Researcher &amp; Software Developer</strong> at the Intersection of Data Science, Neuroscience, and Public Health</p>
+          <p class="cv-contact"><span>Falls Church, Virginia</span><span><a href="mailto:morsalmubarak9@gmail.com">morsalmubarak9@gmail.com</a></span><span><a href="https://github.com/mubarsad012">github.com/mubarsad012</a></span></p>
+        </header>
+
+        <section class="cv-sec" aria-labelledby="cv-edu">
+          <h2 id="cv-edu">Education</h2>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>Justice High School</strong>, Falls Church, Virginia<span class="role">Class of 2027</span></p><span class="cv-when">Weighted GPA 4.519 · SAT 1600</span></div>
+          </div>
+        </section>
+
+        <section class="cv-sec" aria-labelledby="cv-res">
+          <h2 id="cv-res">Research</h2>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>Independent research study</strong><span class="role">Sole author</span><span class="role">Under review, <i>Scientific Reports</i></span></p><span class="cv-when">Aug 2026</span></div>
+            <ul class="cv-pts">
+              <li><i>A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of United States Vital Statistics, 2016–2024.</i></li>
+              <li>Built from <strong>33,589,282</strong> U.S. natality records (NCHS public-use files); code and data are public on GitHub and archived on Zenodo (<a href="https://doi.org/10.5281/zenodo.21894038">DOI 10.5281/zenodo.21894038</a>).</li>
+            </ul>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>Traumatic brain injury (TBI) MRI computational study</strong>, Mass General Brigham / MGH Martinos Center<span class="role">Lead Computational Researcher</span></p><span class="cv-when">Spring 2026</span></div>
+            <ul class="cv-pts">
+              <li>Built a verified Python pipeline (~4,800 lines; pandas, NumPy, SciPy, statsmodels) linking MR spectroscopy to post-concussion symptoms in a <strong>35-participant</strong> treatment study, with outlier screening, FDR correction, and an automated re-run audit.</li>
+            </ul>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>PoxHostAtlas</strong><span class="role">First &amp; corresponding author, with Deon Nguyen (Arizona State University)</span></p><span class="cv-when">2026</span></div>
+            <ul class="cv-pts">
+              <li>Manuscript: <i>PoxHostAtlas: A reproducible cross-study atlas of host gene-expression remodeling during poxvirus infection.</i> Re-analyzes public poxvirus RNA-sequencing datasets with one common workflow; <strong>1,834</strong> host genes changed reproducibly across four datasets. Code: <a href="https://github.com/mubarsad012/poxhostatlas">github.com/mubarsad012/poxhostatlas</a>.</li>
+            </ul>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>COVID-BRAIN imaging study</strong>, Athinoula A. Martinos Center (MGH)<span class="role">Co-author (3rd author)</span></p><span class="cv-when">Oct 2026</span></div>
+            <ul class="cv-pts">
+              <li>Poster: <i>Lower thalamic creatine and glutathione associate with cognition and systemic inflammation in neurological post-acute sequelae of COVID-19 infection from the multicenter COVID-BRAIN imaging cohort.</i> Clinical Research Day, Mass General Brigham, Oct 2026.</li>
+            </ul>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>Neurocysticercosis systematic review (ESM-2 + AlphaFold)</strong><span class="role">Senior (last) author</span></p><span class="cv-when">Manuscript in preparation</span></div>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>2026 Student Research Institute</strong>, Harvard Undergraduate OpenBio Laboratory<span class="role">Mentee</span></p><span class="cv-when">Jun 8 – Jul 31, 2026</span></div>
+          </div>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>Bay Area Medical Explorers</strong><span class="role">Researcher</span></p><span class="cv-when">2026</span></div>
+            <ul class="cv-pts">
+              <li>Co-first author: <i>Assessing the Associations Between Antiretroviral Treatment Resource Shortage and HIV Prevalence Among Teenagers Residing in Zambia</i> (Mar 2026).</li>
+              <li>First author (of 7): <i>Academic Pressure and Mental Health in South Asian American High School Students</i> (Jun 2026).</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="cv-sec" aria-labelledby="cv-sw">
+          <h2 id="cv-sw">Software</h2>
+          <div class="cv-item">
+            <div class="cv-row"><p class="cv-what"><strong>ProxyHealth AI</strong><span class="role"><a href="https://proxyhealth-ai.onrender.com/">proxyhealth-ai.onrender.com</a></span></p><span class="cv-when">Public beta, Oct 2026</span></div>
+            <ul class="cv-pts">
+              <li>Explains official papers, such as medical bills and benefits letters, in 27 languages: what each paper is, what it asks for, and a step-by-step plan, with every date and amount quoted from the paper and checked in code.</li>
+              <li>Python/FastAPI backend; TypeScript/Expo front end (web, iOS, Android). Code: <a href="https://github.com/mubarsad012/ProxyHealth-AI">github.com/mubarsad012/ProxyHealth-AI</a>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="cv-sec" aria-labelledby="cv-lead">
+          <h2 id="cv-lead">Leadership &amp; Community</h2>
+          <ul class="cv-pts">
+            <li><strong>Emergency Afghan evacuation fundraiser</strong> (2021): organized with father and brother; raised <strong>$220,000+</strong>.</li>
+            <li><strong>Medical &amp; legal interpreter</strong> (English–Pashto): one of the main fluent English speakers in my household; interpret for family and refugee community members.</li>
+            <li><strong>Public Health Youth Ambassador</strong>, Fairfax County Health Department.</li>
+            <li><strong>Co-President</strong>, Al Shami Cultural Club · <strong>President</strong>, HOSA · <strong>President</strong>, Math Honor Society.</li>
+          </ul>
+        </section>
+
+        <section class="cv-sec" aria-labelledby="cv-hon">
+          <h2 id="cv-hon">Honors</h2>
+          <ul class="cv-pts">
+            <li><strong>2nd place</strong>, PHYAP Youth Ambassador Competition Final (Georgetown University School of Medicine faculty judges), for <i>Nourish to Flourish: Empowering Communities through Food Education and EBT Access</i>, a policy proposal.</li>
+          </ul>
+        </section>
+
+        <section class="cv-sec" aria-labelledby="cv-sk">
+          <h2 id="cv-sk">Skills</h2>
+          <p class="cv-skills"><strong>Programming:</strong> Python, TypeScript <span class="dot">·</span> <strong>Tools:</strong> Git, GitHub, Streamlit, LaTeX (Overleaf) <span class="dot">·</span> <strong>Languages:</strong> English, Pashto</p>
+        </section>
+      </article>
+
+      <p class="cv-note">Full papers, PDFs, and ready-made citations are in the <a href="../papers.html">Papers &amp; Manuscripts</a> library.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+    (function () {
+      var b = document.getElementById('print-cv');
+      if (b) b.addEventListener('click', function () { window.print(); });
+    })();
+  </script>
+</body>
+</html>

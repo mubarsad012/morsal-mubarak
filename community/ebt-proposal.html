@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nourish to Flourish — Morsal Mubarak</title>
+  <meta name="description" content="Morsal Mubarak's PHYAP project: a one-week, after-school EBT education workshop plan for students leaving high school, with an interactive week planner and budget calculator.">
+  <meta property="og:title" content="Nourish to Flourish — Morsal Mubarak">
+  <meta property="og:description" content="Morsal Mubarak's PHYAP project: a one-week, after-school EBT education workshop plan for students leaving high school, with an interactive week planner and budget calculator.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* Page-specific styles (EBT proposal). Tokens only, so both themes work. */
+    .award { display: flex; gap: 12px; align-items: flex-start; margin: 20px 0 0; padding: 12px 16px; max-width: 70ch;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink-2); font-size: .95rem; line-height: 1.5; }
+    .award svg { width: 22px; height: 22px; flex: none; color: var(--accent); margin-top: 1px; }
+    .award strong { color: var(--ink); }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .chips-row li { margin: 0; }
+    .section-intro { max-width: 72ch; color: var(--ink-2); }
+    .small-note { color: var(--ink-3); font-size: .84rem; line-height: 1.5; margin: 10px 0 0; }
+
+    /* Definitions + health tabs */
+    .def-card h3 { font-size: 1.1rem; }
+    .impact-list { margin: 14px 0 0; padding-left: 1.2em; color: var(--ink-2); }
+    .impact-list li { margin: .35em 0; }
+
+    /* Stat tiles */
+    .hunger .metric .value .unit { margin-left: .28em; }
+    .hunger .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 600px) { .hunger .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hunger .metric:last-child { grid-column: 1 / -1; } }
+
+    /* Rates chart: let the explanation column wrap */
+    #chart-rates .viz-table td:last-child { white-space: normal; min-width: 240px; text-align: left; }
+
+    /* Planner */
+    .planner { margin-top: 20px; }
+    .day-panel { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 32px); margin-top: 18px; }
+    .day-kicker { font: 600 .78rem/1.3 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+    .day-title { font-size: clamp(1.35rem, 2.4vw, 1.7rem); margin-bottom: 12px; }
+    .day-quote { margin: 0; border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; }
+    .day-quote p { margin: 0; color: var(--ink); font-size: 1.06rem; line-height: 1.55; }
+    .day-extra { margin: 14px 0 0; color: var(--ink-2); font-size: .95rem; }
+    .day-side { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+    .day-side h4 { font: 600 .74rem/1.3 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+    .day-side h4 + * { margin-bottom: 16px; }
+    .day-side > :last-child { margin-bottom: 0; }
+    .day-costs { list-style: none; padding: 0; margin: 0; }
+    .day-costs li { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); font-size: .92rem; }
+    .day-costs li:last-child { border-bottom: 0; padding-bottom: 0; }
+    .day-costs li.total { color: var(--ink); font-weight: 600; }
+    .day-costs b { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .day-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .day-nav .muted { font-size: .88rem; }
+    .day-nav .btn[disabled] { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+    @media (max-width: 760px) { .day-panel { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 560px) { .planner .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; border-radius: 14px; } .planner .tabs button { padding: 10px 4px; } }
+    @media (max-width: 480px) { .day-nav .btn { width: auto; } .day-nav .muted { display: none; } }
+
+    /* Calculator */
+    .calc { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(18px, 3vw, 32px); align-items: start; }
+    @media (max-width: 900px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+    .calc .controls { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .calc .field .hint { line-height: 1.45; }
+    .presets { margin-top: 18px; }
+    .result-box .row-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .result-box .row-top .label { margin: 0; }
+    .result-box .value { overflow-wrap: anywhere; }
+    .status-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+      font: 600 .72rem/1.3 var(--font-sans); letter-spacing: .04em; text-transform: uppercase;
+      background: color-mix(in srgb, var(--bg) 16%, transparent); color: var(--bg); }
+    .status-chip svg { width: 13px; height: 13px; }
+    .res-list { margin: 18px 0 0; padding: 14px 0 0; border-top: 1px solid color-mix(in srgb, var(--bg) 22%, transparent); display: grid; gap: 10px; }
+    .res-list div { margin: 0; }
+    .res-list dt { font-size: .84rem; opacity: .78; }
+    .res-list dd { margin: 2px 0 0; font: 700 1.15rem/1.3 var(--font-sans); letter-spacing: -.01em; }
+    .budget-table tbody th, .budget-table tfoot th { font-weight: 500; background: none; color: var(--ink); }
+    .budget-table tfoot th, .budget-table tfoot td { font-weight: 700; color: var(--ink); border-bottom: 0; }
+    @media (max-width: 560px) { .budget-table .col-share { display: none; } .budget-table th, .budget-table td { padding: 8px 6px; } }
+    .derive h3 { font-size: 1.05rem; margin-bottom: 10px; }
+    .derive ul { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: .94rem; }
+    .derive li { margin: .45em 0; }
+    .derive strong { color: var(--ink); }
+
+    /* Food banks */
+    .task-status { display: flex; align-items: center; gap: 10px; margin: 16px 0 18px; padding: 10px 14px; width: fit-content; max-width: 100%;
+      border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); font-size: .92rem; font-weight: 500; }
+    .task-status svg { width: 18px; height: 18px; flex: none; color: var(--ink-3); }
+    .task-status.done { background: var(--good-soft); border-color: transparent; color: var(--good); }
+    .task-status.done svg { color: var(--good); }
+    .bank-card { display: flex; flex-direction: column; gap: 8px; }
+    .bank-card h3 { font-size: 1.08rem; margin: 0; }
+    .bank-card .domain { font: 500 .8rem/1.4 var(--font-mono); color: var(--ink-3); overflow-wrap: anywhere; margin: 0; }
+    .bank-card .note { font-size: .88rem; margin: 0; }
+    .bank-card .bank-foot { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .bank-card .more svg { width: 15px; height: 15px; }
+    .bank-card.picked { border-color: var(--brand-2); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-2) 35%, transparent); }
+
+    /* Deck */
+    .deck-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(18px, 3vw, 32px); align-items: center; }
+    .deck-card img { border-radius: 10px; border: 1px solid var(--line); box-shadow: var(--shadow); width: 100%; }
+    .deck-card h3 { margin-bottom: 6px; }
+    .deck-meta { color: var(--ink-3); font-size: .9rem; margin: 0 0 16px; }
+    @media (max-width: 760px) { .deck-card { grid-template-columns: minmax(0, 1fr); } }
+    .slide-map { margin: 0; padding: 0; list-style: none; counter-reset: slide; color: var(--ink-2); columns: 2; column-gap: 36px; }
+    .slide-map li { counter-increment: slide; display: grid; grid-template-columns: 2.4em minmax(0, 1fr); margin: 0 0 .55em; break-inside: avoid; }
+    .slide-map li::before { content: counter(slide) "."; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; padding-right: .6em; }
+    .slide-map a { white-space: nowrap; }
+    @media (max-width: 700px) { .slide-map { columns: 1; } }
+    .figure img { width: 100%; max-width: 760px; }
+    .sources-list { padding-left: 1.4em; color: var(--ink-2); }
+    .sources-list li { margin: .5em 0; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#community">Community</a><span aria-hidden="true">/</span><span aria-current="page">Nourish to Flourish</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge live">2nd place</span><span class="badge plain">PHYAP project</span><span class="badge plain">Proposal</span></div>
+        <h1>Nourish to Flourish: An EBT Education Workshop Proposal</h1>
+        <p class="byline">PHYAP Project by <strong>Morsal Mubarak</strong> · deck title: <em>Nourish to Flourish: Empowering Communities through Food Education and EBT Access</em></p>
+        <p class="lede">A plan for a one-week, after-school workshop for students who are about to leave high school, built for those who may face food insecurity in college: how to apply for an EBT card, tell needs from wants, find food pantries, and shop and cook on a budget. I made it as my project for the Fairfax County Health Department's Public Health Youth Ambassador Program (PHYAP).</p>
+        <p class="award"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></svg><span><strong>2nd place</strong> — PHYAP Youth Ambassador Competition Final, judged by faculty of Georgetown University School of Medicine's Department of Family Medicine</span></p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>Author. The title slide reads “PHYAP Project by Morsal Mubarak.”</dd></div>
+          <div><dt>Program</dt><dd><a href="https://www.fairfaxcounty.gov/health/youth-ambassador-program" target="_blank" rel="noopener">Public Health Youth Ambassador Program</a>, Fairfax County Health Department</dd></div>
+          <div><dt>Format</dt><dd>15-slide PowerPoint deck</dd></div>
+          <div><dt>Proposed budget</dt><dd>$665–765 for the week</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#budget">Try the budget calculator</a>
+          <a class="btn" href="#planner">Plan the week</a>
+          <a class="btn btn-ghost" href="../papers/Mubarak_Nourish-to-Flourish_EBT-Proposal.pptx" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download the deck (.pptx)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px);padding-left:var(--gutter);padding-right:var(--gutter)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#problem">Why it matters</a><a href="#data">The numbers</a><a href="#planner">Week planner</a><a href="#budget">Budget calculator</a><a href="#food-banks">Food banks</a><a href="#deck">The deck</a><a href="#sources">Sources</a><a href="#cite">Cite</a>
+        </nav></aside>
+        <div>
+          <!-- ============ OVERVIEW ============ -->
+          <section id="overview" class="prose block" style="margin-top:0">
+            <h2 style="margin-top:0">Overview</h2>
+            <p>As students finish high school and get ready for college, the ones who face food insecurity run into a hard question: where will their next meal come from, and how will they get good meals every day? Many students can face food insecurity in college and may not know how to overcome it. My proposal is an <strong>EBT Education Workshop</strong> for young adults moving on to the next stage of their education.</p>
+            <p>An EBT card sets an amount of money that can be spent on food, and students can get one only if they apply and meet the requirements. The workshop would run for one week in the last month of the school year, after school, with a Zoom option for students who can't attend in person. It would give a step-by-step tutorial on applying for an EBT card, finding food pantries nearby, putting needs before wants, and shopping and cooking on a budget.</p>
+            <h3>Why a workshop, and not only a pantry</h3>
+            <p>In the deck's speaker notes, I describe what already exists at Justice High School: the school partners with Food for Neighbors, which helps feed Justice students outside of school. The money raised and food collected created the Wolf Shack, where students go after school to pick up food, toiletries, or school supplies they need, and it is open to everyone. The notes call this a great idea, but point out that it might not be available to students once they graduate high school. Food pantries, food banks, and organizations are important; the notes argue that students also need a stronger solution, like this EBT Education Workshop.</p>
+            <p>PHYAP, the program I made this for, is a free, grant-funded Fairfax County Health Department program that trains high school students in grades 10–12 in community health work.</p>
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> I wrote this proposal and its 15-slide deck. The title slide reads “PHYAP Project by Morsal Mubarak,” and neither the slides nor the speaker notes name other contributors. This page shows the plan as proposed; it does not report results from running the workshop.</p></div>
+          </section>
+
+          <!-- ============ WHY IT MATTERS ============ -->
+          <section id="problem" class="block">
+            <h2 class="prose">Why it matters</h2>
+            <p class="section-intro">The deck opens by explaining food insecurity to an audience with no background in it.</p>
+            <div class="grid grid-2 mt-2">
+              <article class="card def-card">
+                <p class="card-kicker">Defined in the deck</p>
+                <h3>Hunger</h3>
+                <p class="mb-0">Not having enough food for your body to produce the energy it needs to work properly. It isn't only wanting to eat: it is being unable to eat because of food insecurity and a lack of food and nutrition, often because of a lack of money or resources.</p>
+              </article>
+              <article class="card def-card">
+                <p class="card-kicker">Defined in the deck</p>
+                <h3>Homelessness</h3>
+                <p class="mb-0">More than facing hunger: it also means lacking the resources to get back on your feet, including shelter. It is harder to overcome because it takes resources for both shelter and food, and it usually starts with high housing costs and no stable job that pays enough.</p>
+              </article>
+            </div>
+
+            <h3 class="mt-4">What hunger does to health</h3>
+            <div class="tabs" role="tablist" data-tabs aria-label="Health effects of hunger">
+              <button type="button" role="tab" id="tab-phys" aria-controls="panel-phys" aria-selected="true">Physical health</button>
+              <button type="button" role="tab" id="tab-mental" aria-controls="panel-mental" aria-selected="false" tabindex="-1">Mental health</button>
+            </div>
+            <div class="tab-panel" id="panel-phys" role="tabpanel" aria-labelledby="tab-phys" tabindex="0">
+              <ul class="impact-list">
+                <li>Affects the immune system, so people are more likely to get sick</li>
+                <li>Longer-term effects include chronic diseases and disabilities that can lead to death</li>
+                <li>Weakens bones, muscles, and skin</li>
+                <li>Lowers energy and performance</li>
+                <li>A big increase in stunted growth</li>
+              </ul>
+            </div>
+            <div class="tab-panel" id="panel-mental" role="tabpanel" aria-labelledby="tab-mental" tabindex="0" hidden>
+              <ul class="impact-list">
+                <li>Depression</li>
+                <li>Anxiety</li>
+                <li>Posttraumatic stress disorder (PTSD)</li>
+                <li>Can lead to addictions: smoking, drugs, alcohol</li>
+                <li>Trouble staying focused</li>
+                <li>Withdrawing from others: feeling you don't fit into society, so you keep to yourself</li>
+              </ul>
+            </div>
+            <p class="small-note">From slides 4 and 5 of the deck. Its sources are listed under <a href="#sources">Sources</a>.</p>
+          </section>
+
+          <!-- ============ THE NUMBERS ============ -->
+          <section id="data" class="block hunger">
+            <h2 class="prose">The numbers in the deck</h2>
+            <p class="section-intro">The deck moves from the whole country down to Falls Church, then compares food insecurity rates in three Virginia localities.</p>
+            <div class="metrics mt-2">
+              <div class="metric"><span class="value">47.4<span class="unit">million</span></span><span class="label">people face hunger in the U.S.</span><span class="src">Deck, slide 7</span></div>
+              <div class="metric"><span class="value">1<span class="unit">million</span></span><span class="label">people in Virginia face hunger</span><span class="src">Deck, slide 7</span></div>
+              <div class="metric"><span class="value">1,210</span><span class="label">people face hunger in Falls Church</span><span class="src">Deck, slide 7</span></div>
+            </div>
+            <p class="small-note">These figures are as cited in the deck. Its Resources slide (slide 15) lists Feeding America and other sources but does not tie each figure to one of them, and the deck does not state the year they describe.</p>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">Food insecurity rate in Loudoun, Fairfax, and Norton City</h3><p class="chart-sub">Norton City's rate is about 2.6 times Fairfax County's and 3.2 times Loudoun County's.</p></div></div>
+              <div id="chart-rates"></div>
+            </div>
+          </section>
+
+          <!-- ============ WEEK PLANNER ============ -->
+          <section id="planner" class="block">
+            <h2 class="prose">Plan the week</h2>
+            <p class="section-intro">Five after-school sessions, one theme a day. Pick a day to see the deck's plan for it and the budget lines that fall on it. The dollar amounts follow whatever you set in the <a href="#budget">budget calculator</a>.</p>
+            <ul class="chips-row mt-2" aria-label="Workshop logistics">
+              <li class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>One week, last month of the school year</li>
+              <li class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>After school, no more than 2 hours a day</li>
+              <li class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Zoom option for students who can't come in person</li>
+              <li class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Nutritionist on days 4 and 5</li>
+            </ul>
+
+            <div class="card planner">
+              <div class="tabs" role="tablist" data-tabs aria-label="Workshop days">
+                <button type="button" role="tab" id="tab-day-1" aria-controls="day-1" aria-selected="true">Day 1</button>
+                <button type="button" role="tab" id="tab-day-2" aria-controls="day-2" aria-selected="false" tabindex="-1">Day 2</button>
+                <button type="button" role="tab" id="tab-day-3" aria-controls="day-3" aria-selected="false" tabindex="-1">Day 3</button>
+                <button type="button" role="tab" id="tab-day-4" aria-controls="day-4" aria-selected="false" tabindex="-1">Day 4</button>
+                <button type="button" role="tab" id="tab-day-5" aria-controls="day-5" aria-selected="false" tabindex="-1">Day 5</button>
+              </div>
+
+              <div class="tab-panel" id="day-1" role="tabpanel" aria-labelledby="tab-day-1" tabindex="0">
+                <div class="day-panel">
+                  <div>
+                    <p class="day-kicker">Day 1 of 5</p>
+                    <h3 class="day-title">Apply for EBT Card</h3>
+                    <blockquote class="day-quote"><p>“On the first day of the week, we’ll help the young adults apply for an EBT Card step by step.”</p></blockquote>
+                  </div>
+                  <aside class="day-side" aria-label="Day 1 details">
+                    <h4>Who's there</h4>
+                    <ul class="chips-row"><li class="chip">Students, in person or on Zoom</li></ul>
+                    <h4>Budget lines this day</h4>
+                    <ul class="day-costs"><li><span>No budget line in the deck</span><b>–</b></li></ul>
+                  </aside>
+                </div>
+                <div class="day-nav">
+                  <button class="btn btn-sm btn-ghost" type="button" disabled>Previous</button>
+                  <span class="muted">Day 1 of 5</span>
+                  <button class="btn btn-sm" type="button" data-goto-day="2">Next: Need vs Want <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="day-2" role="tabpanel" aria-labelledby="tab-day-2" tabindex="0" hidden>
+                <div class="day-panel">
+                  <div>
+                    <p class="day-kicker">Day 2 of 5</p>
+                    <h3 class="day-title">Need vs Want</h3>
+                    <blockquote class="day-quote"><p>“On the second day, we will help them identify whether they need or want something to manage the amount of money spent.”</p></blockquote>
+                  </div>
+                  <aside class="day-side" aria-label="Day 2 details">
+                    <h4>Who's there</h4>
+                    <ul class="chips-row"><li class="chip">Students, in person or on Zoom</li></ul>
+                    <h4>Budget lines this day</h4>
+                    <ul class="day-costs"><li><span>No budget line in the deck</span><b>–</b></li></ul>
+                  </aside>
+                </div>
+                <div class="day-nav">
+                  <button class="btn btn-sm btn-ghost" type="button" data-goto-day="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Day 1</button>
+                  <span class="muted">Day 2 of 5</span>
+                  <button class="btn btn-sm" type="button" data-goto-day="3">Next: Food pantries <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="day-3" role="tabpanel" aria-labelledby="tab-day-3" tabindex="0" hidden>
+                <div class="day-panel">
+                  <div>
+                    <p class="day-kicker">Day 3 of 5</p>
+                    <h3 class="day-title">Food pantries near you</h3>
+                    <blockquote class="day-quote"><p>“On the third day, each student will find at least two pantries or food banks near them.”</p></blockquote>
+                    <p class="day-extra">Try it with the deck's own list in <a href="#food-banks">Food banks near us</a>.</p>
+                  </div>
+                  <aside class="day-side" aria-label="Day 3 details">
+                    <h4>Who's there</h4>
+                    <ul class="chips-row"><li class="chip">Students, in person or on Zoom</li></ul>
+                    <h4>Budget lines this day</h4>
+                    <ul class="day-costs"><li><span>No budget line in the deck</span><b>–</b></li></ul>
+                  </aside>
+                </div>
+                <div class="day-nav">
+                  <button class="btn btn-sm btn-ghost" type="button" data-goto-day="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Day 2</button>
+                  <span class="muted">Day 3 of 5</span>
+                  <button class="btn btn-sm" type="button" data-goto-day="4">Next: Shop + cook <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="day-4" role="tabpanel" aria-labelledby="tab-day-4" tabindex="0" hidden>
+                <div class="day-panel">
+                  <div>
+                    <p class="day-kicker">Day 4 of 5</p>
+                    <h3 class="day-title">How to shop + cook on a budget</h3>
+                    <blockquote class="day-quote"><p>“On the fourth day, we can help them figure out how to eat and make healthy meals while being limited.”</p></blockquote>
+                    <p class="day-extra">A nutritionist is invited on the fourth and fifth day to help create and talk about eating healthy on a budget (slide 12).</p>
+                  </div>
+                  <aside class="day-side" aria-label="Day 4 details">
+                    <h4>Who's there</h4>
+                    <ul class="chips-row"><li class="chip">Students, in person or on Zoom</li><li class="chip">Nutritionist</li></ul>
+                    <h4>Budget lines this day</h4>
+                    <ul class="day-costs"><li><span>Guest speaker, day 1 of 2</span><b data-cost="rate">$50</b></li></ul>
+                  </aside>
+                </div>
+                <div class="day-nav">
+                  <button class="btn btn-sm btn-ghost" type="button" data-goto-day="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Day 3</button>
+                  <span class="muted">Day 4 of 5</span>
+                  <button class="btn btn-sm" type="button" data-goto-day="5">Next: Starter kit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="day-5" role="tabpanel" aria-labelledby="tab-day-5" tabindex="0" hidden>
+                <div class="day-panel">
+                  <div>
+                    <p class="day-kicker">Day 5 of 5</p>
+                    <h3 class="day-title">Healthy Eating Starter Kit</h3>
+                    <blockquote class="day-quote"><p>“On the last day, the workshop will be more engaging. Each student will get a cookbook that aids them in making healthy food. There will be a featured meal that each student will make together.”</p></blockquote>
+                    <p class="day-extra">The nutritionist returns for the second of their two days (slide 12).</p>
+                  </div>
+                  <aside class="day-side" aria-label="Day 5 details">
+                    <h4>Who's there</h4>
+                    <ul class="chips-row"><li class="chip">Students, in person or on Zoom</li><li class="chip">Nutritionist</li></ul>
+                    <h4>Budget lines this day</h4>
+                    <ul class="day-costs">
+                      <li><span>Guest speaker, day 2 of 2</span><b data-cost="rate">$50</b></li>
+                      <li><span>Cookbooks (<span data-qty="students">35</span>)</span><b data-cost="cookbooks">$450</b></li>
+                      <li><span>Meal ingredients (estimate)</span><b data-cost="meal">$100</b></li>
+                      <li class="total"><span>Day 5 total</span><b data-cost="day5">$600</b></li>
+                    </ul>
+                  </aside>
+                </div>
+                <div class="day-nav">
+                  <button class="btn btn-sm btn-ghost" type="button" data-goto-day="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Day 4</button>
+                  <span class="muted">Day 5 of 5</span>
+                  <a class="btn btn-sm" href="#budget">See the full budget <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
+                </div>
+              </div>
+            </div>
+
+            <p class="small-note">The deck doesn't tie the outreach posters to a day: <span data-qty="posters">50</span> colored posters with where, when, and what the workshop is about, <b data-cost="posters">$15</b> at the current settings. The deck budgets a paid guest speaker for 2 days and invites a nutritionist on days 4 and 5, so this planner puts the speaker pay on those two days. The deck also notes that Hunger and Homelessness Awareness Week is the week before Thanksgiving.</p>
+
+            <figure class="figure mt-3">
+              <img class="zoomable" src="../assets/img/ebt/deck-slide-10-sm.jpg" srcset="../assets/img/ebt/deck-slide-10-sm.jpg 720w, ../assets/img/ebt/deck-slide-10.jpg 1440w" sizes="(max-width: 800px) 100vw, 760px" data-full="../assets/img/ebt/deck-slide-10.jpg" width="720" height="405" loading="lazy" decoding="async" alt="Slide 10, Week Workshop Draft: a table with one row per day, numbered 01 to 05, giving each day's theme and plan.">
+              <figcaption>The week plan as it appears in the deck (slide 10). Click to zoom. Rendered from the PowerPoint file for this page, so some decorative artwork may be missing or look different.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ============ BUDGET CALCULATOR ============ -->
+          <section id="budget" class="block">
+            <h2 class="prose">Budget calculator</h2>
+            <p class="section-intro">The deck budgets <strong>$665–765</strong> for the week (slide 12). Move the sliders to try other class sizes and prices. The total, the cost per student, both charts, the line items, and the planner above all update together.</p>
+
+            <div class="card">
+              <div class="calc">
+                <div>
+                  <div class="controls">
+                    <div class="field">
+                      <label for="in-students">Students <output id="out-students" for="in-students">35</output></label>
+                      <input type="range" id="in-students" min="5" max="150" step="1" value="35">
+                      <p class="hint">Deck: around 35 cookbooks, one for each student.</p>
+                    </div>
+                    <div class="field">
+                      <label for="in-book">Price per cookbook <output id="out-book" for="in-book">$12.86</output></label>
+                      <input type="range" id="in-book" min="5" max="30" step="0.01" value="12.86">
+                      <p class="hint">Deck: around $450 for around 35 books. $450 ÷ 35 = $12.857…, shown as $12.86.</p>
+                    </div>
+                    <div class="field">
+                      <label for="in-rate">Guest-speaker pay per day <output id="out-rate" for="in-rate">$50</output></label>
+                      <input type="range" id="in-rate" min="50" max="100" step="5" value="50">
+                      <p class="hint">Deck: around $50–100 a day, for 2 days.</p>
+                    </div>
+                    <div class="field">
+                      <label for="in-posters">Colored posters <output id="out-posters" for="in-posters">50</output></label>
+                      <input type="range" id="in-posters" min="0" max="150" step="5" value="50">
+                      <p class="hint">Deck: 50 posters for around $15. $15 ÷ 50 = $0.30 each.</p>
+                    </div>
+                    <div class="field">
+                      <label for="in-meal">Ingredients per student <output id="out-meal" for="in-meal">$2.86</output></label>
+                      <input type="range" id="in-meal" min="0" max="10" step="0.01" value="2.86">
+                      <p class="hint">An estimate scaled from the deck: around $100 for the featured meal ÷ 35 students ≈ $2.86.</p>
+                    </div>
+                  </div>
+                  <div class="btn-row presets">
+                    <button class="btn btn-sm" type="button" data-preset="low">Deck values, $50 a day</button>
+                    <button class="btn btn-sm" type="button" data-preset="high">Deck values, $100 a day</button>
+                  </div>
+                </div>
+                <div>
+                  <div class="result-box">
+                    <div class="row-top"><span class="label">Estimated total for the week</span><span class="status-chip" id="res-status">Deck baseline</span></div>
+                    <div class="value" id="res-total">$665</div>
+                    <div class="label" id="res-per">$19.00 per student</div>
+                    <dl class="res-list">
+                      <div><dt>Total with speaker pay of $50–100 a day</dt><dd id="res-range">$665–$765</dd></div>
+                      <div><dt>Per student across that range</dt><dd id="res-range-per">$19.00–$21.86</dd></div>
+                    </dl>
+                  </div>
+                  <p class="visually-hidden" id="res-live" aria-live="polite"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="callout mt-3" id="deck-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><p><strong>Check against the deck.</strong> With the deck's own numbers (around 35 cookbooks for around $450, one per student; 50 posters for around $15; around $100 of meal ingredients; and a guest speaker for 2 days), this calculator gives <strong id="chk-low">$665</strong> at $50 a day and <strong id="chk-high">$765</strong> at $100 a day. <span id="chk-verdict">That matches the $665–765 budget on slide 12.</span></p></div>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">Where the money goes: estimated cost by budget line</h3><p class="chart-sub" id="stack-sub">Cookbooks are the largest line, at 68% of the total.</p></div></div>
+              <div id="chart-stack"></div>
+            </div>
+
+            <div class="card mt-3">
+              <h3 style="font-size:1.05rem" class="mb-2">Line items at the current settings</h3>
+              <div class="viz-table-wrap">
+                <table class="viz-table budget-table">
+                  <caption class="visually-hidden">Budget line items at the current calculator settings</caption>
+                  <thead><tr><th scope="col">Budget line</th><th scope="col">Quantity</th><th scope="col">Unit cost</th><th scope="col">Subtotal</th><th scope="col" class="col-share">Share</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">Cookbooks (day 5)</th><td id="li-book-q">35 books</td><td id="li-book-u">$12.86</td><td id="li-book-s">$450</td><td id="li-book-p" class="col-share">68%</td></tr>
+                    <tr><th scope="row">Meal ingredients (day 5, estimate)</th><td id="li-meal-q">35 students</td><td id="li-meal-u">$2.86</td><td id="li-meal-s">$100</td><td id="li-meal-p" class="col-share">15%</td></tr>
+                    <tr><th scope="row">Guest speaker (days 4–5)</th><td>2 days</td><td id="li-spk-u">$50</td><td id="li-spk-s">$100</td><td id="li-spk-p" class="col-share">15%</td></tr>
+                    <tr><th scope="row">Outreach posters</th><td id="li-post-q">50 posters</td><td>$0.30</td><td id="li-post-s">$15</td><td id="li-post-p" class="col-share">2%</td></tr>
+                  </tbody>
+                  <tfoot><tr><th scope="row">Total</th><td></td><td></td><td id="li-total">$665</td><td class="col-share">100%</td></tr></tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">Estimated cost per student, by number of students</h3><p class="chart-sub" id="line-sub">Speaker pay and posters cost the same however many students come, so the cost per student falls as the class grows.</p></div></div>
+              <div id="chart-perstudent"></div>
+            </div>
+
+            <div class="card derive mt-3">
+              <h3>Where each starting value comes from</h3>
+              <ul>
+                <li><strong>Cookbooks.</strong> “Order around 35 cookbooks for students attending the fifth day. (Around $450)” gives $450 ÷ 35 = $12.857… per book, shown as $12.86.</li>
+                <li><strong>Posters.</strong> “Print 50 colored posters with information about where, when, and what the workshop is about. (Around $15)” gives $15 ÷ 50 = $0.30 per poster.</li>
+                <li><strong>Guest speaker.</strong> “Guest speaker will be paid around 50-100 dollars per day. They will only be there for 2 days” gives $100 to $200.</li>
+                <li><strong>Meal ingredients.</strong> “Around 100 dollars will be used on the fifth day for the ingredients needed to cook the featured healthy meal.” The deck gives one figure for the meal; this calculator scales it with class size as an estimate, from the 35-student baseline: $100 ÷ 35 ≈ $2.86 per student.</li>
+                <li><strong>Total.</strong> $450 + $100 + $15 + $100 = $665 at $50 a day, and $450 + $100 + $15 + $200 = $765 at $100 a day.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ============ FOOD BANKS ============ -->
+          <section id="food-banks" class="block">
+            <h2 class="prose">Food banks near us</h2>
+            <p class="section-intro">The deck's Food Bank Resources slide (slide 13) lists six places to start. On Day 3, each student would find at least two pantries or food banks near them. Try the Day 3 task: pick two.</p>
+            <p class="task-status" id="task-status" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><span id="task-text">Day 3 goal: 0 of 2 chosen</span></p>
+            <div class="grid grid-3">
+              <article class="card bank-card">
+                <h3>Falls Church Community Service Council</h3>
+                <p class="domain">fcswecare.org</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://fcswecare.org/" target="_blank" rel="noopener">Website <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+              <article class="card bank-card">
+                <h3>Miriam’s Kitchen</h3>
+                <p class="domain">miriamskitchen.org</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://www.miriamskitchen.org/" target="_blank" rel="noopener">Website <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+              <article class="card bank-card">
+                <h3>Food for Neighbors</h3>
+                <p class="domain">foodforneighbors.org</p>
+                <p class="note">Partners with Justice High School to help feed students outside of school, per the deck's speaker notes.</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://foodforneighbors.org/" target="_blank" rel="noopener">Website <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+              <article class="card bank-card">
+                <h3>So Others Might Eat</h3>
+                <p class="domain">some.org</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://some.org/" target="_blank" rel="noopener">Website <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+              <article class="card bank-card">
+                <h3>Little Yellow Free Pantry</h3>
+                <p class="domain">mapping.littlefreepantry.org</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://mapping.littlefreepantry.org/pantry/3084" target="_blank" rel="noopener">Pantry map <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+              <article class="card bank-card">
+                <h3>Food for Others</h3>
+                <p class="domain">foodforothers.org</p>
+                <div class="bank-foot">
+                  <label class="check"><input type="checkbox" class="bank-pick"> Pick for Day 3</label>
+                  <a class="more" href="https://foodforothers.org/" target="_blank" rel="noopener">Website <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+                </div>
+              </article>
+            </div>
+            <p class="small-note">Names and links from slide 13 of the deck.</p>
+          </section>
+
+          <!-- ============ THE DECK ============ -->
+          <section id="deck" class="block">
+            <h2 class="prose">The original deck</h2>
+            <div class="card deck-card">
+              <img class="zoomable" src="../assets/img/ebt/deck-slide-01-sm.jpg" srcset="../assets/img/ebt/deck-slide-01-sm.jpg 720w, ../assets/img/ebt/deck-slide-01.jpg 1440w" sizes="(max-width: 760px) 100vw, 420px" data-full="../assets/img/ebt/deck-slide-01.jpg" width="720" height="405" loading="lazy" decoding="async" alt="Title slide: Nourish to Flourish: Empowering Communities through Food Education and EBT Access. PHYAP Project by Morsal Mubarak.">
+              <div>
+                <p class="card-kicker">PowerPoint · 15 slides · 1.8 MB</p>
+                <h3>Nourish to Flourish: Empowering Communities through Food Education and EBT Access</h3>
+                <p class="deck-meta">PHYAP Project by Morsal Mubarak. Speaker notes on slide 9.</p>
+                <div class="btn-row">
+                  <a class="btn btn-primary" href="../papers/Mubarak_Nourish-to-Flourish_EBT-Proposal.pptx" download>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Download the deck (.pptx)
+                  </a>
+                </div>
+              </div>
+            </div>
+            <h3 class="mt-4">What's on each slide</h3>
+            <ol class="slide-map" role="list">
+              <li><span>Title slide</span></li>
+              <li><span>Table of contents</span></li>
+              <li><span>Section 01: Introduction</span></li>
+              <li><span>Introduction to hunger and homelessness · <a href="#problem">on this page</a></span></li>
+              <li><span>Impacts on your health · <a href="#problem">on this page</a></span></li>
+              <li><span>Food insecurity in Fairfax vs other counties · <a href="#data">on this page</a></span></li>
+              <li><span>Hunger in the U.S., Virginia, and Falls Church, with a chart comparing Virginia with other states · <a href="#data">on this page</a></span></li>
+              <li><span>Section 02: Solutions</span></li>
+              <li><span>EBT Education Workshops, with speaker notes · <a href="#overview">on this page</a></span></li>
+              <li><span>Week Workshop Draft · <a href="#planner">on this page</a></span></li>
+              <li><span>Section 03: Timeline + more</span></li>
+              <li><span>Content by theme: when, where, who, and the budget · <a href="#budget">on this page</a></span></li>
+              <li><span>Food Bank Resources · <a href="#food-banks">on this page</a></span></li>
+              <li><span>Thank you, with template credits (Slidesgo, Flaticon, Freepik)</span></li>
+              <li><span>Resources · <a href="#sources">on this page</a></span></li>
+            </ol>
+            <p class="small-note">Slide images on this page are rendered from the PowerPoint file, so some of the template's decorative artwork may be missing or look different. The deck's design template is by Slidesgo, as credited on slide 14.</p>
+          </section>
+
+          <!-- ============ SOURCES ============ -->
+          <section id="sources" class="block">
+            <h2 class="prose">Sources cited in the deck</h2>
+            <p class="section-intro">Titles as they appear on the deck's Resources slide (slide 15), linked to the pages the deck links to. The slide does not give publication years.</p>
+            <ol class="sources-list">
+              <li><a href="https://www.feedingamerica.org/hunger-blog/3-ways-hunger-affects-your-body" target="_blank" rel="noopener">Feeding America: 3 devastating effects of hunger on the body</a></li>
+              <li><a href="https://www.feedingamerica.org/" target="_blank" rel="noopener">Feeding America: Our Vision: An America without Hunger</a></li>
+              <li><a href="https://map.feedingamerica.org/county/2018/overall/virginia" target="_blank" rel="noopener">Feeding America: Food Insecurity among the Overall Population in Virginia (before COVID-19)</a></li>
+              <li><a href="https://www.atcaa.org/single-post/how-hunger-affects-health" target="_blank" rel="noopener">ATCAA: How Hunger Affects Health</a></li>
+              <li><a href="https://map.feedingamerica.org/county/2022/overall/virginia/county/falls-church-city" target="_blank" rel="noopener">Feeding America: Food Insecurity among the Overall Population in Falls Church city County</a></li>
+              <li><a href="https://vafoodbanks.org/hunger-in-virginia/" target="_blank" rel="noopener">Federation of Virginia Food Banks: Hunger in Virginia</a></li>
+              <li><a href="https://www.feedingamerica.org/hunger-in-america" target="_blank" rel="noopener">Feeding America: Fact about Hunger in America</a></li>
+              <li><a href="https://www.feedthechildren.org/our-work/stories/the-ten-states-facing-the-most-hunger/" target="_blank" rel="noopener">Feed The Children: The Ten States Facing the Most Hunger</a></li>
+            </ol>
+          </section>
+
+          <!-- ============ CITE ============ -->
+          <section id="cite" class="block">
+            <h2 class="prose">Cite</h2>
+            <div class="citation"><span id="cite-text">Mubarak, M. (n.d.). <em>Nourish to flourish: Empowering communities through food education and EBT access</em> [Unpublished PHYAP project presentation].</span><button class="btn btn-sm copy-btn" data-copy-target="#cite-text" type="button"><span class="label">Copy</span></button></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---------- Formatting ---------- */
+    var money0 = function (v) { return '$' + Math.round(v).toLocaleString('en-US'); };
+    var money2 = function (v) { return '$' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var cents = function (v) { return Math.round(v * 100) / 100; };
+    var moneyAuto = function (v) { var c = cents(v); return Math.abs(c - Math.round(c)) < 1e-9 ? money0(c) : money2(c); };
+    var pct0 = function (part, whole) { return whole > 0 ? Math.round(part / whole * 100) + '%' : '0%'; };
+    function setText(id, s) { var el = document.getElementById(id); if (el) el.textContent = s; }
+
+    /* ---------- Deck numbers (slide 12) ---------- */
+    var DECK = { students: 35, cookbooks: 35, cookbookTotal: 450, posters: 50, posterTotal: 15, mealTotal: 100, mealBase: 35,
+                 speakerDays: 2, rateLow: 50, rateHigh: 100, budgetLow: 665, budgetHigh: 765 };
+    var POSTER_PRICE = DECK.posterTotal / DECK.posters;            /* $15 / 50 = $0.30 */
+    var DEF = {
+      students: DECK.students,
+      bookPrice: DECK.cookbookTotal / DECK.cookbooks,              /* $450 / 35 = $12.857... (kept exact) */
+      posters: DECK.posters,
+      mealPer: DECK.mealTotal / DECK.mealBase,                     /* $100 / 35 = $2.857... (estimate, scaled) */
+      rate: DECK.rateLow
+    };
+    var state = Object.assign({}, DEF);
+
+    function compute(s, rate) {
+      var r = rate === undefined ? s.rate : rate;
+      var items = {
+        cookbooks: s.students * s.bookPrice,
+        meal: s.students * s.mealPer,
+        speaker: DECK.speakerDays * r,
+        posters: s.posters * POSTER_PRICE
+      };
+      var total = items.cookbooks + items.meal + items.speaker + items.posters;
+      return { items: items, total: total, perStudent: total / s.students };
+    }
+    function isBaseline(s) {
+      return s.students === DEF.students && s.posters === DEF.posters &&
+        Math.abs(s.bookPrice - DEF.bookPrice) < 1e-9 && Math.abs(s.mealPer - DEF.mealPer) < 1e-9;
+    }
+
+    /* ---------- The check against the deck, computed rather than typed ---------- */
+    var chkLow = cents(compute(DEF, DECK.rateLow).total);
+    var chkHigh = cents(compute(DEF, DECK.rateHigh).total);
+    setText('chk-low', moneyAuto(chkLow));
+    setText('chk-high', moneyAuto(chkHigh));
+    if (chkLow === DECK.budgetLow && chkHigh === DECK.budgetHigh) {
+      setText('chk-verdict', 'That matches the $665–765 budget on slide 12.');
+    } else {
+      setText('chk-verdict', 'That does not match the deck’s $665–765, so the inputs need review.');
+      var box = document.getElementById('deck-check'); if (box) box.classList.add('warn');
+    }
+
+    /* ---------- Controls ---------- */
+    var controls = [
+      { key: 'students', id: 'in-students', out: 'out-students', parse: function (v) { return parseInt(v, 10); }, show: function (v) { return String(v); } },
+      { key: 'bookPrice', id: 'in-book', out: 'out-book', parse: parseFloat, show: money2, snap: true },
+      { key: 'rate', id: 'in-rate', out: 'out-rate', parse: parseFloat, show: money0 },
+      { key: 'posters', id: 'in-posters', out: 'out-posters', parse: function (v) { return parseInt(v, 10); }, show: function (v) { return String(v); } },
+      { key: 'mealPer', id: 'in-meal', out: 'out-meal', parse: parseFloat, show: money2, snap: true }
+    ];
+    controls.forEach(function (c) {
+      c.el = document.getElementById(c.id);
+      c.outEl = document.getElementById(c.out);
+      if (!c.el) return;
+      c.el.addEventListener('input', function () {
+        var v = c.parse(c.el.value);
+        if (isNaN(v)) return;
+        /* Landing back on the deck's rounded value restores the exact deck value. */
+        if (c.snap && Math.abs(v - DEF[c.key]) < 0.005) v = DEF[c.key];
+        state[c.key] = v;
+        update();
+      });
+    });
+    function syncControls() {
+      controls.forEach(function (c) {
+        if (!c.el) return;
+        c.el.value = c.snap ? state[c.key].toFixed(2) : String(state[c.key]);
+      });
+    }
+    document.querySelectorAll('[data-preset]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state = Object.assign({}, DEF, { rate: b.getAttribute('data-preset') === 'high' ? DECK.rateHigh : DECK.rateLow });
+        syncControls();
+        update();
+      });
+    });
+
+    /* ---------- Update everything that depends on the inputs ---------- */
+    function update() {
+      var r = compute(state);
+      var lo = compute(state, DECK.rateLow), hi = compute(state, DECK.rateHigh);
+      controls.forEach(function (c) { if (c.outEl) c.outEl.textContent = c.show(state[c.key]); });
+
+      setText('res-total', moneyAuto(r.total));
+      setText('res-per', money2(r.perStudent) + ' per student');
+      setText('res-range', moneyAuto(lo.total) + '–' + moneyAuto(hi.total));
+      setText('res-range-per', money2(lo.perStudent) + '–' + money2(hi.perStudent));
+      var st = document.getElementById('res-status');
+      if (st) st.textContent = isBaseline(state) ? 'Deck baseline' : 'Your scenario';
+
+      /* Line items */
+      setText('li-book-q', state.students + ' books');
+      setText('li-book-u', money2(state.bookPrice));
+      setText('li-book-s', moneyAuto(r.items.cookbooks));
+      setText('li-book-p', pct0(r.items.cookbooks, r.total));
+      setText('li-meal-q', state.students + ' students');
+      setText('li-meal-u', money2(state.mealPer));
+      setText('li-meal-s', moneyAuto(r.items.meal));
+      setText('li-meal-p', pct0(r.items.meal, r.total));
+      setText('li-spk-u', money0(state.rate));
+      setText('li-spk-s', moneyAuto(r.items.speaker));
+      setText('li-spk-p', pct0(r.items.speaker, r.total));
+      setText('li-post-q', state.posters + ' posters');
+      setText('li-post-s', moneyAuto(r.items.posters));
+      setText('li-post-p', pct0(r.items.posters, r.total));
+      setText('li-total', moneyAuto(r.total));
+
+      /* Planner amounts */
+      var costs = {
+        rate: money0(state.rate),
+        cookbooks: moneyAuto(r.items.cookbooks),
+        meal: moneyAuto(r.items.meal),
+        day5: moneyAuto(state.rate + r.items.cookbooks + r.items.meal),
+        posters: moneyAuto(r.items.posters)
+      };
+      document.querySelectorAll('[data-cost]').forEach(function (el) { el.textContent = costs[el.getAttribute('data-cost')]; });
+      document.querySelectorAll('[data-qty]').forEach(function (el) { el.textContent = String(state[el.getAttribute('data-qty')]); });
+
+      scheduleCharts();
+    }
+
+    /* ---------- Charts (Viz) ---------- */
+    if (!window.Viz) { update(); return; }
+    var stackEl = document.getElementById('chart-stack');
+    var lineEl = document.getElementById('chart-perstudent');
+    function tableOpen(host) { var w = host && host.querySelector('.viz-table-wrap'); return !!(w && !w.hidden); }
+    function reopen(host, was) { if (!was) return; var b = host.querySelector('.viz-tools button'); if (b) b.click(); }
+
+    function drawStack() {
+      var r = compute(state);
+      var parts = [
+        { label: 'Cookbooks', value: r.items.cookbooks, note: state.students + ' books × ' + money2(state.bookPrice) + ' each' },
+        { label: 'Meal ingredients', value: r.items.meal, note: 'Estimate scaled from the deck: ' + state.students + ' students × ' + money2(state.mealPer) },
+        { label: 'Guest speaker', value: r.items.speaker, note: '2 days × ' + money0(state.rate) + ' a day' },
+        { label: 'Posters', value: r.items.posters, note: state.posters + ' posters × $0.30' }
+      ];
+      var top = parts.reduce(function (a, b) { return b.value > a.value ? b : a; });
+      setText('stack-sub', top.label + (top.label === 'Cookbooks' ? ' are' : ' is') + ' the largest line, at ' + pct0(top.value, r.total) + ' of the ' + moneyAuto(r.total) + ' total.');
+      Viz.stack(stackEl, {
+        segments: parts.map(function (p) { return { label: p.label + ' · ' + moneyAuto(p.value), value: p.value, note: p.note }; }),
+        valueFormat: moneyAuto,
+        valueName: 'Cost',
+        darkInk: [0, 1, 2, 3],
+        ariaLabel: 'Stacked bar of the estimated budget by line: ' + parts.map(function (p) { return p.label + ' ' + moneyAuto(p.value); }).join(', ') + '.',
+        table: {
+          caption: 'Estimated cost by budget line',
+          columns: ['Budget line', 'Cost', 'Share of total'],
+          rows: parts.map(function (p) { return [p.label, moneyAuto(p.value), pct0(p.value, r.total)]; }).concat([['Total', moneyAuto(r.total), '100%']])
+        },
+        source: 'Source: budget lines from the deck (slide 12), recalculated at the current calculator settings. Meal ingredients are scaled per student as an estimate.'
+      });
+    }
+
+    function drawLine() {
+      var xs = []; for (var n = 15; n <= 150; n += 5) xs.push(n);
+      var perStudentVar = state.bookPrice + state.mealPer;
+      var posterCost = state.posters * POSTER_PRICE;
+      var fixLo = DECK.speakerDays * DECK.rateLow + posterCost;
+      var fixHi = DECK.speakerDays * DECK.rateHigh + posterCost;
+      var lo = xs.map(function (x) { return { x: x, y: perStudentVar + fixLo / x }; });
+      var hi = xs.map(function (x) { return { x: x, y: perStudentVar + fixHi / x, note: x === DECK.students ? 'Deck baseline: 35 students' : undefined }; });
+      var cur = compute(state, DECK.rateLow).perStudent, curHi = compute(state, DECK.rateHigh).perStudent;
+      setText('line-sub', 'Speaker pay and posters cost the same however many students come, while cookbooks and ingredients add ' + money2(perStudentVar) +
+        ' per student, so the cost per student falls as the class grows. At ' + state.students + ' students: ' + money2(cur) + '–' + money2(curHi) + ' each.');
+      Viz.line(lineEl, {
+        series: [{ name: 'Speaker at $50 a day', points: lo }, { name: 'Speaker at $100 a day', points: hi }],
+        format: money2,
+        tickFormat: function (v) { return '$' + v; },
+        xFormat: function (v) { return String(v); },
+        xLabel: 'Number of students',
+        yLabel: 'Cost per student',
+        zeroBased: true,
+        ariaLabel: 'Line chart of estimated cost per student from 15 to 150 students, for speaker pay of $50 and $100 a day. Use the arrow keys to step through class sizes.',
+        table: {
+          caption: 'Estimated cost per student by number of students',
+          columns: ['Students', 'Speaker at $50 a day', 'Speaker at $100 a day'],
+          rows: xs.map(function (x, i) { return [String(x), money2(lo[i].y), money2(hi[i].y)]; })
+        },
+        source: 'Source: calculated on this page from the deck’s budget (slide 12). Assumes one cookbook per student and ingredients scaled per student (an estimate); speaker pay and posters stay fixed.'
+      });
+    }
+
+    var timer = null;
+    function drawCharts() {
+      var a = tableOpen(stackEl), b = tableOpen(lineEl);
+      drawStack(); drawLine();
+      reopen(stackEl, a); reopen(lineEl, b);
+      var r = compute(state);
+      setText('res-live', 'Total ' + moneyAuto(r.total) + ', ' + money2(r.perStudent) + ' per student.');
+    }
+    function scheduleCharts() { if (!window.Viz) return; clearTimeout(timer); timer = setTimeout(drawCharts, 140); }
+
+    /* Food insecurity rates (slide 6) */
+    var rates = [
+      { label: 'Loudoun', value: 6.9, note: 'Deck: “Loudoun County has the highest household average income which of course leads to a lower rate.”' },
+      { label: 'Fairfax', value: 8.4, note: 'Deck: “Fairfax County has the highest population of all Virginia counties. The food insecurity rate is lower here due to more resources.”' },
+      { label: 'Norton City', value: 22.1, note: 'Deck: “Counties in Southwest Virginia tend to have higher food insecurity rates.”' }
+    ];
+    Viz.hbar('#chart-rates', {
+      data: rates,
+      format: Viz.fmt.pct(1),
+      tickFormat: function (v) { return v + '%'; },
+      valueName: 'Food insecurity rate',
+      xLabel: 'Food insecurity rate (%)',
+      ariaLabel: 'Bar chart of food insecurity rates: Loudoun 6.9%, Fairfax 8.4%, Norton City 22.1%.',
+      table: {
+        caption: 'Food insecurity rate by locality, as cited in the deck',
+        columns: ['Locality', 'Food insecurity rate', 'The deck’s explanation'],
+        rows: rates.map(function (d) { return [d.label, d.value.toFixed(1) + '%', d.note.replace(/^Deck: /, '')]; })
+      },
+      source: 'Source: rates as cited in the deck (slide 6). Its Resources slide lists Feeding America and other sources without tying each figure to one, and the deck does not state the year.'
+    });
+
+    update();
+    clearTimeout(timer);
+    drawCharts();
+
+    /* ---------- Planner: previous / next ---------- */
+    document.querySelectorAll('[data-goto-day]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var t = document.getElementById('tab-day-' + b.getAttribute('data-goto-day'));
+        if (!t) return;
+        t.click();
+        try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); }
+      });
+    });
+
+    /* ---------- Day 3 task ---------- */
+    var picks = Array.prototype.slice.call(document.querySelectorAll('.bank-pick'));
+    var taskBox = document.getElementById('task-status');
+    function updatePicks() {
+      var n = 0;
+      picks.forEach(function (p) { if (p.checked) n++; var card = p.closest('.bank-card'); if (card) card.classList.toggle('picked', p.checked); });
+      if (taskBox) taskBox.classList.toggle('done', n >= 2);
+      setText('task-text', n >= 2 ? 'Day 3 goal met: ' + n + ' chosen (the goal is at least two)' : 'Day 3 goal: ' + n + ' of 2 chosen');
+    }
+    picks.forEach(function (p) { p.addEventListener('change', updatePicks); });
+    updatePicks();
+  })();
+  </script>
+</body>
+</html>

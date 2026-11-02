@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PoxHostAtlas — Morsal Mubarak</title>
+  <meta name="description" content="PoxHostAtlas: Morsal Mubarak's reproducible cross-study atlas of host gene-expression changes during poxvirus infection, mentored by Deon Nguyen (OpenBio Student Research Institute 2026). Interactive charts, datasets, pipeline, code and manuscript.">
+  <meta property="og:title" content="PoxHostAtlas — Morsal Mubarak">
+  <meta property="og:description" content="Four public poxvirus RNA-sequencing datasets re-analyzed with one open pipeline: 1,834 host genes changed the same way across datasets.">
+  <meta property="og:type" content="article">
+  <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <style>
+    /* Page-specific styles (PoxHostAtlas). Tokens only. */
+    .container.section { padding-left: var(--gutter); padding-right: var(--gutter); } /* .section's shorthand otherwise removes the side gutter */
+    .page-hero h1 { max-width: 30ch; }
+    .page-hero h1 .sub { display: block; margin-top: .4em; font-size: .5em; line-height: 1.3; font-weight: 500; letter-spacing: -.01em; color: var(--ink-2); }
+    .metrics.m3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .metric .value.sci { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+    @media (max-width: 760px) { .metrics.m3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 440px) { .metrics.m3 { grid-template-columns: minmax(0, 1fr); } }
+    .rule-list { list-style: none; padding: 0; margin: 0 0 1em; display: grid; gap: 8px; counter-reset: rule; }
+    .rule-list li { counter-increment: rule; position: relative; margin: 0; padding: 10px 14px 10px 46px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink-2); }
+    .rule-list li::before { content: counter(rule); position: absolute; left: 12px; top: 9px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font: 700 .8rem/1 var(--font-sans); }
+    .findings { display: grid; gap: 12px; margin-top: 18px; }
+    .findings .card { padding: 18px 20px; }
+    .findings h3 { font-size: 1.04rem; margin-bottom: .3em; }
+    .findings p { margin: 0; font-size: .95rem; }
+    .lfc-tool { margin-top: 18px; }
+    .prose .lfc-tool h3 { margin-top: 0; }
+    .lfc-tool .result-box { display: flex; flex-direction: column; justify-content: center; }
+    .lfc-tool .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .lfc-tool .result-box .value { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+    .lfc-tool .grid { align-items: stretch; }
+    details.glossary { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 4px 18px; }
+    details.glossary > summary { cursor: pointer; font-weight: 600; padding: 12px 0; color: var(--ink); }
+    .glossary dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; margin: 4px 0 16px; }
+    .glossary dt { font-weight: 700; color: var(--ink); font-size: .95rem; }
+    .glossary dd { margin: 2px 0 0; color: var(--ink-2); font-size: .9rem; line-height: 1.5; }
+    @media (max-width: 640px) { .glossary dl { grid-template-columns: minmax(0, 1fr); } }
+    .atlas-tabs { border-radius: 18px; margin-bottom: 18px; }
+    .atlas-tabs button { padding: 10px 14px; }
+    .tab-panel > * + * { margin-top: 18px; }
+    .panel-intro { color: var(--ink-2); max-width: 72ch; margin: 0; }
+    .filters.seg { margin: 10px 0 6px; }
+    .filters.seg button { min-height: 36px; }
+    .chart-card .filters.seg + .filters.seg { margin-top: 0; }
+    .ctrl-row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 10px 0 4px; }
+    .ctrl-row .filters { margin: 0; }
+    .ctrl-row .check { font-size: .9rem; color: var(--ink-2); }
+    .gene-pick { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 18px; align-items: start; }
+    @media (max-width: 640px) { .gene-pick { grid-template-columns: minmax(0, 1fr); } }
+    .gene-card { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px 18px; }
+    .gene-card h4 { font: 700 1.25rem/1.2 var(--font-mono); margin: 0 0 4px; }
+    .gene-card .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 18px; margin: 12px 0 0; }
+    .gene-card .kv div { margin: 0; }
+    .gene-card .kv dt { font: 600 .72rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+    .gene-card .kv dd { margin: 3px 0 0; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .gene-card .kv dd small { display: block; font-weight: 400; color: var(--ink-3); }
+    .gene-card p { margin: 10px 0 0; color: var(--ink-2); font-size: .9rem; }
+    .dirdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+    .dirdot.up { background: var(--series-2); }
+    .dirdot.down { background: var(--series-1); }
+    .gene-card .sub { color: var(--ink-2); font-size: .9rem; margin: 0; }
+    .cmp-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    @media (max-width: 640px) { .cmp-cards { grid-template-columns: minmax(0, 1fr); } }
+    .cmp-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px 18px; transition: border-color .2s, box-shadow .2s; }
+    .cmp-card.sig { border-color: color-mix(in srgb, var(--good) 55%, var(--line)); box-shadow: var(--shadow-sm); }
+    .cmp-card h4 { font: 700 1.2rem/1.2 var(--font-mono); margin: 0 0 8px; display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .cmp-card dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; margin: 0; }
+    .cmp-card dl div { margin: 0; }
+    .cmp-card dt { font: 600 .7rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+    .cmp-card dd { margin: 3px 0 0; font: 700 1.05rem/1.2 var(--font-sans); color: var(--ink); font-variant-numeric: tabular-nums; }
+    .verdict { margin: 0; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; color: var(--ink-2); }
+    .mini-facts { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .mini-facts li { margin: 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: .9rem; color: var(--ink-2); line-height: 1.45; }
+    .mini-facts b { display: block; font-size: 1.15rem; color: var(--ink); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+    .ds-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .ds-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .ds-table th, .ds-table td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+    .ds-table thead th { background: var(--surface-2); color: var(--ink); font-weight: 600; font-size: .8rem; letter-spacing: .02em; }
+    .ds-table tbody tr:last-child td, .ds-table tbody tr:last-child th { border-bottom: 0; }
+    .ds-table tbody th { font-weight: 600; color: var(--ink); }
+    .ds-table .acc { font-family: var(--font-mono); font-weight: 600; }
+    .ds-table .src { display: block; font-size: .8rem; color: var(--ink-3); font-weight: 400; margin-top: 4px; }
+    .ds-table tr[hidden] { display: none; }
+    @media (max-width: 760px) {
+      .ds-wrap { border: 0; background: none; overflow: visible; }
+      .ds-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      .ds-table, .ds-table tbody, .ds-table tr, .ds-table th, .ds-table td { display: block; width: 100%; }
+      .ds-table tr { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); margin-bottom: 12px; padding: 6px 0; }
+      .ds-table tbody th, .ds-table td { border-bottom: 0; padding: 6px 14px; }
+      .ds-table td::before { content: attr(data-label); display: block; font: 600 .7rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 2px; }
+    }
+    .tier { display: inline-block; min-width: 28px; text-align: center; padding: 2px 8px; border-radius: 6px; font: 700 .78rem/1.5 var(--font-mono); background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); }
+    .tier.a { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
+    .tier.b { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+    .tier.x { background: var(--good-soft); color: var(--good); border-color: transparent; }
+    .flow.pipeline { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; overflow: visible; }
+    .flow.pipeline .step { border: 1px solid var(--line); border-radius: 12px !important; min-height: 0; padding: 16px 18px; }
+    .flow.pipeline .step p { font-size: .88rem; }
+    .flow.pipeline .tags { margin-top: 10px; }
+    .flow.pipeline .tag { font-size: .74rem; }
+    @media (max-width: 760px) { .flow.pipeline { grid-template-columns: minmax(0, 1fr); } .flow.pipeline .step { border-bottom: 1px solid var(--line); } }
+    .fig-stack { display: grid; gap: 18px; }
+    .fig-stack .narrow img { max-width: 640px; width: 100%; }
+    .limits li { margin: .5em 0; }
+    .code-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 18px; align-items: start; }
+    @media (max-width: 860px) { .code-grid { grid-template-columns: minmax(0, 1fr); } }
+    .cmd { position: relative; }
+    .cmd pre { margin: 0; padding-right: 96px; font-size: .82rem; }
+    .cmd .copy-btn { position: absolute; top: 10px; right: 10px; }
+    .stack-tags .tag b { font-weight: 600; color: var(--ink); }
+    .hint { color: var(--ink-3); font-size: .84rem; margin: 6px 0 0; }
+    #main .source-note, #main .hint, .figure figcaption, .ds-table td { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#community">Community Impact</a><span class="sep" aria-hidden="true">•</span>
+        <a href="../index.html#about">About / CV</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span aria-hidden="true">/</span><a href="../index.html#research">Research</a><span aria-hidden="true">/</span><span aria-current="page">PoxHostAtlas</span></nav>
+        <div class="flex wrap gap-1 mb-2"><span class="badge review">Manuscript (September 2026)</span><span class="badge plain">First &amp; corresponding author</span><span class="badge plain">OpenBio SRI 2026</span></div>
+        <h1>PoxHostAtlas<span class="visually-hidden">: </span><span class="sub">A Reproducible Cross-Study Atlas of Host Gene-Expression Remodeling During Poxvirus Infection</span></h1>
+        <p class="byline"><strong>Morsal Mubarak</strong> (Justice High School, Falls Church, VA; first and corresponding author) and Deon Nguyen (Arizona State University; mentor)</p>
+        <p class="lede">Poxviruses take over the cells they infect. Many labs have measured how cells respond, but each used different viruses, cells and methods. I re-analyzed four public datasets with one shared, open pipeline and kept only the host genes that changed the same way across datasets: <strong>1,834 genes</strong>.</p>
+        <dl class="facts">
+          <div><dt>My role</dt><dd>First &amp; corresponding author</dd></div>
+          <div><dt>Mentor</dt><dd>Deon Nguyen, Arizona State University</dd></div>
+          <div><dt>Program</dt><dd>OpenBio Student Research Institute 2026 (June 8 – July 31)</dd></div>
+          <div><dt>Status</dt><dd>Manuscript (September 2026)</dd></div>
+          <div><dt>Data</dt><dd>4 public RNA-seq datasets analyzed (12 screened)</dd></div>
+        </dl>
+        <div class="btn-row mt-3">
+          <a class="btn btn-primary" href="#explore">Explore the atlas</a>
+          <a class="btn" href="#paper">Read the paper</a>
+          <a class="btn" href="https://github.com/mubarsad012/poxhostatlas" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            Code on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container section" style="padding-top:clamp(36px,5vw,64px)">
+      <div class="with-toc">
+        <aside><nav class="toc" aria-label="On this page">
+          <a href="#overview">Overview</a><a href="#results">Key results</a><a href="#explore">Explore the atlas</a><a href="#datasets">Datasets</a><a href="#pipeline">Pipeline</a><a href="#figures">Figures</a><a href="#limitations">Limitations</a><a href="#code">Code</a><a href="#paper">Paper</a><a href="#cite">Cite</a>
+        </nav></aside>
+        <div>
+          <section id="overview" class="prose block">
+            <h2>Overview</h2>
+            <p>PoxHostAtlas is a curated collection of public poxvirus RNA-sequencing datasets that I re-analyzed with one common, reproducible workflow. It asks a whole-genome question: <strong>which host genes and pathways change the same way across independent poxvirus datasets</strong>, rather than in just one experiment? The answer is a ranked list of 1,834 host genes and the programs they belong to, released with all of the code so anyone can check it.</p>
+
+            <h3>Poxviruses and host shutoff</h3>
+            <p>Poxviruses are a family of viruses that includes the causes of smallpox and mpox. Vaccinia virus is its best-studied member. When a poxvirus infects a cell, it broadly turns down the cell's own gene activity and protein-making while the virus's own messages keep being translated. This takeover is called <strong>host shutoff</strong>. RNA sequencing (RNA-seq) measures how active each of a cell's genes is, so comparing infected and uninfected cells shows which host genes the infection turns up or down.</p>
+
+            <h3>Why check across studies?</h3>
+            <p>Every experiment carries the quirks of its lab: the cell line, the timing, the sequencing run. A change that appears in only one dataset could be one of those quirks, known as a batch effect. If a gene changes the same way in datasets from different studies, it is less likely to be a batch effect and more likely to be real biology. So instead of highlighting what changed in any single experiment, I focused on what changed consistently across several.</p>
+
+            <h3>What counts as "reproducible"</h3>
+            <p>A gene made the list only if it passed all four rules:</p>
+            <ol class="rule-list">
+              <li><strong>Measured in at least 3 of the 4 datasets.</strong> 16,841 genes met this rule.</li>
+              <li><strong>Changed in the same direction</strong> (up or down) in every dataset that measured it.</li>
+              <li><strong>Statistically significant after pooling</strong>: meta-FDR below 0.05, which limits the expected share of false hits among the genes called significant to 5%, even across thousands of tests.</li>
+              <li><strong>Changed enough to matter</strong>: a pooled log<sub>2</sub> fold change of at least 0.5 in either direction (about 1.4 times higher, or lower).</li>
+            </ol>
+
+            <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> I conceived and designed the study, identified and curated the datasets, wrote the analysis code, performed all analyses, produced the figures and tables, and wrote the manuscript. My mentor, Deon Nguyen (Arizona State University), supervised the project, advised on analytical direction and interpretation, and reviewed and edited the manuscript. This was a mentored project of the OpenBio Student Research Institute (June 8 – July 31, 2026).</p></div>
+
+            <div class="card lfc-tool" id="lfc-tool">
+              <h3 class="mt-0">Try it: reading a log<sub>2</sub> fold change</h3>
+              <p class="mb-2">Gene changes in this project are reported as log<sub>2</sub> fold changes: +1 means twice as active as in control cells, −1 means half as active, 0 means no change. Move the slider or pick a gene from the atlas.</p>
+              <div class="grid grid-2">
+                <div class="field">
+                  <label for="lfc-range">log<sub>2</sub> fold change <output id="lfc-out" for="lfc-range">+1.64</output></label>
+                  <input type="range" id="lfc-range" min="-3" max="6" step="0.01" value="1.64">
+                  <p class="hint">Conversion only: linear fold change = 2<sup>log<sub>2</sub> fold change</sup>.</p>
+                  <div class="presets" role="group" aria-label="Example genes">
+                    <button class="btn btn-sm" type="button" data-lfc="5.13">IL6 +5.13</button>
+                    <button class="btn btn-sm" type="button" data-lfc="1.64">DTNA +1.64</button>
+                    <button class="btn btn-sm" type="button" data-lfc="0.5">Rule threshold 0.5</button>
+                    <button class="btn btn-sm" type="button" data-lfc="-1.84">DBP −1.84</button>
+                    <button class="btn btn-sm" type="button" data-lfc="-2.22">BTN3A2 −2.22</button>
+                  </div>
+                </div>
+                <div class="result-box" aria-live="polite">
+                  <div class="value" id="lfc-x">3.12×</div>
+                  <div class="label" id="lfc-words">About 3.1 times the control expression level.</div>
+                </div>
+              </div>
+            </div>
+
+            <details class="glossary">
+              <summary>Glossary: key terms in plain English</summary>
+              <dl>
+                <div><dt>Vaccinia virus</dt><dd>The best-studied poxvirus; two of the four datasets are vaccinia infections.</dd></div>
+                <div><dt>Myxoma M003 effector</dt><dd>A single protein from myxoma virus (another poxvirus). Two datasets express this one protein in human cells instead of infecting them.</dd></div>
+                <div><dt>Host shutoff</dt><dd>The virus broadly suppressing the cell's own gene expression and protein synthesis.</dd></div>
+                <div><dt>Differential expression</dt><dd>Comparing gene activity between infected (or M003-expressing) cells and control cells, gene by gene.</dd></div>
+                <div><dt>Meta-analysis (random effects)</dt><dd>Combining one estimate per dataset into a pooled estimate while allowing the true effect to differ between datasets.</dd></div>
+                <div><dt>meta-FDR</dt><dd>The false discovery rate of the pooled test, corrected for testing thousands of genes at once. Smaller means stronger evidence.</dd></div>
+                <div><dt>I² (heterogeneity)</dt><dd>How much the datasets disagree about the size of a gene's change, from 0% (they agree) to near 100% (they differ a lot).</dd></div>
+                <div><dt>Host program</dt><dd>A group of genes with a shared job, such as inflammation or cell division.</dd></div>
+                <div><dt>Co-expression network and hubs</dt><dd>Genes are linked when their activity is strongly correlated across samples (rising and falling together, or moving in opposite directions). Hubs are well-connected genes; links show correlation, not physical interaction.</dd></div>
+                <div><dt>Balanced accuracy</dt><dd>How often a classifier labels samples correctly, averaged over infected and control groups. 0.5 is a coin flip; 1.0 is perfect.</dd></div>
+                <div><dt>Tier A / B / C</dt><dd>Tiers I assigned by data availability and comparability. Tier A was pooled; Tier B was used only for direction checks; Tier C was catalogued as context.</dd></div>
+                <div><dt>GEO accession (GSE…)</dt><dd>The public ID of a dataset in NCBI's Gene Expression Omnibus repository.</dd></div>
+              </dl>
+            </details>
+          </section>
+
+          <section id="results" class="block">
+            <h2 class="prose">Key results</h2>
+            <div class="metrics m3">
+              <div class="metric accent"><span class="value">1,834</span><span class="label">host genes reproducibly changed: 871 up, 963 down</span><span class="src">Abstract; p.7</span></div>
+              <div class="metric"><span class="value">4 <span class="unit">of 12</span></span><span class="label">public datasets analyzed quantitatively (Tier A), out of 12 screened</span><span class="src">Figure 1A; Table 1</span></div>
+              <div class="metric"><span class="value">16,841</span><span class="label">host genes measured in at least 3 datasets (the tested background)</span><span class="src">p.5, p.7</span></div>
+              <div class="metric"><span class="value">228 <span class="unit">genes</span></span><span class="label">in the co-expression network, joined by 4,430 edges</span><span class="src">p.8; Table 2</span></div>
+              <div class="metric"><span class="value">1.6<span class="unit">%</span></span><span class="label">of the 1,834 (29 genes) are RNA helicases, translation-initiation factors or ribosomal proteins</span><span class="src">Abstract; p.7</span></div>
+              <div class="metric"><span class="value sci">3.6×10<sup>−19</sup></span><span class="label">meta-FDR for DHX15, the helicase with the strongest pooled support (up in all 4 datasets)</span><span class="src">Abstract; p.10</span></div>
+            </div>
+
+            <div class="findings">
+              <div class="card"><h3>A broad host program, not one gene family</h3><p>Inflammatory and NF-κB signaling genes (such as IL6, IL1B, CXCL8 and BIRC3) were over-represented 5.4-fold (13 of 22), and all 13 went up. Cell-cycle and mitosis genes were over-represented 5.7-fold (13 of 21), and all 13 went down. Ribosomal-protein genes drifted downward without being over-represented, consistent with host shutoff.</p></div>
+              <div class="card"><h3>Within vaccinia infection alone, shutoff is the clearest signal</h3><p>Pooling only the two vaccinia datasets, ribosomal-protein (median −0.79) and cell-cycle (−0.58) genes stayed down and translation-initiation genes leaned down (−0.32), while inflammatory induction was much weaker (+0.74, vs +2.0 across all four datasets). The strong inflammatory signal is driven partly by the Myxoma M003 effector datasets.</p></div>
+              <div class="card"><h3>The top network hubs are outside the expected programs</h3><p>A hub score combining connectivity and reproducibility ranked DTNA, DBP and BTN3A2 highest; 11 of the top 12 hubs lie outside the curated programs, and IL6 ranked 7th of 228.</p></div>
+              <div class="card"><h3>A stress test that the gene set did not pass, reported honestly</h3><p>A classifier built on 509 helicase and translation genes reached a balanced accuracy of 0.79 averaged over three held-out datasets but only 0.58 on the held-out vaccinia dataset, and housekeeping (0.82) and random gene sets (0.74) did about as well. This points to broad host remodeling rather than a specific signature.</p></div>
+              <div class="card"><h3>Independent single-cell and protein data agree only in part</h3><p>In separate single-cell data, the share of reads from host genes fell from 0.998 to 0.758 in HeLa cells and from 0.999 to 0.804 in BJ5ta fibroblasts. A HeLa proteome agreed modestly with the transcript changes (Spearman ρ = 0.31 for 242 genes), but ribosomal and translation-initiation protein levels were not reduced.</p></div>
+            </div>
+          </section>
+
+          <section id="explore" class="block">
+            <h2 class="prose">Explore the atlas</h2>
+            <p class="prose ink-2">Seven interactive views of the results. Hover over or tap any bar or dot for exact values, open the data table under each chart, and use the buttons to switch views. Each view has its own link you can share.</p>
+            <div class="tabs atlas-tabs" role="tablist" aria-label="Atlas views" data-tabs>
+              <button type="button" role="tab" id="tab-direction" aria-controls="panel-direction" aria-selected="true">Up vs down</button>
+              <button type="button" role="tab" id="tab-programs" aria-controls="panel-programs" aria-selected="false" tabindex="-1">Host programs</button>
+              <button type="button" role="tab" id="tab-hubs" aria-controls="panel-hubs" aria-selected="false" tabindex="-1">Hub genes</button>
+              <button type="button" role="tab" id="tab-classifier" aria-controls="panel-classifier" aria-selected="false" tabindex="-1">Classifier test</button>
+              <button type="button" role="tab" id="tab-helicases" aria-controls="panel-helicases" aria-selected="false" tabindex="-1">Helicases</button>
+              <button type="button" role="tab" id="tab-singlecell" aria-controls="panel-singlecell" aria-selected="false" tabindex="-1">Single cells</button>
+              <button type="button" role="tab" id="tab-proteome" aria-controls="panel-proteome" aria-selected="false" tabindex="-1">Proteome</button>
+            </div>
+
+            <!-- 1. Up vs down -->
+            <div class="tab-panel" id="panel-direction" role="tabpanel" aria-labelledby="tab-direction" tabindex="0">
+              <p class="panel-intro">"Up" means a gene was more active in infected (or M003-expressing) cells than in control cells; "down" means less active.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title" id="t-updown">Direction of change among the 1,834 reproducible host genes</h3><p class="chart-sub" id="s-updown">Slightly more reproducible genes went down (963) than up (871).</p></div></div>
+                <div class="filters seg" role="group" aria-label="Gene set shown">
+                  <button type="button" aria-pressed="true" data-ud="rep">Reproducible genes (1,834)</button>
+                  <button type="button" aria-pressed="false" data-ud="all">All significant genes (3,337)</button>
+                </div>
+                <div id="c-updown" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Number of host genes left after each reproducibility rule</h3><p class="chart-sub">Of 16,841 genes measured in at least 3 datasets, 3,337 were significant after pooling and 1,834 also passed the direction and size rules.</p></div></div>
+                <div id="c-funnel" data-chart></div>
+              </div>
+            </div>
+
+            <!-- 2. Host programs -->
+            <div class="tab-panel" id="panel-programs" role="tabpanel" aria-labelledby="tab-programs" tabindex="0" hidden>
+              <p class="panel-intro">I tested 10 host "programs" (groups of genes with a shared job) for over-representation: does a program hold more reproducible genes than chance would put there? A fold enrichment of 1 means "as expected by chance".</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title" id="t-enrich">Fold over-representation of 10 host programs among all 1,834 reproducible genes</h3><p class="chart-sub" id="s-enrich">Cell-cycle (5.68-fold) and inflammatory/NF-κB (5.43-fold) programs stand out; no other program is significant.</p></div></div>
+                <div class="filters seg" role="group" aria-label="Which reproducible genes">
+                  <button type="button" aria-pressed="true" data-enrich="all">All 1,834</button>
+                  <button type="button" aria-pressed="false" data-enrich="up">871 up-regulated</button>
+                  <button type="button" aria-pressed="false" data-enrich="down">963 down-regulated</button>
+                </div>
+                <div id="c-enrich" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Median pooled log<sub>2</sub> fold change of each program: all four datasets vs vaccinia infection only</h3><p class="chart-sub">Inflammatory genes rise most across all four datasets (+2.00) but much less in the two vaccinia infections (+0.74), where ribosomal-protein (−0.79) and cell-cycle (−0.58) genes stay down.</p></div></div>
+                <div id="c-progdir" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Vaccinia time course in Vero cells: median log<sub>2</sub> fold change vs mock at 2, 6 and 24 hours</h3><p class="chart-sub">The shutoff signature builds over infection: ribosomal-protein genes go from +0.03 at 2 h to −0.74 at 24 h, and cell-cycle genes reach −1.61.</p></div></div>
+                <div id="c-time" data-chart></div>
+              </div>
+            </div>
+
+            <!-- 3. Hub genes -->
+            <div class="tab-panel" id="panel-hubs" role="tabpanel" aria-labelledby="tab-hubs" tabindex="0" hidden>
+              <p class="panel-intro">To rank genes without favoring any gene family, I took the 250 most significant named reproducible genes (228 of them were measured in a 45-sample expression matrix) and linked two genes whenever their activity was strongly correlated across those samples, in the same or the opposite direction (|r| ≥ 0.7). A gene's hub score averages two percentile ranks: how connected it is and how reproducible its change is.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title" id="t-hubs">Top 12 co-expression hub genes, by hub score</h3><p class="chart-sub" id="s-hubs">DTNA, DBP and BTN3A2 rank highest; IL6, 7th, is the only top-12 hub from a curated program.</p></div></div>
+                <div class="ctrl-row">
+                  <div class="filters seg" role="group" aria-label="Measure shown">
+                    <button type="button" aria-pressed="true" data-hm="hub">Hub score</button>
+                    <button type="button" aria-pressed="false" data-hm="deg">Co-expression partners</button>
+                    <button type="button" aria-pressed="false" data-hm="lfc">log<sub>2</sub> fold change</button>
+                  </div>
+                  <div class="filters seg" role="group" aria-label="Number of genes">
+                    <button type="button" aria-pressed="true" data-hn="12">Top 12</button>
+                    <button type="button" aria-pressed="false" data-hn="20">Top 20</button>
+                  </div>
+                  <label class="check"><input type="checkbox" id="hub-sort"> Sort by this measure</label>
+                </div>
+                <div id="c-hubs" data-chart></div>
+                <p class="hint">Click or tap a gene to open its card below.</p>
+              </div>
+              <div class="gene-pick">
+                <div class="field">
+                  <label for="gene-select">Look up a hub gene</label>
+                  <select id="gene-select" aria-controls="gene-card"></select>
+                  <p class="hint">Ranks 1–12 are from the manuscript's Table 2; ranks 13–20 from the project repository.</p>
+                </div>
+                <div class="gene-card" id="gene-card" aria-live="polite">
+                  <h4>DTNA</h4>
+                  <p>Hub rank 1 of 228 · up-regulated · outside the curated programs · pooled log<sub>2</sub> fold change +1.64 · meta-FDR 8.4×10<sup>−75</sup> · 89 co-expression partners · hub score 0.956</p>
+                </div>
+              </div>
+              <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>How to read this.</strong> Network links mean two genes' activity was correlated across samples, not that their proteins touch or regulate each other. The network has 228 genes and 4,430 links, with a co-up-regulated module of 128 genes and a co-down-regulated module of 93. The hubs are candidates for lab follow-up, not proven regulators.</p></div>
+            </div>
+
+            <!-- 4. Classifier test -->
+            <div class="tab-panel" id="panel-classifier" role="tabpanel" aria-labelledby="tab-classifier" tabindex="0" hidden>
+              <p class="panel-intro">A stress test of portability: if a model learns to tell infected (or M003-expressing) samples from controls in some datasets, can it do the same in a dataset it has never seen? I held out one whole dataset at a time (45 samples from the three datasets with sample-level counts) and compared the gene set against control gene sets.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Balanced accuracy on each held-out dataset (linear SVM on 509 helicase and translation genes)</h3><p class="chart-sub">The model transferred between the two Myxoma datasets (1.00 and 0.80) but scored 0.58 on the held-out vaccinia dataset, close to chance.</p></div></div>
+                <div id="c-clf-fold" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Mean balanced accuracy over the three held-out datasets, by feature set (same linear SVM)</h3><p class="chart-sub">Housekeeping genes (0.82) and random gene sets (0.74) did about as well as the 509 translation genes (0.79); shuffled labels fell to chance (0.54).</p></div></div>
+                <div id="c-clf-ctrl" data-chart></div>
+              </div>
+              <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg><p><strong>What this means.</strong> Infection status transferred between the two Myxoma datasets but not to the held-out vaccinia dataset, and it did not depend on this particular gene set. That is what a broad host program would look like, so I report it as <strong>broad host remodeling rather than a specific signature</strong>, not as a predictive test.</p></div>
+              <ul class="mini-facts">
+                <li><b>0.44–0.71</b>mean balanced accuracy of the other three algorithms (elastic-net, random forest, gradient boosting)</li>
+                <li><b>0.93 vs 0.67</b>accuracy at guessing which study a sample came from, vs always guessing the largest study: strong batch structure</li>
+                <li><b>81.7th percentile</b>where a 29-gene signature ranked among 1,000 matched random gene sets (p = 0.18): no better than random</li>
+                <li><b>p = 0.003</b>removing the 25 top-ranked genes hurt the model more than 99.8% of random 25-gene removals</li>
+              </ul>
+            </div>
+
+            <!-- 5. Helicases -->
+            <div class="tab-panel" id="panel-helicases" role="tabpanel" aria-labelledby="tab-helicases" tabindex="0" hidden>
+              <p class="panel-intro">RNA helicases unwind RNA. Earlier studies reported that host RNA helicases such as DHX29 affect which cells myxoma virus can infect, and that DHX29 works with eIF3 to help ribosomes scan structured messages. So I treated helicases as one pre-defined sub-question within the genome-wide analysis, not the headline. Switch the pooling to see how the evidence for DHX15 and DHX29 changes.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">DHX15 vs DHX29: pooled evidence under two poolings</h3><p class="chart-sub">Which helicase looks stronger depends on which datasets are pooled.</p></div></div>
+                <div class="filters seg" role="group" aria-label="Datasets pooled">
+                  <button type="button" aria-pressed="true" data-pool="all">All four datasets</button>
+                  <button type="button" aria-pressed="false" data-pool="vacc">Vaccinia infection only (2)</button>
+                </div>
+                <div class="cmp-cards" id="heli-cards" aria-live="polite">
+                  <article class="cmp-card sig"><h4>DHX15 <span class="badge live">meta-FDR &lt; 0.05</span></h4><dl><div><dt>Pooled log<sub>2</sub>FC</dt><dd>+0.75</dd></div><div><dt>meta-FDR</dt><dd>3.6×10<sup>−19</sup></dd></div><div><dt>I²</dt><dd>45%</dd></div></dl><p class="hint">Up in 4 of 4 datasets; rank 96 of 16,841 by meta-FDR (top 0.6%).</p></article>
+                  <article class="cmp-card"><h4>DHX29 <span class="badge plain">Not significant</span></h4><dl><div><dt>Pooled log<sub>2</sub>FC</dt><dd>+0.51</dd></div><div><dt>meta-FDR</dt><dd>0.055</dd></div><div><dt>I²</dt><dd>80%</dd></div></dl><p class="hint">Up in 4 of 4 datasets, but the size of the change varies widely.</p></article>
+                </div>
+                <p class="verdict mt-2" id="heli-verdict">Across all four datasets, DHX15 has the strongest pooled helicase support; DHX29 is up everywhere but too heterogeneous to pass correction.</p>
+                <p class="source-note">DHX15's I² values, its vaccinia-only fold change and its exact rank (96), and DHX29's all-dataset fold change, come from the project's repository tables; all other values are quoted in the manuscript (Abstract, p.10).</p>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">DHX15 and DHX29 log<sub>2</sub> fold change in each Tier-A dataset</h3><p class="chart-sub">Both genes went up in all four datasets; DHX29's change ranged from +0.15 to +0.98 across datasets, matching its high heterogeneity (I² 80%).</p></div></div>
+                <div id="c-heli" data-chart></div>
+              </div>
+              <ul class="mini-facts">
+                <li><b>4 of 4</b>leave-one-study-out re-poolings (each dataset dropped in turn) in which DHX15 kept both its direction and its significance</li>
+                <li><b>About ⅔</b>of DHX15's pooled weight comes from the two Myxoma M003 datasets</li>
+                <li><b>17 of 18</b>DDX/DHX helicases with meta-FDR &lt; 0.05 were up-regulated (the exception: DHX58)</li>
+                <li><b>2.8-fold</b>helicase enrichment among up-regulated reproducible genes (FDR 0.039), but not among all of them (1.3-fold, FDR 0.87)</li>
+                <li><b>Not induced</b>DHX15 in the Tier-B vaccinia dataset GSE185520 (log<sub>2</sub>FC −0.01 at 6 h, −2.77 at 18 h, +0.10 for a mutant virus)</li>
+              </ul>
+            </div>
+
+            <!-- 6. Single cells -->
+            <div class="tab-panel" id="panel-singlecell" role="tabpanel" aria-labelledby="tab-singlecell" tabindex="0" hidden>
+              <p class="panel-intro">An independent check, using single-cell RNA-seq data that were not part of the atlas (Matía et al. 2024, a bioRxiv preprint): if host shutoff is real, infected cells should show a smaller share of reads from host genes, and fewer genes should be detected per cell.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title" id="t-sc">Median share of each cell's reads that come from host genes, uninfected vs vaccinia-infected</h3><p class="chart-sub" id="s-sc">The host share fell from 0.998 to 0.758 in HeLa cells and from 0.999 to 0.804 in BJ5ta fibroblasts.</p></div></div>
+                <div class="filters seg" role="group" aria-label="Single-cell measure">
+                  <button type="button" aria-pressed="true" data-sc="share">Host-read share</button>
+                  <button type="button" aria-pressed="false" data-sc="genes">Genes detected per cell</button>
+                </div>
+                <div id="c-sc" data-chart></div>
+              </div>
+            </div>
+
+            <!-- 7. Proteome -->
+            <div class="tab-panel" id="panel-proteome" role="tabpanel" aria-labelledby="tab-proteome" tabindex="0" hidden>
+              <p class="panel-intro">RNA is not protein. I compared the vaccinia-only transcript changes with an independent HeLa proteome from the same preprint (3 infected vs 3 uninfected whole-cell samples) to see whether protein levels moved the same way.</p>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Agreement between protein and transcript changes (Spearman ρ)</h3><p class="chart-sub">Agreement is positive but modest: ρ = 0.31 for the 242 transcript-significant genes, and only 0.08 across all 7,111 matched genes.</p></div></div>
+                <div id="c-rho" data-chart></div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-head"><div><h3 class="chart-title">Median protein log<sub>2</sub> fold change by host program, infected vs uninfected HeLa cells</h3><p class="chart-sub">Cell-cycle proteins were modestly lower (−0.17), but ribosomal-protein (+0.03) and translation-initiation (+0.14) levels were not reduced.</p></div></div>
+                <div id="c-prot" data-chart></div>
+              </div>
+              <ul class="mini-facts">
+                <li><b>64%</b>of the 242 genes changed in the same direction at the protein and transcript level</li>
+                <li><b>−0.21 vs +0.05</b>median protein change for transcript-down vs transcript-up genes (p = 1.6×10<sup>−5</sup>)</li>
+                <li><b>3 vs 3</b>infected and uninfected HeLa whole-cell proteomes compared; 7,111 genes matched between the proteome and the vaccinia-only transcript analysis</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="datasets" class="block">
+            <h2 class="prose">Datasets</h2>
+            <p class="prose ink-2">I searched NCBI GEO and PubMed, screened 12 candidate datasets and sorted them into tiers by data availability and comparability. The four Tier-A datasets come from three independent sources and two host species; GSE287860 and GSE288000 are two sub-series of one Myxoma study. Seven Tier-C datasets (for example, long-read viral transcriptome studies) were catalogued as context but not analyzed. All data are public and were generated by other research groups.</p>
+            <div class="filters" role="group" aria-label="Filter datasets by tier">
+              <button type="button" aria-pressed="true" data-tier="all">All (6)</button>
+              <button type="button" aria-pressed="false" data-tier="A">Tier A: pooled (4)</button>
+              <button type="button" aria-pressed="false" data-tier="B">Tier B: direction check (1)</button>
+              <button type="button" aria-pressed="false" data-tier="X">External validation (1)</button>
+            </div>
+            <div class="ds-wrap">
+              <table class="ds-table">
+                <caption class="visually-hidden">Datasets used in PoxHostAtlas, with tier, system, host, samples and role</caption>
+                <thead><tr><th scope="col">Dataset &amp; source study</th><th scope="col">Tier</th><th scope="col">Virus / system</th><th scope="col">Host &amp; cells</th><th scope="col">Samples</th><th scope="col">Role in the atlas</th></tr></thead>
+                <tbody>
+                  <tr data-tier="A"><th scope="row"><a class="acc" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE278320" target="_blank" rel="noopener">GSE278320</a><span class="src"><a href="https://doi.org/10.1038/s41564-025-02009-4" target="_blank" rel="noopener">Park et al. 2025, Nat Microbiol</a></span></th><td data-label="Tier"><span class="tier a">A</span></td><td data-label="Virus / system">Vaccinia virus (strain WR) infection</td><td data-label="Host &amp; cells">Human · HAP1 cells</td><td data-label="Samples">38 in GEO; 9 analyzed (3 mock, 6 infected)</td><td data-label="Role">Meta-analysis, network, classifier</td></tr>
+                  <tr data-tier="A"><th scope="row"><a class="acc" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE284044" target="_blank" rel="noopener">GSE284044</a><span class="src"><a href="https://doi.org/10.1186/s12985-026-03160-y" target="_blank" rel="noopener">Kwon et al. 2026, Virol J</a></span></th><td data-label="Tier"><span class="tier a">A</span></td><td data-label="Virus / system">Vaccinia virus infection, time course (2, 6, 24 h)</td><td data-label="Host &amp; cells">African green monkey · Vero kidney cell line</td><td data-label="Samples">24 in GEO; authors' DESeq2 tables (13,028 of 18,785 Vero genes matched a gene in another dataset)</td><td data-label="Role">Meta-analysis (6 h), time course</td></tr>
+                  <tr data-tier="A"><th scope="row"><a class="acc" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE287860" target="_blank" rel="noopener">GSE287860</a><span class="src"><a href="https://doi.org/10.1126/science.adw4937" target="_blank" rel="noopener">Remick et al. 2026, Science</a></span></th><td data-label="Tier"><span class="tier a">A</span></td><td data-label="Virus / system">Myxoma virus M003 effector vs mCherry control (protein expression, no infection)</td><td data-label="Host &amp; cells">Human cells</td><td data-label="Samples">6 in GEO; 6 analyzed (3 vs 3)</td><td data-label="Role">Meta-analysis, network, classifier</td></tr>
+                  <tr data-tier="A"><th scope="row"><a class="acc" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE288000" target="_blank" rel="noopener">GSE288000</a><span class="src"><a href="https://doi.org/10.1126/science.adw4937" target="_blank" rel="noopener">Remick et al. 2026, Science</a></span></th><td data-label="Tier"><span class="tier a">A</span></td><td data-label="Virus / system">Myxoma M003 vs mCherry in five host backgrounds (non-targeting control and four knockouts); companion sub-series of GSE287860</td><td data-label="Host &amp; cells">Human cells (5 backgrounds)</td><td data-label="Samples">30 in GEO; 30 analyzed (non-targeting control, 3 vs 3, in the meta-analysis)</td><td data-label="Role">Meta-analysis, host-background robustness, network, classifier</td></tr>
+                  <tr data-tier="B"><th scope="row"><a class="acc" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185520" target="_blank" rel="noopener">GSE185520</a><span class="src"><a href="https://doi.org/10.1371/journal.ppat.1010099" target="_blank" rel="noopener">Ly et al. 2022, PLoS Pathog</a></span></th><td data-label="Tier"><span class="tier b">B</span></td><td data-label="Virus / system">Vaccinia infection (wild type and D9/D10 decapping mutant)</td><td data-label="Host &amp; cells">Human cells</td><td data-label="Samples">30 in GEO; authors' FPKM / log<sub>2</sub>FC tables (3 contrasts)</td><td data-label="Role">Directional comparison only (not pooled)</td></tr>
+                  <tr data-tier="X"><th scope="row"><span class="acc">Matía et al. 2024</span><span class="src"><a href="https://doi.org/10.1101/2024.01.13.575413" target="_blank" rel="noopener">bioRxiv preprint (supplementary tables, not GEO)</a></span></th><td data-label="Tier"><span class="tier x">Ext.</span></td><td data-label="Virus / system">Vaccinia virus infection</td><td data-label="Host &amp; cells">Human · HeLa and BJ5ta fibroblasts (single-cell); HeLa (proteomics)</td><td data-label="Samples">4,346 HeLa and 11,628 BJ5ta cells; 3 vs 3 HeLa proteomes</td><td data-label="Role">Independent cross-modality validation</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="source-note">Source: manuscript Table 1 (p.4), pp.3–4 and 6; host species, cell types and knockout backgrounds from the repository's dataset registry.</p>
+          </section>
+
+          <section id="pipeline" class="block">
+            <h2 class="prose">Pipeline</h2>
+            <p class="prose ink-2">Ten steps, from finding the data to a public release that anyone can re-run with one command.</p>
+            <div class="flow pipeline">
+              <div class="step"><h4>Find and tier public data</h4><p>Searched NCBI GEO (4 queries) and PubMed (3 queries), up to 10 records each, plus the literature and expert suggestions. Screened 12 candidates: 4 Tier A, 1 Tier B, 7 Tier C.</p><ul class="tags"><li><span class="tag">NCBI GEO</span></li><li><span class="tag">PubMed</span></li><li><span class="tag">GEOparse</span></li></ul></div>
+              <div class="step"><h4>Harmonized differential expression</h4><p>Removed genes with fewer than 10 total reads and ran the DESeq2 model (PyDESeq2) on raw counts; used the authors' DESeq2 tables for the Vero time course. Result: 10 harmonized contrasts.</p><ul class="tags"><li><span class="tag">PyDESeq2</span></li></ul></div>
+              <div class="step"><h4>Genome-wide random-effects meta-analysis</h4><p>One contrast per dataset; DerSimonian–Laird pooled log<sub>2</sub> fold change, I², direction agreement and Benjamini–Hochberg meta-FDR. The reproducibility rule keeps 1,834 of 16,841 genes.</p><ul class="tags"><li><span class="tag">pandas</span></li><li><span class="tag">NumPy</span></li><li><span class="tag">SciPy</span></li></ul></div>
+              <div class="step"><h4>Stability and heterogeneity checks</h4><p>Leave-one-study-out re-pooling (each dataset dropped in turn) and Class I–III heterogeneity classes for 485 translation-family genes; cross-study rank agreement (Spearman, Kendall's W).</p><ul class="tags"><li><span class="tag">SciPy</span></li><li><span class="tag">pandas</span></li></ul></div>
+              <div class="step"><h4>Host-program enrichment and sensitivity layers</h4><p>One-sided hypergeometric tests for 10 host programs, program direction medians, a vaccinia-only meta-analysis and the 2/6/24-hour time course.</p><ul class="tags"><li><span class="tag">SciPy</span></li></ul></div>
+              <div class="step"><h4>Cross-study co-expression network</h4><p>228 genes × 45 samples; genes linked when |r| ≥ 0.7; degree and eigenvector centrality; hub score; greedy-modularity modules. A separate STRING subnetwork is in the supplement.</p><ul class="tags"><li><span class="tag">NetworkX</span></li><li><span class="tag">STRING API</span></li><li><span class="tag">GENCODE v44</span></li></ul></div>
+              <div class="step"><h4>Classifier stress test</h4><p>Leave-one-dataset-out tests of four classifiers, with housekeeping, interferon and random gene-set controls, label permutation, matched null sets, feature removal and a batch check.</p><ul class="tags"><li><span class="tag">scikit-learn</span></li></ul></div>
+              <div class="step"><h4>Directional comparison (Tier B)</h4><p>Compared the author-processed fold changes of GSE185520 (3 contrasts) with the pooled results by direction and Spearman correlation.</p><ul class="tags"><li><span class="tag">Python</span></li></ul></div>
+              <div class="step"><h4>Independent external validation</h4><p>Matía et al. 2024 single-cell data (HeLa, BJ5ta; Mann–Whitney U tests) and a HeLa proteome (Spearman correlation and sign agreement).</p><ul class="tags"><li><span class="tag">pandas</span></li><li><span class="tag">openpyxl</span></li><li><span class="tag">SciPy</span></li></ul></div>
+              <div class="step"><h4>Open, verifiable release</h4><p>Scripts, tables and figures on GitHub with a one-command rerun (run_all.sh), a clean-clone check (verify_clone.sh), pinned requirements and a SHA-256 file-hash manifest.</p><ul class="tags"><li><span class="tag">Bash</span></li><li><span class="tag">Git / GitHub</span></li></ul></div>
+            </div>
+          </section>
+
+          <section id="figures" class="block">
+            <h2 class="prose">Figures</h2>
+            <p class="prose ink-2">Original figures from the analysis. Click or tap any figure to zoom and pan.</p>
+            <div class="fig-stack">
+              <figure class="figure">
+                <img class="zoomable" src="../assets/img/pox/program_enrichment.png" width="2590" height="1159" loading="lazy" alt="Horizontal bar chart: cell cycle/mitosis (13 of 21, 5.7-fold) and inflammatory/NF-kB signaling (13 of 22, 5.4-fold) are strongly over-represented; RNA helicases (8 of 56) slightly above 1; eIF, ribosomal, apoptosis, mitochondrial ribosome and interferon-stimulated genes below 1.">
+                <figcaption><strong>Manuscript Figure 3.</strong> Fold over-representation of host programs among the 1,834 reproducibly remodeled genes (labels: hits / program size; asterisks: Benjamini–Hochberg FDR; programs without hits are not shown). Red marks over-representation and blue under-representation, not direction: the inflammatory/NF-κB hits are all up-regulated and the cell-cycle hits all down-regulated.</figcaption>
+              </figure>
+              <figure class="figure narrow">
+                <img class="zoomable" src="../assets/img/pox/top_host_hubs.png" width="2520" height="2066" loading="lazy" alt="Horizontal bar chart of 20 genes ordered DTNA, DBP, BTN3A2, LARP4, DSE, ABHD4, IL6 and so on, with bar lengths from 57 to 99 co-expression partners.">
+                <figcaption><strong>Hub ranking (repository figure; order matches the manuscript's Table 2).</strong> The top 20 reproducibly remodeled host hubs in the cross-study co-expression network, ordered by hub score. Bar length is network degree (the number of co-expression partners with |r| ≥ 0.7), not hub score; red = up-regulated, blue = down-regulated; the label gives the curated program ("other" = outside the curated programs).</figcaption>
+              </figure>
+              <figure class="figure">
+                <img class="zoomable" src="../assets/img/pox/matia_cross_modality.png" width="3863" height="1609" loading="lazy" alt="Left: scatter plot of protein versus transcript fold change with a weak positive trend. Right: bar chart of median protein change by program, positive for inflammatory, eIF, ribosomal and helicase proteins and negative for cell-cycle proteins.">
+                <figcaption><strong>Manuscript Figure 7.</strong> Independent check in the Matía et al. vaccinia HeLa proteome. Left: protein vs pooled transcript log<sub>2</sub> fold change for 242 vaccinia-significant genes (Spearman ρ = 0.31, p = 8.1×10<sup>−7</sup>). Right: median protein log<sub>2</sub> fold change by host program; ribosomal-protein and eIF protein levels were not reduced.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section id="limitations" class="block">
+            <h2 class="prose">Limitations</h2>
+            <div class="prose">
+              <p>PoxHostAtlas is <strong>computational and hypothesis-generating</strong>. It re-analyzes data that other groups generated and released, makes no cause-and-effect claims and does not claim primary discovery. Its rankings are leads for lab experiments.</p>
+              <ul class="limits">
+                <li><strong>RNA, not protein or function.</strong> All primary signals are transcript levels. The only protein evidence is one independent proteome, in which ribosomal-protein and translation-initiation proteins were not reduced (median log<sub>2</sub>FC +0.03 and +0.14). Ribosome profiling and perturbation experiments are needed for any mechanistic claim.</li>
+                <li><strong>Only two of the four Tier-A datasets are vaccinia infections.</strong> GSE287860 and GSE288000 are two sub-series of one Myxoma study that express a single viral protein (M003) rather than infect cells. Because I analyzed them as separate datasets, the ≥3-dataset rule can be met by one vaccinia dataset plus these two sub-series, which is the case for 592 of the 1,834 genes. That is why I also report the vaccinia-only layer, which, with only two datasets, is a directional sensitivity analysis.</li>
+                <li><strong>Monkey-cell data matched by name.</strong> For GSE284044 I used the authors' DESeq2 tables and matched Vero gene symbols to human symbols by name, without an ortholog database; roughly 30% of its genes, mostly uncharacterized LOC identifiers, matched no gene in the human datasets.</li>
+                <li><strong>Stability checks covered a subset.</strong> Leave-one-study-out re-pooling (dropping each dataset in turn) and the Class I–III classification covered only the 485 helicase, translation-initiation and ribosomal-protein genes measured in at least 2 datasets, and re-pooling never removes both M003 sub-series at once. In those checks, 67.4% of genes kept their direction every time, but only 5.8% stayed nominally significant every time.</li>
+                <li><strong>The classifier is not a specific signature.</strong> It separated samples mainly within the two Myxoma datasets (0.58 on held-out vaccinia), and housekeeping and random gene sets did about as well.</li>
+                <li><strong>Network links are correlations</strong>, not physical or regulatory interactions.</li>
+                <li><strong>Other viruses, hosts and labs are untested.</strong> Whether these patterns extend to other orthopoxviruses, such as monkeypox virus, remains to be tested.</li>
+              </ul>
+            </div>
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">How similar are the datasets? Spearman correlation of gene rankings for each pair of Tier-A datasets</h3><p class="chart-sub">Only the two Myxoma sub-series of one study agree strongly (ρ = 0.87); datasets from different sources agree weakly (ρ from −0.13 to 0.21). Overall Kendall's W = 0.40.</p></div></div>
+              <div id="c-concord" data-chart></div>
+            </div>
+            <div class="chart-card mt-3">
+              <div class="chart-head"><div><h3 class="chart-title">Reproducibility classes of the 485 translation-family genes</h3><p class="chart-sub">Most fall in the broader Class II (254 genes: consistent in direction, but not meeting every strict Class I condition); only 33 meet the strict Class I rule.</p></div></div>
+              <div id="c-classes" data-chart></div>
+            </div>
+          </section>
+
+          <section id="code" class="block">
+            <h2 class="prose">Code</h2>
+            <div class="code-grid">
+              <div class="card">
+                <h3>Re-run every number yourself</h3>
+                <p>I released the whole analysis so that anyone can check it, from data download to the final figures.</p>
+                <ul style="color:var(--ink-2)">
+                  <li><strong style="color:var(--ink)">22 numbered Python scripts</strong>, from data download to figures and release</li>
+                  <li><strong style="color:var(--ink)">One command</strong> (<code>run_all.sh</code>) reruns the pipeline</li>
+                  <li><strong style="color:var(--ink)">Clean-clone check</strong> (<code>verify_clone.sh</code>) re-clones the repository and checks that regenerated numbers match the manuscript</li>
+                  <li><strong style="color:var(--ink)">Pinned package versions</strong> and a <strong style="color:var(--ink)">SHA-256 file-hash manifest</strong> so files can be checked for changes</li>
+                </ul>
+                <div class="btn-row mt-2">
+                  <a class="btn btn-dark" href="https://github.com/mubarsad012/poxhostatlas" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                    github.com/mubarsad012/poxhostatlas
+                  </a>
+                </div>
+                <p class="hint mt-2">Numbers on this page follow the September 2026 manuscript. Per the repository README, I used Claude Code (Anthropic) as a supplementary tool for code verification and formatting of the project and its figures, with my mentor's approval, as OpenBio SRI directs students to do.</p>
+              </div>
+              <div>
+                <div class="cmd">
+                  <pre id="cmd-text"><code>git clone https://github.com/mubarsad012/poxhostatlas.git
+cd poxhostatlas
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+bash run_all.sh        # full pipeline
+bash verify_clone.sh   # clean-clone check</code></pre>
+                  <button class="btn btn-sm copy-btn" data-copy-target="#cmd-text" type="button"><span class="label">Copy</span></button>
+                </div>
+                <h4 class="mt-3 mb-2">Tools (pinned versions)</h4>
+                <ul class="tags stack-tags">
+                  <li><span class="tag"><b>Python</b> 3.13</span></li><li><span class="tag"><b>pandas</b> 3.0.5</span></li><li><span class="tag"><b>NumPy</b> 2.5.2</span></li><li><span class="tag"><b>SciPy</b> 1.18.0</span></li><li><span class="tag"><b>PyDESeq2</b> 0.5.4</span></li><li><span class="tag"><b>scikit-learn</b> 1.9.0</span></li><li><span class="tag"><b>NetworkX</b> 3.6.1</span></li><li><span class="tag"><b>statsmodels</b> 0.14.6</span></li><li><span class="tag"><b>matplotlib</b> 3.11.1</span></li><li><span class="tag"><b>seaborn</b> 0.13.2</span></li><li><span class="tag"><b>GEOparse</b> 2.0.4</span></li><li><span class="tag"><b>openpyxl</b> 3.1.5</span></li><li><span class="tag"><b>requests</b> 2.34.2</span></li>
+                </ul>
+                <h4 class="mt-3 mb-2">Data and methods resources</h4>
+                <ul class="tags">
+                  <li><span class="tag">NCBI GEO</span></li><li><span class="tag">STRING API</span></li><li><span class="tag">GENCODE v44</span></li><li><span class="tag">DerSimonian–Laird meta-analysis</span></li><li><span class="tag">Benjamini–Hochberg FDR</span></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="paper" class="block">
+            <h2 class="prose">Read the paper</h2>
+            <div class="embed">
+              <div class="embed-bar"><span><strong>PoxHostAtlas manuscript</strong> · PDF · 21 pages · September 2026</span><span class="btn-row"><a class="btn btn-sm" href="../papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" target="_blank" rel="noopener">Open in new tab</a><a class="btn btn-sm btn-ghost" href="../papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf" download>Download</a></span></div>
+              <object data="../papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf#view=FitH" type="application/pdf" aria-label="PoxHostAtlas manuscript PDF">
+                <div class="fallback"><p>Your browser can't show PDFs inline.</p><a class="btn btn-primary" href="../papers/Mubarak-Nguyen_2026_PoxHostAtlas.pdf">Download the PDF</a></div>
+              </object>
+            </div>
+            <p class="hint mt-2">Supplementary tables and figures are in the <a href="https://github.com/mubarsad012/poxhostatlas/blob/main/docs/manuscript/PoxHostAtlas_supplementary.pdf" target="_blank" rel="noopener">supplementary PDF on GitHub</a>.</p>
+          </section>
+
+          <section id="cite" class="block">
+            <h2 class="prose">Cite</h2>
+            <div class="citation"><span id="cite-text">Mubarak, M., &amp; Nguyen, D. (2026). <i>PoxHostAtlas: A reproducible cross-study atlas of host gene-expression remodeling during poxvirus infection</i> [Manuscript].</span><button class="btn btn-sm copy-btn" data-copy-target="#cite-text" type="button"><span class="label">Copy</span></button></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div><a class="brand-mark" href="../index.html"><span class="mono">MM</span><span>Morsal Mubarak</span></a><p class="mt-2">Computational research and software at the intersection of data science, neuroscience, and public health. Falls Church, Virginia.</p></div>
+        <div><h4>Explore</h4><ul><li><a href="../index.html#research">Research</a></li><li><a href="../index.html#software">Software &amp; Tools</a></li><li><a href="../index.html#community">Community Impact</a></li><li><a href="../index.html#about">About / CV</a></li><li><a href="../papers.html">All papers</a></li></ul></div>
+        <div><h4>Elsewhere</h4><ul><li><a href="https://proxyhealth-ai.onrender.com/" target="_blank" rel="noopener">ProxyHealth AI (live)</a></li><li><a href="https://github.com/mubarsad012" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://doi.org/10.5281/zenodo.21894038" target="_blank" rel="noopener">Zenodo archive (fetal-growth benchmark)</a></li><li><a href="mailto:morsalmubarak9@gmail.com">Email</a></li></ul></div>
+      </div>
+      <div class="fine"><span>© <span data-year>2026</span> Morsal Mubarak</span><span>Last updated November 2026</span></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+  /* PoxHostAtlas page: data from the manuscript (Mubarak & Nguyen, Sept 2026) and the project repository.
+     Charts are drawn the first time their container is visible (tab panels start hidden). */
+  (function () {
+    'use strict';
+    const V = window.Viz;
+    if (!V) return;
+    const UP = 'var(--series-2)', DOWN = 'var(--series-1)', S1 = 'var(--series-1)', S2 = 'var(--series-2)', S4 = 'var(--series-4)';
+    const MUTED = 'var(--chart-muted)', INK2 = 'var(--chart-ink-2)', MINUS = '−';
+    const int = V.fmt.int;
+    const signed = d => v => { const n = Number(v); return (n > 0 ? '+' : n < 0 ? MINUS : '') + Math.abs(n).toFixed(d); };
+    const fixed = d => v => { const n = Number(v); return (n < 0 ? MINUS : '') + Math.abs(n).toFixed(d); };
+    const tickSigned = v => (v > 0 ? '+' : v < 0 ? MINUS : '') + String(Math.abs(Math.round(v * 100) / 100));
+    const SUP = { 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+    const sci = s => { const m = /^([0-9.]+)e-(\d+)$/.exec(String(s)); return m ? m[1] + '×10⁻' + m[2].replace(/^0+/, '').split('').map(c => SUP[c]).join('') : String(s); };
+    const sciHtml = s => { const m = /^([0-9.]+)e-(\d+)$/.exec(String(s)); return m ? m[1] + '×10<sup>' + MINUS + m[2].replace(/^0+/, '') + '</sup>' : String(s); };
+    const $ = id => document.getElementById(id);
+
+    /* ---------- Lazy chart registry ---------- */
+    const registry = {}, drawn = {};
+    function paint(id) {
+      const box = $(id);
+      if (!box || !registry[id]) return;
+      box.textContent = '';
+      const inner = document.createElement('div');
+      box.appendChild(inner);
+      registry[id](inner);
+      drawn[id] = true;
+    }
+    const isShown = el => !!(el && el.getClientRects().length);
+    function ensure(scope) {
+      (scope || document).querySelectorAll('[data-chart]').forEach(el => { if (!drawn[el.id] && isShown(el)) paint(el.id); });
+    }
+    /* Segmented buttons: aria-pressed within each group */
+    function seg(attr, onChange) {
+      document.querySelectorAll('button[' + attr + ']').forEach(b => {
+        b.addEventListener('click', () => {
+          b.parentElement.querySelectorAll('button[' + attr + ']').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+          onChange(b.getAttribute(attr));
+        });
+      });
+    }
+
+    /* ---------- 1. Up vs down (stack) ---------- */
+    const UD = {
+      rep: { title: 'Direction of change among the 1,834 reproducible host genes', sub: 'Slightly more reproducible genes went down (963) than up (871).', up: 871, down: 963, total: 1834,
+             src: 'Source: manuscript Abstract and p.7; repository results/genomewide/genomewide_reproducible_host_genes.csv (1,834 rows).' },
+      all: { title: 'Direction of change among all 3,337 genes with meta-FDR < 0.05', sub: 'Before the direction and size rules, 1,792 significant genes went up and 1,545 went down; the 1,834 reproducible genes are the subset that also passed those rules.', up: 1792, down: 1545, total: 3337,
+             src: 'Source: manuscript Figure 2 caption (p.9): genome-wide meta-analysis of the 16,841 genes measured in at least 3 datasets.' }
+    };
+    let udState = 'rep';
+    registry['c-updown'] = el => {
+      const d = UD[udState], pct = v => (v / d.total * 100).toFixed(1) + '%';
+      $('t-updown').textContent = d.title;
+      $('s-updown').textContent = d.sub;
+      V.stack(el, {
+        segments: [
+          { label: 'Up-regulated', value: d.up, color: UP, note: 'More active in infected or M003-expressing cells than in controls' },
+          { label: 'Down-regulated', value: d.down, color: DOWN, note: 'Less active than in control cells' }
+        ],
+        format: v => int(v) + ' (' + pct(v) + ')',
+        darkInk: [0],
+        table: { columns: ['Direction', 'Genes', 'Share'], rows: [['Up-regulated', int(d.up), pct(d.up)], ['Down-regulated', int(d.down), pct(d.down)], ['Total', int(d.total), '100%']] },
+        source: d.src,
+        ariaLabel: d.title + ': ' + int(d.up) + ' up, ' + int(d.down) + ' down.'
+      });
+    };
+    seg('data-ud', v => { udState = v; paint('c-updown'); });
+
+    /* ---------- 2. Funnel of the reproducibility rules ---------- */
+    registry['c-funnel'] = el => V.funnel(el, {
+      steps: [
+        { label: 'Measured in ≥3 of the 4 datasets', value: 16841, note: 'The background for every genome-wide test' },
+        { label: '…and meta-FDR < 0.05', value: 3337, note: '1,792 up, 1,545 down' },
+        { label: '…and same direction, |log₂FC| ≥ 0.5', value: 1834, note: 'Same direction in every dataset that measured the gene: 871 up, 963 down' }
+      ],
+      format: int,
+      table: { columns: ['Rule applied', 'Genes remaining'], rows: [['Measured in ≥3 of the 4 datasets', '16,841'], ['…and meta-FDR < 0.05', '3,337'], ['…and same direction in every dataset and |pooled log₂FC| ≥ 0.5', '1,834']] },
+      source: 'Source: manuscript pp.5 and 7, and Figure 2 caption (p.9).',
+      ariaLabel: 'Funnel: 16,841 genes measured in at least 3 datasets, 3,337 with meta-FDR below 0.05, 1,834 reproducible.'
+    });
+
+    /* ---------- 3. Program enrichment (toggle all / up / down) ---------- */
+    const PROG = { cc: 'Cell cycle / mitosis', inf: 'Inflammatory / NF-κB signaling', hel: 'RNA helicases (DEAD/DEAH-box)', eif: 'Translation initiation (eIF)', rib: 'Ribosomal proteins (cytoplasmic)',
+                   apo: 'Apoptosis / cell death', mito: 'Mitochondrial ribosome', isg: 'Interferon-stimulated genes', isr: 'Integrated stress response / UPR', chol: 'Cholesterol / sterol biosynthesis' };
+    const ENR = {
+      all: { n: '1,834', title: 'Fold over-representation of 10 host programs among all 1,834 reproducible genes', sub: 'Cell-cycle (5.68-fold) and inflammatory/NF-κB (5.43-fold) programs stand out; no other program is significant.',
+             rows: [['cc', 5.68, '13/21', '2.5e-7'], ['inf', 5.43, '13/22', '2.8e-7'], ['hel', 1.31, '8/56', '0.87'], ['eif', 0.92, '7/70', '1.0'], ['rib', 0.68, '14/189', '1.0'], ['apo', 0.54, '1/17', '1.0'], ['mito', 0.34, '3/82', '1.0'], ['isg', 0.23, '1/40', '1.0'], ['isr', 0, '0/21', '1.0'], ['chol', 0, '0/18', '1.0']] },
+      up: { n: '871 up-regulated', title: 'Fold over-representation of 10 host programs among the 871 up-regulated reproducible genes', sub: 'Among up-regulated genes, inflammatory/NF-κB genes are 11.43-fold over-represented and RNA helicases 2.76-fold (FDR 0.039).',
+            rows: [['inf', 11.43, '13/22', '5.6e-11'], ['hel', 2.76, '8/56', '0.039'], ['eif', 1.38, '5/70', '0.98'], ['apo', 1.14, '1/17', '1.0'], ['isg', 0.48, '1/40', '1.0'], ['mito', 0.47, '2/82', '1.0'], ['rib', 0, '0/189', '1.0'], ['isr', 0, '0/21', '1.0'], ['cc', 0, '0/21', '1.0'], ['chol', 0, '0/18', '1.0']] },
+      down: { n: '963 down-regulated', title: 'Fold over-representation of 10 host programs among the 963 down-regulated reproducible genes', sub: 'Among down-regulated genes, cell-cycle genes are 10.83-fold over-represented; ribosomal proteins (1.30-fold) are not significant.',
+              rows: [['cc', 10.83, '13/21', '8.6e-11'], ['rib', 1.3, '14/189', '0.97'], ['eif', 0.5, '2/70', '1.0'], ['mito', 0.21, '1/82', '1.0'], ['hel', 0, '0/56', '1.0'], ['isg', 0, '0/40', '1.0'], ['inf', 0, '0/22', '1.0'], ['isr', 0, '0/21', '1.0'], ['chol', 0, '0/18', '1.0'], ['apo', 0, '0/17', '1.0']] }
+    };
+    let enState = 'all';
+    registry['c-enrich'] = el => {
+      const d = ENR[enState];
+      $('t-enrich').textContent = d.title;
+      $('s-enrich').textContent = d.sub;
+      const sig = r => parseFloat(r[3]) < 0.05;
+      const hits = r => r[2].replace('/', ' of ');
+      V.hbar(el, {
+        data: d.rows.map(r => ({ label: PROG[r[0]], value: r[1], color: sig(r) ? S1 : MUTED,
+          note: 'Hits: ' + hits(r) + ' program genes · FDR ' + sci(r[3]) + (r[1] === 0 ? ' · no hits' : '') })),
+        format: fixed(2), valueName: 'Fold enrichment', ref: { value: 1 },
+        xLabel: 'Fold enrichment (dashed line = 1, chance)',
+        legend: [{ name: 'Significant (FDR < 0.05)', color: S1 }, { name: 'Not significant', color: MUTED }],
+        table: { columns: ['Program', 'Fold enrichment', 'Hits / program size', 'FDR'], rows: d.rows.map(r => [PROG[r[0]], r[1].toFixed(2), r[2], sci(r[3])]) },
+        source: 'Source: repository results/genomewide/program_enrichment.csv (manuscript Table S2; Figure 3, p.10). One-sided hypergeometric test against the 16,841 genes measured in ≥3 datasets, Benjamini–Hochberg FDR across the 10 programs. Fold enrichment is observed ÷ expected overlap, not an effect size; prefix-defined families (DDX/DHX, EIF, RPL/RPS, MRPL/MRPS) can include pseudogenes.',
+        ariaLabel: d.title
+      });
+    };
+    seg('data-enrich', v => { enState = v; paint('c-enrich'); });
+
+    /* ---------- 4. Program direction: all four vs vaccinia only ---------- */
+    const PD = [
+      ['Inflammatory / NF-κB', 2.0, 22, 0.744, 16], ['Stress response / UPR', 0.331, 21, -0.321, 20], ['Interferon-stimulated genes', 0.328, 40, 0.214, 25],
+      ['RNA helicases', 0.319, 56, 0.095, 47], ['Translation initiation (eIF)', 0.186, 70, -0.324, 49], ['Apoptosis / cell death', 0.135, 17, -0.156, 15],
+      ['Mitochondrial ribosome', 0.111, 82, -0.551, 76], ['Cholesterol / sterol synthesis', -0.248, 18, -0.704, 18], ['Ribosomal proteins', -0.327, 189, -0.787, 84],
+      ['Cell cycle / mitosis', -0.801, 21, -0.584, 21]
+    ];
+    registry['c-progdir'] = el => V.groupedHbar(el, {
+      categories: PD.map(r => r[0]),
+      series: [
+        { name: 'All four datasets', values: PD.map(r => r[1]), notes: PD.map(r => r[2] + ' genes measured in ≥3 datasets') },
+        { name: 'Vaccinia infection only (2 datasets)', values: PD.map(r => r[3]), notes: PD.map(r => r[4] + ' genes measured in both vaccinia datasets') }
+      ],
+      mark: 'dot', ref: { value: 0 }, format: signed(2), tickFormat: tickSigned,
+      xLabel: 'Median pooled log₂FC (dashed = no change)',
+      table: { columns: ['Program', 'All four datasets', 'Vaccinia only', 'Genes (all / vaccinia)'], rows: PD.map(r => [r[0], signed(3)(r[1]), signed(3)(r[3]), r[2] + ' / ' + r[4]]) },
+      source: 'Source: repository program_direction_summary.csv and program_direction_summary_vaccinia_only.csv (manuscript Table S3; pp.7–8). With only two datasets, the vaccinia-only layer is a directional sensitivity analysis: few genes are individually significant (e.g., 2 of 84 ribosomal-protein genes).',
+      ariaLabel: 'Median pooled log2 fold change by host program, all four datasets versus vaccinia only.'
+    });
+
+    /* ---------- 5. Vero time course ---------- */
+    registry['c-time'] = el => V.line(el, {
+      series: [
+        { name: 'Cell-cycle genes', points: [{ x: 2, y: -0.40 }, { x: 6, y: -0.32 }, { x: 24, y: -1.61, note: '18 of 21 significantly lower (FDR < 0.05)' }] },
+        { name: 'Ribosomal-protein genes', points: [{ x: 2, y: 0.03 }, { x: 6, y: -0.28 }, { x: 24, y: -0.74, note: '7 of 84 significantly lower (FDR < 0.05)' }] }
+      ],
+      format: signed(2), tickFormat: tickSigned, xFormat: v => v + ' h', xLabel: 'Hours after vaccinia infection', yLabel: 'Median log₂ fold change vs mock',
+      table: { columns: ['Hours after infection', 'Cell-cycle genes', 'Ribosomal-protein genes'], rows: [['2 h', MINUS + '0.40', '+0.03'], ['6 h', MINUS + '0.32', MINUS + '0.28'], ['24 h', MINUS + '1.61', MINUS + '0.74']] },
+      source: 'Source: manuscript p.8 (GSE284044, authors’ DESeq2 tables). Significant decreases only at 24 h. One study in a monkey cell line whose gene symbols were matched to human symbols by name, so interpret with caution.',
+      ariaLabel: 'Line chart of median log2 fold change at 2, 6 and 24 hours for cell-cycle and ribosomal-protein genes.'
+    });
+
+    /* ---------- 6. Hub genes (metric / top-N / sort) + gene card ---------- */
+    // [rank, gene, hub score, direction, program, pooled log2FC, meta-FDR, degree]; ranks 1-12 = manuscript Table 2, 13-20 = repo top_host_hubs.csv
+    const HUBS = [
+      [1, 'DTNA', 0.956, 'up', 'other', 1.64, '8.4e-75', 89], [2, 'DBP', 0.952, 'down', 'other', -1.84, '5.4e-106', 82],
+      [3, 'BTN3A2', 0.941, 'down', 'other', -2.22, '1.4e-36', 99], [4, 'LARP4', 0.921, 'up', 'other', 1.04, '2.2e-45', 82],
+      [5, 'DSE', 0.904, 'up', 'other', 1.34, '2.2e-32', 84], [6, 'ABHD4', 0.893, 'down', 'other', -1.04, '8.0e-46', 74],
+      [7, 'IL6', 0.884, 'up', 'inf', 5.13, '1.2e-79', 68], [8, 'GALM', 0.875, 'down', 'other', -1.77, '5.4e-34', 73],
+      [9, 'SATB1', 0.871, 'down', 'other', -0.90, '2.8e-26', 79], [10, 'MACC1', 0.866, 'up', 'other', 3.65, '6.1e-134', 62],
+      [11, 'ABTB1', 0.864, 'down', 'other', -1.50, '1.9e-21', 96], [12, 'LENG9', 0.860, 'up', 'other', 2.00, '1.1e-20', 95],
+      [13, 'KMT5C', 0.860, 'down', 'other', -0.96, '4.4e-22', 89], [14, 'MAFB', 0.849, 'up', 'other', 1.97, '6.0e-28', 69],
+      [15, 'AMD1', 0.849, 'up', 'other', 0.91, '6.8e-43', 66], [16, 'ARHGAP11A', 0.842, 'down', 'other', -1.00, '1.2e-21', 80],
+      [17, 'C1ORF216', 0.842, 'up', 'other', 1.19, '7.2e-51', 63], [18, 'PTPRC', 0.839, 'up', 'other', 1.40, '3.4e-25', 74],
+      [19, 'SNX29', 0.833, 'down', 'other', -0.93, '6.2e-27', 68], [20, 'SIK1', 0.833, 'up', 'other', 3.13, '8.5e-72', 57]
+    ].map(r => ({ rank: r[0], gene: r[1], hub: r[2], dir: r[3], prog: r[4], lfc: r[5], fdr: r[6], deg: r[7] }));
+    const progLabel = p => p === 'inf' ? 'Inflammatory / NF-κB' : 'Outside the curated programs';
+    const dirWord = r => r.dir === 'up' ? 'Up-regulated' : 'Down-regulated';
+    const HM = {
+      hub: { key: 'hub', title: n => `Top ${n} co-expression hub genes, by hub score`, sub: 'DTNA, DBP and BTN3A2 rank highest; IL6, 7th, is the only top-12 hub from a curated program.',
+             name: 'Hub score', fmt: v => v.toFixed(3), tick: v => v.toFixed(2), mark: 'dot', domain: [0.8, 1.0], x: 'Hub score (0 to 1)' },
+      deg: { key: 'deg', title: n => `Co-expression partners of the top ${n} hub genes`, sub: 'BTN3A2 has the most partners among these hubs (99 of 227 possible); the most-connected gene in the whole network has 112.',
+             name: 'Co-expression partners', fmt: int, mark: 'bar', ref: { value: 112 }, x: 'Partners (dashed = network maximum, 112)' },
+      lfc: { key: 'lfc', title: n => `Pooled log₂ fold change of the top ${n} hub genes`, sub: 'IL6 has by far the largest increase (+5.13); BTN3A2 has the largest decrease (−2.22).',
+             name: 'Pooled log₂ fold change', fmt: signed(2), tick: tickSigned, mark: 'dot', ref: { value: 0 }, x: 'Pooled log₂FC (dashed = no change)' }
+    };
+    const hubState = { m: 'hub', n: 12, sort: false };
+    const hubNote = r => `${dirWord(r)} · ${progLabel(r.prog)} · log₂FC ${signed(2)(r.lfc)} · meta-FDR ${sci(r.fdr)} · ${r.deg} partners · hub score ${r.hub.toFixed(3)}`;
+    registry['c-hubs'] = el => {
+      const cfg = HM[hubState.m];
+      let rows = HUBS.slice(0, hubState.n);
+      if (hubState.sort) rows = rows.slice().sort((a, b) => b[cfg.key] - a[cfg.key] || a.rank - b.rank);
+      $('t-hubs').textContent = cfg.title(hubState.n);
+      $('s-hubs').textContent = cfg.sub;
+      V.hbar(el, {
+        data: rows.map(r => ({ label: r.rank + '. ' + r.gene, value: r[cfg.key], color: r.dir === 'up' ? UP : DOWN, note: hubNote(r) })),
+        mark: cfg.mark, domain: cfg.domain, ref: cfg.ref, format: cfg.fmt, tickFormat: cfg.tick, valueName: cfg.name, xLabel: cfg.x,
+        legend: [{ name: 'Up-regulated', color: UP }, { name: 'Down-regulated', color: DOWN }],
+        table: { columns: ['Gene', 'Hub rank', 'Program', 'Direction', 'Pooled log₂FC', 'meta-FDR', 'Partners', 'Hub score'],
+                 rows: rows.map(r => [r.gene, String(r.rank), progLabel(r.prog), dirWord(r), signed(2)(r.lfc), sci(r.fdr), String(r.deg), r.hub.toFixed(3)]) },
+        source: 'Source: manuscript Table 2 (p.13) for ranks 1–12; repository results/genomewide/network/top_host_hubs.csv for ranks 13–20 (values rounded). Ranked among the 228 network genes, not all 1,834. KMT5C (13th) ties LENG9’s hub score; ties are ordered by degree.',
+        ariaLabel: cfg.title(hubState.n)
+      });
+    };
+    seg('data-hm', v => { hubState.m = v; paint('c-hubs'); });
+    seg('data-hn', v => { hubState.n = +v; paint('c-hubs'); });
+    const sortBox = $('hub-sort');
+    if (sortBox) sortBox.addEventListener('change', () => { hubState.sort = sortBox.checked; paint('c-hubs'); });
+
+    const geneSel = $('gene-select');
+    HUBS.forEach(r => { const o = document.createElement('option'); o.value = r.gene; o.textContent = r.rank + '. ' + r.gene; geneSel.appendChild(o); });
+    function geneExtra(r) {
+      if (r.gene === 'IL6') return 'IL6 is the highest-ranked gene from the curated programs (7th of 228). It was among the most strongly induced genes, but also among the most heterogeneous across datasets (I² 79%).';
+      if (r.gene === 'KMT5C') return 'KMT5C ties LENG9’s hub score; ties are ordered by degree. Values from the repository’s full hub ranking (rounded).';
+      return r.rank <= 12 ? 'Listed in the manuscript’s Table 2 of hubs prioritized for experimental follow-up.' : 'From the repository’s full hub ranking (values rounded).';
+    }
+    function selectGene(g, scroll) {
+      const r = HUBS.find(x => x.gene === g);
+      if (!r) return;
+      geneSel.value = g;
+      const f = Math.pow(2, Math.abs(r.lfc)), ft = f >= 10 ? f.toFixed(0) : f.toFixed(1);
+      const lin = r.lfc >= 0 ? `about ${ft}× the control level` : `about 1/${ft} of the control level`;
+      const card = $('gene-card');
+      card.innerHTML = `<h4>${r.gene}</h4><p class="sub"><span class="dirdot ${r.dir}" aria-hidden="true"></span>${dirWord(r)} · hub rank ${r.rank} of 228</p>` +
+        `<dl class="kv"><div><dt>Hub score</dt><dd>${r.hub.toFixed(3)}</dd></div>` +
+        `<div><dt>Co-expression partners</dt><dd>${r.deg}<small>of 227 possible</small></dd></div>` +
+        `<div><dt>Pooled log<sub>2</sub> fold change</dt><dd>${signed(2)(r.lfc)}<small>${lin} (2<sup>log₂FC</sup>)</small></dd></div>` +
+        `<div><dt>meta-FDR</dt><dd>${sciHtml(r.fdr)}</dd></div><div><dt>Program</dt><dd>${progLabel(r.prog)}</dd></div></dl>` +
+        `<p>${geneExtra(r)} Hubs are leads for lab follow-up, not proven regulators.</p>`;
+      if (scroll) { const b = card.getBoundingClientRect(); if (b.top < 0 || b.bottom > window.innerHeight) card.scrollIntoView({ block: 'nearest' }); }
+    }
+    geneSel.addEventListener('change', () => selectGene(geneSel.value, false));
+    const hubBox = $('c-hubs');
+    const pickHit = t => { const m = /^\d+\.\s+([A-Z0-9]+)/.exec(t.getAttribute('aria-label') || ''); if (m) selectGene(m[1], true); };
+    hubBox.addEventListener('click', e => { const t = e.target.closest && e.target.closest('rect.hit'); if (t) pickHit(t); });
+    hubBox.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const t = e.target.closest && e.target.closest('rect.hit');
+      if (t) { e.preventDefault(); pickHit(t); }
+    });
+    selectGene('DTNA', false);
+
+    /* ---------- 7. Classifier stress test ---------- */
+    const dec2 = fixed(2);
+    registry['c-clf-fold'] = el => V.hbar(el, {
+      data: [
+        { label: 'GSE278320 · vaccinia (9 samples)', value: 0.58, color: S2, note: 'Held-out vaccinia dataset: close to chance' },
+        { label: 'GSE287860 · Myxoma (6 samples)', value: 1.00, color: S1, note: 'Held-out Myxoma M003 dataset' },
+        { label: 'GSE288000 · Myxoma (30 samples)', value: 0.80, color: S1, note: 'Held-out Myxoma M003 dataset' },
+        { label: 'Mean of the three', value: 0.79, lo: 0.67, hi: 0.90, color: INK2, note: '95% bootstrap CI 0.67–0.90 (2,000 resamples of the pooled out-of-fold predictions)' }
+      ],
+      domain: [0, 1], ref: { value: 0.5 }, format: dec2, valueName: 'Balanced accuracy', xLabel: 'Balanced accuracy (dashed = chance, 0.5)',
+      legend: [{ name: 'Held-out vaccinia dataset', color: S2 }, { name: 'Held-out Myxoma M003 dataset', color: S1 }, { name: 'Mean (95% CI)', color: INK2 }],
+      table: { columns: ['Held-out dataset', 'System', 'Samples', 'Balanced accuracy'], rows: [['GSE278320', 'Vaccinia infection', '9', '0.58'], ['GSE287860', 'Myxoma M003 expression', '6', '1.00'], ['GSE288000', 'Myxoma M003 expression', '30', '0.80'], ['Mean of the three (95% CI)', '', '45', '0.79 (0.67–0.90)']] },
+      source: 'Source: manuscript Abstract and p.13; repository results/ml/per_held_out_study_performance.csv (0.5833, 1.0, 0.8) and bootstrap_confidence_intervals.csv. GSE284044 could not be included (no sample-level counts).',
+      ariaLabel: 'Balanced accuracy per held-out dataset: vaccinia 0.58, Myxoma 1.00 and 0.80, mean 0.79.'
+    });
+    registry['c-clf-ctrl'] = el => V.hbar(el, {
+      data: [
+        { label: '509 helicase + translation genes', value: 0.79, lo: 0.67, hi: 0.90, color: S1, note: 'The headline gene set · 95% bootstrap CI 0.67–0.90' },
+        { label: '15 housekeeping genes', value: 0.82, color: S1, note: 'Control gene set (basic cell-maintenance genes)' },
+        { label: 'Random 509-gene sets (mean of 5)', value: 0.74, color: S1, note: 'Control: randomly chosen genes, same number' },
+        { label: 'Shuffled labels (mean of 10)', value: 0.54, color: MUTED, note: 'Null control: infection labels shuffled within each study' }
+      ],
+      domain: [0, 1], ref: { value: 0.5 }, format: dec2, valueName: 'Mean balanced accuracy', xLabel: 'Mean balanced accuracy (dashed = chance)',
+      legend: [{ name: 'Real infection labels', color: S1 }, { name: 'Shuffled labels (null)', color: MUTED }],
+      table: { columns: ['Feature set', 'Mean balanced accuracy'], rows: [['509 helicase + translation genes (95% CI)', '0.79 (0.67–0.90)'], ['15 housekeeping genes', '0.82'], ['Random 509-gene sets (mean of 5)', '0.74'], ['Labels shuffled within study (mean of 10)', '0.54']] },
+      source: 'Source: manuscript Abstract, pp.13 and 17; repository results/ml/negative_control_results.csv (0.7944, 0.8222, 0.7422, 0.5383).',
+      ariaLabel: 'Mean balanced accuracy: translation genes 0.79, housekeeping 0.82, random 0.74, shuffled labels 0.54.'
+    });
+
+    /* ---------- 8. Helicases: pooling toggle + per-dataset chart ---------- */
+    const HELI = {
+      all: { DHX15: ['+0.75', '3.6e-19', '45%', true, 'Up in 4 of 4 datasets; rank 96 of 16,841 by meta-FDR (top 0.6%).'],
+             DHX29: ['+0.51', '0.055', '80%', false, 'Up in 4 of 4 datasets, but the size of the change varies widely.'],
+             verdict: 'Across all four datasets, DHX15 has the strongest pooled helicase support; DHX29 is up everywhere but too heterogeneous to pass correction.' },
+      vacc: { DHX15: ['+0.61', '0.075', '58%', false, 'Not significant when only the two vaccinia infections are pooled.'],
+              DHX29: ['+0.83', '0.006', '23%', true, 'Significant, with low heterogeneity, within vaccinia infection.'],
+              verdict: 'Within vaccinia infection alone the order flips: DHX29 is significant (meta-FDR 0.006) and DHX15 is not (0.075). Both are candidates for lab follow-up.' }
+    };
+    seg('data-pool', v => {
+      const d = HELI[v];
+      $('heli-cards').innerHTML = ['DHX15', 'DHX29'].map(g => {
+        const c = d[g];
+        return `<article class="cmp-card${c[3] ? ' sig' : ''}"><h4>${g} ${c[3] ? '<span class="badge live">meta-FDR &lt; 0.05</span>' : '<span class="badge plain">Not significant</span>'}</h4>` +
+          `<dl><div><dt>Pooled log<sub>2</sub>FC</dt><dd>${c[0].replace('-', MINUS)}</dd></div><div><dt>meta-FDR</dt><dd>${sciHtml(c[1])}</dd></div><div><dt>I²</dt><dd>${c[2]}</dd></div></dl><p class="hint">${c[4]}</p></article>`;
+      }).join('');
+      $('heli-verdict').textContent = d.verdict;
+    });
+    const HD = [
+      ['GSE278320 · vaccinia, HAP1', 0.764, '4.3e-10', 0.975, '1.6e-5'], ['GSE284044 · vaccinia, Vero (6 h)', 0.325, '1.00', 0.512, '0.95'],
+      ['GSE287860 · Myxoma M003', 0.704, '3.1e-24', 0.154, '0.14'], ['GSE288000 · Myxoma M003 (NTC)', 0.925, '1.4e-14', 0.502, '0.0086']
+    ];
+    registry['c-heli'] = el => V.groupedHbar(el, {
+      categories: HD.map(r => r[0]),
+      series: [
+        { name: 'DHX15', values: HD.map(r => r[1]), notes: HD.map(r => 'Adjusted p within dataset: ' + sci(r[2])) },
+        { name: 'DHX29', values: HD.map(r => r[3]), notes: HD.map(r => 'Adjusted p within dataset: ' + sci(r[4])) }
+      ],
+      mark: 'dot', ref: { value: 0 }, format: signed(2), tickFormat: tickSigned, xLabel: 'log₂FC per dataset (dashed = no change)',
+      table: { columns: ['Dataset (contrast)', 'DHX15 log₂FC', 'DHX15 adj. p', 'DHX29 log₂FC', 'DHX29 adj. p'], rows: HD.map(r => [r[0], signed(3)(r[1]), sci(r[2]), signed(3)(r[3]), sci(r[4])]) },
+      source: 'Source: repository results/meta_analysis/meta_pan_poxvirus_translation_factors.csv (3 decimals); GSE284044 values are from the authors’ deposited DESeq2 tables. The manuscript shows these as forest plots across all 10 contrasts (Figure 5, p.12).',
+      ariaLabel: 'DHX15 and DHX29 log2 fold change in each of the four Tier-A datasets; all positive.'
+    });
+
+    /* ---------- 9. Single cells (toggle share / genes detected) ---------- */
+    const SC = {
+      share: { title: 'Median share of each cell’s reads that come from host genes, uninfected vs vaccinia-infected', sub: 'The host share fell from 0.998 to 0.758 in HeLa cells and from 0.999 to 0.804 in BJ5ta fibroblasts.',
+               fmt: fixed(3), domain: [0, 1], x: 'Median host-read fraction (1 = all host)', un: [0.998, 0.999], inf: [0.758, 0.804],
+               unN: ['2,172 uninfected cells', '6,826 uninfected cells'], infN: ['2,174 infected cells', '4,802 infected cells'] },
+      genes: { title: 'Median number of genes detected per cell, uninfected vs vaccinia-infected', sub: 'Infected cells had fewer detected genes: 4,978 vs 1,976 in HeLa cells, and about 2,340 vs 1,740 in BJ5ta fibroblasts.',
+               fmt: int, x: 'Median genes detected per cell', un: [4978, 2340], inf: [1976, 1740],
+               unN: ['2,172 uninfected cells', '6,826 uninfected cells; the manuscript gives this as about 2,340'], infN: ['2,174 infected cells', '4,802 infected cells; the manuscript gives this as about 1,740'] }
+    };
+    let scState = 'share';
+    registry['c-sc'] = el => {
+      const d = SC[scState];
+      $('t-sc').textContent = d.title;
+      $('s-sc').textContent = d.sub;
+      V.groupedHbar(el, {
+        categories: ['HeLa cells', 'BJ5ta fibroblasts'],
+        series: [{ name: 'Uninfected', values: d.un, notes: d.unN }, { name: 'Vaccinia-infected', values: d.inf, notes: d.infN }],
+        format: d.fmt, domain: d.domain, xLabel: d.x,
+        table: { columns: ['Cell type', 'Uninfected', 'Infected', 'Cells (uninfected / infected)'], rows: [['HeLa', d.fmt(d.un[0]), d.fmt(d.inf[0]), '2,172 / 2,174'], ['BJ5ta fibroblasts', (scState === 'genes' ? 'about ' : '') + d.fmt(d.un[1]), (scState === 'genes' ? 'about ' : '') + d.fmt(d.inf[1]), '6,826 / 4,802']] },
+        source: 'Source: manuscript p.14 (Figure S14); repository results/external_validation/matia_singlecell_shutoff_summary.csv. Data: Matía et al. 2024, bioRxiv preprint (independent of the four atlas datasets). Two-sided Mann–Whitney U test, p < 10⁻³⁰⁰ for each comparison.',
+        ariaLabel: d.title
+      });
+    };
+    seg('data-sc', v => { scState = v; paint('c-sc'); });
+
+    /* ---------- 10. Proteome agreement ---------- */
+    registry['c-rho'] = el => V.hbar(el, {
+      data: [
+        { label: '242 transcript-significant genes', value: 0.31, note: 'Genes with vaccinia-only meta-FDR < 0.05 that were also detected in the proteome · p = 8.1×10⁻⁷ · same direction for 64%' },
+        { label: 'All 7,111 matched genes', value: 0.08, note: 'Weak overall agreement' }
+      ],
+      domain: [0, 1], format: dec2, valueName: 'Spearman ρ', xLabel: 'Spearman ρ (1 = identical ranking)',
+      table: { columns: ['Gene set', 'Spearman ρ', 'Notes'], rows: [['242 transcript-significant genes', '0.31', 'p = 8.1×10⁻⁷; same direction for 64%'], ['All 7,111 matched genes', '0.08', '']] },
+      source: 'Source: manuscript Abstract, p.14 and Figure 7 (p.16). Proteome: Matía et al. 2024 (bioRxiv), HeLa whole-cell extracts, 3 infected vs 3 uninfected, compared with the vaccinia-only transcript meta-analysis.',
+      ariaLabel: 'Spearman rho 0.31 for 242 transcript-significant genes and 0.08 for all 7,111 matched genes.'
+    });
+    const PP = [
+      ['Inflammatory / NF-κB (6)', 0.467, 6, S1], ['Translation initiation, eIF (44)', 0.14, 44, S1], ['Ribosomal proteins (79)', 0.026, 79, S1],
+      ['RNA helicases (48)', 0.012, 48, S1], ['Cell cycle / mitosis (13)', -0.174, 13, S1], ['All 7,111 matched proteins', -0.08, 7111, MUTED]
+    ];
+    registry['c-prot'] = el => V.hbar(el, {
+      data: PP.map(r => ({ label: r[0], value: r[1], color: r[3], note: r[3] === MUTED ? 'Background: median over all matched proteins' : r[2] + ' proteins in this program' })),
+      mark: 'dot', ref: { value: 0 }, format: signed(2), tickFormat: tickSigned, valueName: 'Median protein log₂FC',
+      xLabel: 'Median protein log₂FC (dashed = no change)',
+      legend: [{ name: 'Host program', color: S1 }, { name: 'All matched proteins (background)', color: MUTED }],
+      table: { columns: ['Host program', 'Median protein log₂FC', 'Proteins'], rows: PP.map(r => [r[0].replace(/ \(\d+\)$/, ''), signed(3)(r[1]), int(r[2])]) },
+      source: 'Source: repository results/external_validation/matia_proteomics_program_response.csv; manuscript p.14 and Figure 7 (right). The manuscript rounds these to +0.14 (eIF), +0.03 (ribosomal) and −0.17 (cell cycle) and gives −0.08 for all 7,111 matched genes; the inflammatory and helicase medians are from the repository table.',
+      ariaLabel: 'Median protein change by program: inflammatory +0.47, eIF +0.14, ribosomal +0.03, helicases +0.01, cell cycle -0.17.'
+    });
+
+    /* ---------- 11. Limitations: dataset agreement + reproducibility classes ---------- */
+    const CC = [
+      ['GSE287860 × GSE288000', 0.87, 'Two Myxoma M003 sub-series of one study', S4], ['GSE278320 × GSE284044', 0.21, 'The two vaccinia datasets', S1],
+      ['GSE284044 × GSE287860', 0.17, 'Vaccinia (Vero) vs Myxoma M003', S1], ['GSE284044 × GSE288000', 0.16, 'Vaccinia (Vero) vs Myxoma M003', S1],
+      ['GSE278320 × GSE287860', -0.08, 'Vaccinia (HAP1) vs Myxoma M003', S1], ['GSE278320 × GSE288000', -0.13, 'Vaccinia (HAP1) vs Myxoma M003', S1]
+    ];
+    registry['c-concord'] = el => V.hbar(el, {
+      data: CC.map(r => ({ label: r[0], value: r[1], color: r[3], note: r[2] })),
+      mark: 'dot', domain: [-0.2, 1], ref: { value: 0 }, format: signed(2), tickFormat: tickSigned, valueName: 'Spearman ρ',
+      xLabel: 'Spearman ρ of gene rankings (dashed = 0)',
+      legend: [{ name: 'Same study (two sub-series)', color: S4 }, { name: 'Different sources', color: S1 }],
+      table: { columns: ['Dataset pair', 'Spearman ρ', 'Pair'], rows: CC.map(r => [r[0], signed(2)(r[1]), r[2]]) },
+      source: 'Spearman \u03c1 of signed \u2212log\u2081\u2080 p-values over the 10,976 genes measured in all four datasets. Source: manuscript p.14 and Figure 6A (p.15); repository results/meta_analysis/rank_concordance_matrix.csv. Kendall’s W across all four datasets = 0.40. Most of the overall agreement comes from the two sub-series of one study.',
+      ariaLabel: 'Pairwise Spearman correlations between datasets: 0.87 for the two Myxoma sub-series, between -0.13 and 0.21 for all other pairs.'
+    });
+    registry['c-classes'] = el => V.stack(el, {
+      segments: [
+        { label: 'Class I: conserved, low heterogeneity', value: 33, note: 'Same direction in every dataset, nominal pooled p < 0.05 and I² < 40%' },
+        { label: 'Class II: conserved, high heterogeneity', value: 254, note: 'Same direction in ≥75% of datasets and either nominal p < 0.05 or direction kept in every leave-one-study-out re-pooling (no I² condition; 95 of 254 have I² < 40%). DHX15 and DHX29 are here.' },
+        { label: 'Class III: context-dependent', value: 198, note: 'All remaining genes (same direction in ≥50% of datasets)' }
+      ],
+      format: v => int(v) + ' (' + (v / 485 * 100).toFixed(1) + '%)', darkInk: [1, 2],
+      table: { columns: ['Class', 'Genes', 'Share of 485'], rows: [['Class I: conserved, low heterogeneity', '33', '6.8%'], ['Class II: conserved, high heterogeneity', '254', '52.4%'], ['Class III: context-dependent', '198', '40.8%']] },
+      source: 'Source: manuscript Table 3 (p.15) and Figure 6B. Classes use nominal, not FDR-adjusted, p-values; no gene fell in Class IV. Only 29 of these 485 genes are among the 1,834 reproducible genes.',
+      ariaLabel: 'Reproducibility classes of 485 genes: Class I 33, Class II 254, Class III 198.'
+    });
+
+    /* ---------- Dataset table filter ---------- */
+    const tierBtns = document.querySelectorAll('button[data-tier]');
+    tierBtns.forEach(b => b.addEventListener('click', () => {
+      tierBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      const t = b.getAttribute('data-tier');
+      document.querySelectorAll('.ds-table tr[data-tier]').forEach(r => { r.hidden = !(t === 'all' || r.getAttribute('data-tier') === t); });
+    }));
+
+    /* ---------- log2 fold-change converter ---------- */
+    const range = $('lfc-range'), out = $('lfc-out'), xEl = $('lfc-x'), words = $('lfc-words');
+    function updLfc() {
+      const v = parseFloat(range.value), f = Math.pow(2, v), inv = 1 / f;
+      out.textContent = signed(2)(v);
+      xEl.textContent = (f >= 10 ? f.toFixed(1) : f.toFixed(2)) + '×';
+      let w;
+      if (Math.abs(v) < 0.005) w = 'No change from control cells.';
+      else if (v > 0) w = 'About ' + (f >= 10 ? f.toFixed(0) : f.toFixed(1)) + ' times the control expression level.';
+      else w = 'About 1/' + (inv >= 10 ? inv.toFixed(0) : inv.toFixed(1)) + ' of the control expression level (' + Math.round((1 - f) * 100) + '% lower).';
+      if (Math.abs(Math.abs(v) - 0.5) < 0.005) w += ' This is the smallest change the reproducibility rule accepts.';
+      words.textContent = w;
+    }
+    if (range) {
+      range.addEventListener('input', updLfc);
+      document.querySelectorAll('[data-lfc]').forEach(b => b.addEventListener('click', () => { range.value = b.getAttribute('data-lfc'); updLfc(); }));
+      updLfc();
+    }
+
+    /* ---------- Tabs: draw on first show, shareable #tab-… links ---------- */
+    document.addEventListener('tabchange', e => {
+      const tab = e.detail && e.detail.tab;
+      if (!tab) return;
+      ensure($(tab.getAttribute('aria-controls')));
+      if (tab.id && history.replaceState) { try { history.replaceState(null, '', '#' + tab.id); } catch (err) { /* ignore */ } }
+    });
+    const h = decodeURIComponent(location.hash.slice(1));
+    const t0 = h && $(h);
+    if (t0 && t0.getAttribute('role') === 'tab') t0.click();
+    ensure(document);
+  })();
+  </script>
+</body>
+</html>
