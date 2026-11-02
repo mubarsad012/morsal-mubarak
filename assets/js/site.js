@@ -800,3 +800,17 @@ window.Viz = (function () {
 
   return { hbar, groupedHbar, line, stack, funnel, columns, fmt, seriesVar };
 })();
+
+/* Honors filter (home page) */
+(function () {
+  var btns = document.querySelectorAll('[data-hon]');
+  if (!btns.length) return;
+  var items = document.querySelectorAll('.hon-list .hon');
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-hon');
+      Array.prototype.forEach.call(btns, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      Array.prototype.forEach.call(items, function (li) { li.hidden = f !== 'all' && li.getAttribute('data-cat') !== f; });
+    });
+  });
+})();
