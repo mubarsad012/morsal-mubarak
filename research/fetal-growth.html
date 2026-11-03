@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NCHS Fetal-Growth and Infant-Mortality Study — Morsal Mubarak</title>
+  <title>NCHS Fetal-Growth and Infant-Mortality Study | Morsal Mubarak</title>
   <meta name="description" content="Morsal Mubarak's sole-author study of 33,589,282 U.S. natality records: how size for gestational age relates to infant and fetal death, and where the Black–White gap sits. Interactive dashboard, risk calculator, paper and code.">
-  <meta property="og:title" content="NCHS Fetal-Growth and Infant-Mortality Study — Morsal Mubarak">
+  <meta property="og:title" content="NCHS Fetal-Growth and Infant-Mortality Study | Morsal Mubarak">
   <meta property="og:description" content="Morsal Mubarak's sole-author study of 33,589,282 U.S. natality records: how size for gestational age relates to infant and fetal death, and where the Black–White gap sits. Interactive dashboard, risk calculator, paper and code.">
   <meta property="og:type" content="article">
   <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
@@ -13,7 +13,7 @@
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
   <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <style>
@@ -72,7 +72,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="container">
-      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak, home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
       <nav class="nav" id="site-nav" aria-label="Primary">
         <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
         <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
@@ -99,7 +99,7 @@
         <h1>NCHS Fetal-Growth and Infant-Mortality Study</h1>
         <p class="paper-title">Paper: <em>A Reproducible Public-Data Benchmark of Birthweight-for-Gestational-Age Deviations and Infant/Fetal Mortality Risk: A Cross-Sectional Ecological Analysis of United States Vital Statistics, 2016–2024</em></p>
         <p class="byline"><strong>Morsal Mubarak</strong> · sole author · manuscript dated August 23, 2026</p>
-        <p class="lede"><strong>A 33.5-million-record independent study analyzing the Black–White infant-mortality gap.</strong> I wrote code that turns raw U.S. birth, infant-death and fetal-death files (2016–2024) into an open benchmark, then used it to measure how a baby's size for its week of pregnancy relates to stillbirth and to death in the first year of life, and where the gap between Black and White babies sits.</p>
+        <p class="lede">An independent study of 33.5 million U.S. birth records and the Black–White infant-mortality gap. I wrote code that turns raw U.S. birth, infant-death and fetal-death files (2016–2024) into an open benchmark, then used it to measure how a baby's size for its week of pregnancy relates to stillbirth and to death in the first year of life, and where the gap between Black and White babies sits.</p>
         <dl class="facts">
           <div><dt>My role</dt><dd>Sole author · independent research project</dd></div>
           <div><dt>Status</dt><dd>Under review at <i>Scientific Reports</i></dd></div>
@@ -159,7 +159,7 @@
 
           <!-- ===================== DASHBOARD ===================== -->
           <section id="explore" class="block">
-            <h2 class="prose">Interactive dashboard</h2>
+            <h2 class="prose">Dashboard</h2>
             <p class="prose ink-2">Six views of the published results. Pick a tab, use the buttons to switch outcome or growth zone, and hover over (or tab to) any point for exact values. Every chart has a data table and a source note; all numbers come from the paper and the result tables in the code repository.</p>
             <div class="tabs dash-tabs" role="tablist" aria-label="Dashboard views" data-tabs>
               <button type="button" role="tab" id="tab-zones" aria-controls="panel-zones" aria-selected="true" tabindex="0">Growth-zone risk</button>
@@ -191,7 +191,7 @@
             <!-- Panel 2: pandemic -->
             <div class="tab-panel" id="panel-covid" role="tabpanel" aria-labelledby="tab-covid" tabindex="0" hidden>
               <div class="panel-head">
-                <h3>Across the pandemic</h3>
+                <h3>The pandemic</h3>
                 <p>The paper treats COVID-19 as a natural experiment and recomputes the growth-zone rate ratios in three pooled periods: pre-pandemic (2016–2019), pandemic (2020–2021) and post-pandemic (2022–2023 for infant death, 2022–2024 for fetal death).</p>
                 <p><strong>This is a three-period comparison, not a year-by-year trend.</strong> The study did not publish annual mortality rates, so none are shown here. The only year-by-year series of results is the model-validation AUC in the Validation tab.</p>
               </div>
@@ -251,7 +251,7 @@
             <!-- Panel 4: causes -->
             <div class="tab-panel" id="panel-causes" role="tabpanel" aria-labelledby="tab-causes" tabindex="0" hidden>
               <div class="panel-head">
-                <h3>What drives the excess</h3>
+                <h3>Causes of the excess deaths</h3>
                 <p>For each growth zone, the paper splits the extra deaths (compared with the p10–p90 zone) into cause-of-death groups for weeks 24–42. Bars show <strong>excess deaths per 1,000</strong>: positive bars are cause groups with more deaths than in the reference zone, negative bars fewer. IDM means infant of a diabetic mother.</p>
               </div>
               <div class="seg-row">
@@ -277,7 +277,7 @@
               </div>
               <div class="chart-stack">
                 <div class="chart-card">
-                  <div class="chart-head"><div><h4 class="chart-title">Held-out AUC by growth reference, infant vs fetal death</h4><p class="chart-sub">Infant: 0.781 for all three. Fetal: 0.886, 0.886 and 0.885. How far a baby is from expected size matters; which chart defines "expected" barely does.</p></div></div>
+                  <div class="chart-head"><div><h4 class="chart-title">Held-out AUC by growth reference, infant vs fetal death</h4><p class="chart-sub">Infant: 0.781 for all three. Fetal: 0.886, 0.886 and 0.885. How far a baby is from expected size matters, but the choice of growth chart made almost no difference to accuracy.</p></div></div>
                   <div id="chart-std"></div>
                 </div>
                 <div class="chart-card">
@@ -292,7 +292,7 @@
             <div class="tab-panel" id="panel-validation" role="tabpanel" aria-labelledby="tab-validation" tabindex="0" hidden>
               <div class="panel-head">
                 <h3>Validation</h3>
-                <p>A model is only useful if it works on data it has not seen. The paper trains models on earlier years and tests them on later ones, and also repeats the test leaving out one year at a time. That leave-one-year-out AUC is the only year-by-year series of results in the study: it measures model accuracy, not mortality levels.</p>
+                <p>To check the models on data they have not seen, the paper trains them on earlier years and tests them on later ones, and also repeats the test leaving out one year at a time. That leave-one-year-out AUC is the only year-by-year series of results in the study: it measures model accuracy, not mortality levels.</p>
               </div>
               <div class="seg-row">
                 <div class="seg-group"><span class="seg-label" id="lbl-v-end">Outcome</span>
@@ -420,7 +420,7 @@ risk per 1,000 = 1000 / (1 + e^−z)</code></pre>
           <section id="methods" class="block">
             <h2 class="prose">Methods</h2>
             <div class="prose">
-              <p>The study is a cross-sectional, ecological (aggregate-cell) analysis of U.S. vital statistics for 2016–2024, reported following the STROBE and RECORD guidelines for observational studies of routinely collected data. Every step runs from released code; no step is done by hand.</p>
+              <p>The study is a cross-sectional, ecological (aggregate-cell) analysis of U.S. vital statistics for 2016–2024, reported following the STROBE and RECORD guidelines for observational studies of routinely collected data. Every step runs from the released code, with nothing done by hand.</p>
             </div>
             <p class="flow-label">Build the data</p>
             <div class="flow">
@@ -464,7 +464,7 @@ risk per 1,000 = 1000 / (1 + e^−z)</code></pre>
           <!-- ===================== REPRODUCIBILITY ===================== -->
           <section id="reproducibility" class="block">
             <h2 class="prose">Reproducibility</h2>
-            <p class="prose ink-2">I built the project so that someone else can check every number: the code, result tables, audit trail and archive are all public.</p>
+            <p class="prose ink-2">The code, result tables, audit trail and archive are all public, so anyone can check the numbers.</p>
             <div class="grid grid-2">
               <div class="card">
                 <div class="card-top"><span class="badge plain">Code</span><span class="card-kicker">MIT license</span></div>

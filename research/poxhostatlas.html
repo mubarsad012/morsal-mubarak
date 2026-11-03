@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PoxHostAtlas — Morsal Mubarak</title>
+  <title>PoxHostAtlas | Morsal Mubarak</title>
   <meta name="description" content="PoxHostAtlas: Morsal Mubarak's reproducible cross-study atlas of host gene-expression changes during poxvirus infection, mentored by Deon Nguyen (OpenBio Student Research Institute 2026). Interactive charts, datasets, pipeline, code and manuscript.">
-  <meta property="og:title" content="PoxHostAtlas — Morsal Mubarak">
+  <meta property="og:title" content="PoxHostAtlas | Morsal Mubarak">
   <meta property="og:description" content="Four public poxvirus RNA-sequencing datasets re-analyzed with one open pipeline: 1,834 host genes changed the same way across datasets.">
   <meta property="og:type" content="article">
   <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
@@ -13,7 +13,7 @@
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
   <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <style>
@@ -125,7 +125,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="container">
-      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak, home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
       <nav class="nav" id="site-nav" aria-label="Primary">
         <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
         <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
@@ -178,7 +178,7 @@
         <div>
           <section id="overview" class="prose block">
             <h2>Overview</h2>
-            <p>PoxHostAtlas is a curated collection of public poxvirus RNA-sequencing datasets that I re-analyzed with one common, reproducible workflow. It asks a whole-genome question: <strong>which host genes and pathways change the same way across independent poxvirus datasets</strong>, rather than in just one experiment? The answer is a ranked list of 1,834 host genes and the programs they belong to, released with all of the code so anyone can check it.</p>
+            <p>PoxHostAtlas is a set of public poxvirus RNA-sequencing datasets that I re-analyzed with one common, reproducible workflow. The question is genome-wide: <strong>which host genes and pathways change the same way across independent poxvirus datasets</strong>, and not just in one experiment? The result is a ranked list of 1,834 host genes and the programs they belong to, with all the code released so anyone can check it.</p>
 
             <h3>Poxviruses and host shutoff</h3>
             <p>Poxviruses are a family of viruses that includes the causes of smallpox and mpox. Vaccinia virus is its best-studied member. When a poxvirus infects a cell, it broadly turns down the cell's own gene activity and protein-making while the virus's own messages keep being translated. This takeover is called <strong>host shutoff</strong>. RNA sequencing (RNA-seq) measures how active each of a cell's genes is, so comparing infected and uninfected cells shows which host genes the infection turns up or down.</p>
@@ -198,7 +198,7 @@
             <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> I conceived and designed the study, identified and curated the datasets, wrote the analysis code, performed all analyses, produced the figures and tables, and wrote the manuscript. My mentor, Deon Nguyen (Arizona State University), supervised the project, advised on analytical direction and interpretation, and reviewed and edited the manuscript. This was a mentored project of the OpenBio Student Research Institute (June 8 – July 31, 2026).</p></div>
 
             <div class="card lfc-tool" id="lfc-tool">
-              <h3 class="mt-0">Try it: reading a log<sub>2</sub> fold change</h3>
+              <h3 class="mt-0">Reading a log<sub>2</sub> fold change</h3>
               <p class="mb-2">Gene changes in this project are reported as log<sub>2</sub> fold changes: +1 means twice as active as in control cells, −1 means half as active, 0 means no change. Move the slider or pick a gene from the atlas.</p>
               <div class="grid grid-2">
                 <div class="field">
@@ -221,7 +221,7 @@
             </div>
 
             <details class="glossary">
-              <summary>Glossary: key terms in plain English</summary>
+              <summary>Glossary</summary>
               <dl>
                 <div><dt>Vaccinia virus</dt><dd>The best-studied poxvirus; two of the four datasets are vaccinia infections.</dd></div>
                 <div><dt>Myxoma M003 effector</dt><dd>A single protein from myxoma virus (another poxvirus). Two datasets express this one protein in human cells instead of infecting them.</dd></div>
@@ -254,7 +254,7 @@
               <div class="card"><h3>A broad host program, not one gene family</h3><p>Inflammatory and NF-κB signaling genes (such as IL6, IL1B, CXCL8 and BIRC3) were over-represented 5.4-fold (13 of 22), and all 13 went up. Cell-cycle and mitosis genes were over-represented 5.7-fold (13 of 21), and all 13 went down. Ribosomal-protein genes drifted downward without being over-represented, consistent with host shutoff.</p></div>
               <div class="card"><h3>Within vaccinia infection alone, shutoff is the clearest signal</h3><p>Pooling only the two vaccinia datasets, ribosomal-protein (median −0.79) and cell-cycle (−0.58) genes stayed down and translation-initiation genes leaned down (−0.32), while inflammatory induction was much weaker (+0.74, vs +2.0 across all four datasets). The strong inflammatory signal is driven partly by the Myxoma M003 effector datasets.</p></div>
               <div class="card"><h3>The top network hubs are outside the expected programs</h3><p>A hub score combining connectivity and reproducibility ranked DTNA, DBP and BTN3A2 highest; 11 of the top 12 hubs lie outside the curated programs, and IL6 ranked 7th of 228.</p></div>
-              <div class="card"><h3>A stress test that the gene set did not pass, reported honestly</h3><p>A classifier built on 509 helicase and translation genes reached a balanced accuracy of 0.79 averaged over three held-out datasets but only 0.58 on the held-out vaccinia dataset, and housekeeping (0.82) and random gene sets (0.74) did about as well. This points to broad host remodeling rather than a specific signature.</p></div>
+              <div class="card"><h3>A stress test the gene set did not pass</h3><p>A classifier built on 509 helicase and translation genes reached a balanced accuracy of 0.79 averaged over three held-out datasets but only 0.58 on the held-out vaccinia dataset, and housekeeping (0.82) and random gene sets (0.74) did about as well. This points to broad host remodeling rather than a specific signature.</p></div>
               <div class="card"><h3>Independent single-cell and protein data agree only in part</h3><p>In separate single-cell data, the share of reads from host genes fell from 0.998 to 0.758 in HeLa cells and from 0.999 to 0.804 in BJ5ta fibroblasts. A HeLa proteome agreed modestly with the transcript changes (Spearman ρ = 0.31 for 242 genes), but ribosomal and translation-initiation protein levels were not reduced.</p></div>
             </div>
           </section>

@@ -87,7 +87,7 @@
     const dec = parseInt(el.dataset.countDecimals || '0', 10);
     const pre = el.dataset.countPrefix || '', suf = el.dataset.countSuffix || '';
     const fmt = v => pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf;
-    if (reduce) { el.textContent = fmt(to); return; }
+    el.textContent = fmt(to); return; // numbers show as-is, no count-up
     const dur = 1400, t0 = performance.now();
     const step = now => {
       const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TBI MRI Computational Study — Morsal Mubarak</title>
+  <title>TBI MRI Computational Study | Morsal Mubarak</title>
   <meta name="description" content="Lead computational researcher on a 35-participant traumatic brain injury MR spectroscopy study: a verified Python pipeline linking brain chemistry to post-concussion symptoms.">
-  <meta property="og:title" content="TBI MRI Computational Study — Morsal Mubarak">
+  <meta property="og:title" content="TBI MRI Computational Study | Morsal Mubarak">
   <meta property="og:description" content="A verified Python pipeline linking brain chemistry (MR spectroscopy) to post-concussion symptoms, with spectroscopy data from 35 participants.">
   <meta property="og:type" content="article">
   <meta name="theme-color" content="#f8f7f3" media="(prefers-color-scheme: light)">
@@ -13,7 +13,7 @@
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
   <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <style>
@@ -55,7 +55,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="container">
-      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak — home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
+      <a class="brand-mark" href="../index.html" aria-label="Morsal Mubarak, home"><span class="mono">MM</span><span>Morsal Mubarak</span></a>
       <nav class="nav" id="site-nav" aria-label="Primary">
         <a href="../index.html#research">Research</a><span class="sep" aria-hidden="true">•</span>
         <a href="../index.html#software">Software &amp; Tools</a><span class="sep" aria-hidden="true">•</span>
@@ -81,7 +81,7 @@
         <div class="flex wrap gap-1 mb-2"><span class="badge plain">Clinical research · 2026</span><span class="badge review">Lead Computational Researcher</span></div>
         <h1>Traumatic Brain Injury (TBI) MRI Computational Study</h1>
         <p class="byline"><strong>Morsal Mubarak</strong>, Lead Computational Researcher · Mass General Brigham / MGH Martinos Center</p>
-        <p class="lede">After a concussion or other traumatic brain injury, can we see recovery in the brain's chemistry, and does it match how patients say they feel? I built and verified the Python pipeline that turns raw MR spectroscopy measurements and symptom questionnaires from a two-arm treatment study into tested, audited results.</p>
+        <p class="lede">This study looks at whether recovery after a concussion or other traumatic brain injury shows up in brain chemistry, and whether that matches how patients say they feel. I built and verified the Python pipeline that turns raw MR spectroscopy measurements and symptom questionnaires from a two-arm treatment study into tested, audited results.</p>
         <dl class="facts">
           <div><dt>My role</dt><dd>Lead Computational Researcher</dd></div>
           <div><dt>Affiliation</dt><dd>Mass General Brigham / MGH Martinos Center</dd></div>
@@ -105,7 +105,7 @@
             <h2>Overview</h2>
             <p>Traumatic brain injury often leaves people with headaches, fatigue, poor concentration, and other symptoms that last for months, even when standard scans look normal. <strong>Magnetic resonance spectroscopy (MRS)</strong> is an MRI technique that measures brain chemicals instead of anatomy: markers of neuron health (NAA), cell-membrane turnover (choline), energy (creatine), glial cells (myo-inositol), and the excitatory neurotransmitters glutamate and glutamine (Glx).</p>
             <p>This two-arm treatment study measured those chemicals in several brain regions at baseline, 14 days, and 3 months, and tracked symptoms with the <strong>Rivermead Post-Concussion Symptoms Questionnaire (RPQ)</strong> through 6 months. The questions were whether brain chemistry changes differently between the treatment and control groups, and whether chemistry tracks symptoms.</p>
-            <p>Small clinical studies are easy to fool yourself with: a single unusual participant can create a "significant" result, and testing many regions and metabolites makes false positives likely. So I designed the pipeline around guardrails, including outlier and influence screening, multiple-comparison correction, and a full audit that re-runs everything from the raw data.</p>
+            <p>In a small clinical study, one unusual participant can create a "significant" result, and testing many regions and metabolites makes false positives likely. So I built checks into the pipeline: outlier and influence screening, multiple-comparison correction, and a full audit that re-runs everything from the raw data.</p>
             <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><strong>My role.</strong> Lead Computational Researcher: I built the analysis and reporting pipeline (about 4,800 lines of Python across three scripts) and delivered a verified report to the study's principal investigator.</p></div>
           </section>
 
@@ -154,7 +154,7 @@
               <ul class="ink-2"><li>Between arms: Welch's t-test (no equal-variance assumption) and the Mann–Whitney U test (no normality assumption), with Cohen's <em>d</em> effect sizes and confidence intervals.</li><li>Within arms over time: paired t-tests and Wilcoxon signed-rank tests, with Cohen's <em>d<sub>z</sub></em>.</li><li>Built with <code>SciPy</code> and <code>NumPy</code>.</li></ul>
             </div>
             <div class="card stage-panel tab-panel" role="tabpanel" id="st-4" aria-labelledby="tab-4" hidden>
-              <h3>Objective outlier screens</h3>
+              <h3>Outlier screens</h3>
               <ul class="ink-2"><li>Every major analysis is run twice: on all data, and again after an objective, pre-set screen.</li><li>Group comparisons: modified z-score screening (flag if |z| &gt; 3.5).</li><li>Correlations and regressions: influence diagnostics, flagging a point if Cook's distance &gt; 4/<em>n</em> or |studentized residual| &gt; 3 (<code>statsmodels</code>). <a href="#demo">Try it below.</a></li><li>Results that only exist with a flagged point are reported separately instead of being presented as findings.</li></ul>
             </div>
             <div class="card stage-panel tab-panel" role="tabpanel" id="st-5" aria-labelledby="tab-5" hidden>
@@ -163,7 +163,7 @@
             </div>
             <div class="card stage-panel tab-panel" role="tabpanel" id="st-6" aria-labelledby="tab-6" hidden>
               <h3>Correcting for many tests</h3>
-              <ul class="ink-2"><li>Testing many regions × metabolites × timepoints makes some p &lt; 0.05 likely by chance, so the pipeline computes Bonferroni and false-discovery-rate (Benjamini–Hochberg) adjusted p-values, and the report shows adjusted p-values beside the raw ones in every relevant table.</li><li>Findings are sorted into clearly separated tiers: nominally significant, trend-level, and results that do not survive screening, so nothing exploratory is presented as confirmed.</li></ul>
+              <ul class="ink-2"><li>Testing many regions × metabolites × timepoints makes some p &lt; 0.05 likely by chance, so the pipeline computes Bonferroni and false-discovery-rate (Benjamini–Hochberg) adjusted p-values, and the report shows adjusted p-values beside the raw ones in every relevant table.</li><li>Findings are sorted into separate tiers: nominally significant, trend-level, and results that do not survive screening, so exploratory results are not reported as confirmed.</li></ul>
             </div>
             <div class="card stage-panel tab-panel" role="tabpanel" id="st-7" aria-labelledby="tab-7" hidden>
               <h3>Verify, then report</h3>
@@ -172,10 +172,10 @@
           </section>
 
           <section id="demo" class="block">
-            <h2 class="prose">Why one point can fool you: an interactive demo</h2>
-            <p class="prose ink-2">Drag the orange point (or focus it and use the arrow keys). Watch how a single participant can manufacture a correlation, and how the pipeline's influence screen catches it. <strong>These are simulated data for illustration, not study data.</strong></p>
+            <h2 class="prose">Outlier demo</h2>
+            <p class="prose ink-2">Drag the orange point (or focus it and use the arrow keys). It shows how one participant can create a correlation on their own, and when the pipeline's influence screen flags that point. <strong>These are simulated data for illustration, not study data.</strong></p>
             <div class="chart-card">
-              <div class="chart-head"><div><h3 class="chart-title">Simulated: change in a brain metabolite vs. change in symptom score (15 people)</h3><p class="chart-sub">Fourteen fixed points have essentially no relationship; one point is yours to move.</p></div></div>
+              <div class="chart-head"><div><h3 class="chart-title">Simulated: change in a brain metabolite vs. change in symptom score (15 people)</h3><p class="chart-sub">Fourteen fixed points show almost no relationship. You can move the fifteenth.</p></div></div>
               <div class="demo">
                 <div>
                   <svg id="demo-svg" viewBox="0 0 560 380" role="img" aria-label="Interactive scatter plot of simulated data with one draggable point">
